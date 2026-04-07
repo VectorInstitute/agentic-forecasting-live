@@ -18,7 +18,6 @@ from __future__ import annotations
 from datetime import datetime, timezone
 
 import pandas as pd
-
 from aieng.forecasting.data.context import ForecastContext
 from aieng.forecasting.evaluation.prediction import (
     STANDARD_QUANTILES,
@@ -90,7 +89,7 @@ class LastValuePredictor(Predictor):
         # ------------------------------------------------------------------
         payload = ContinuousForecast(
             point_forecast=last_value,
-            quantiles={q: last_value for q in STANDARD_QUANTILES},
+            quantiles=dict.fromkeys(STANDARD_QUANTILES, last_value),
         )
 
         # ------------------------------------------------------------------
@@ -101,8 +100,7 @@ class LastValuePredictor(Predictor):
         # when scoring.
         # ------------------------------------------------------------------
         forecast_date: datetime = (
-            pd.Timestamp(context.as_of)
-            + pd.tseries.frequencies.to_offset(task.frequency) * task.horizon
+            pd.Timestamp(context.as_of) + pd.tseries.frequencies.to_offset(task.frequency) * task.horizon
         ).to_pydatetime()
 
         # ------------------------------------------------------------------

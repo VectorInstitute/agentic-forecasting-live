@@ -53,6 +53,26 @@ the use-case notebooks and experiments that demonstrate them.
 
 Tests mirror the package under `aieng-forecasting/tests/aieng/forecasting/`.
 
+### Implementations layer structure
+
+**Decision date:** Apr 7, 2026
+
+The `implementations/` directory is organized by **use case** at the top level. Within each use case, reference predictor implementations, notebooks, and experiment scripts live together.
+
+```
+implementations/
+└── <use-case>/           # e.g. economic_forecasting/, event_forecasting/
+    ├── README.md         # learning path, interfaces quick-reference
+    ├── predictors/       # Predictor subclasses — copy these to start your own
+    └── *.ipynb / *.py    # notebooks and experiment scripts
+```
+
+**Predictor placement rule:** A predictor implementation lives in the use-case folder where it was first built. It is lifted to a shared location only when the same implementation is needed in a second, distinct use case. Apply the same "two concrete instances before abstracting" rule used for package-level abstractions.
+
+**No mid-level `implementations/predictors/` layer** until there is a concrete duplication trigger. Creating it speculatively adds navigation overhead without benefit.
+
+**Agent backbone in the package (future):** When agentic predictors are built, the ADK agent definition, tool scaffolding, and prompt infrastructure are reusable across use cases and belong in `aieng-forecasting` (e.g. `aieng/forecasting/agents/`). The task-specific configuration and experiments using those agents live in `implementations/<use-case>/`. This is a cleaner cut than a mid-level implementations layer for that case.
+
 ### Tracing & Logging: Langfuse
 
 **Langfuse** is selected for tracing. The integration point is at the **Predictor level** — reasoning traces are linked to prediction outcomes via `predictor_id` + `question_id`. This is separate from the evaluation harness's own prediction/resolution/score logging. Implementation details are deferred.
@@ -407,7 +427,7 @@ Shared abstractions are extracted after both passes are working — not designed
 
 1. ✅ `ContinuousForecast` + `Prediction` Pydantic models — YAML-serializable
 2. ✅ `Predictor` ABC — `predict(task: ForecastingTask, context: ForecastContext) -> Prediction`
-3. ✅ `ARIMAPredictor` (Darts AutoARIMA, 500 Monte Carlo samples) — first reference predictor
+3. ✅ `DartsAutoARIMAPredictor` (Darts AutoARIMA, 500 Monte Carlo samples) — first reference predictor, defined inline in `cpi_backtest_demo.ipynb` and as a standalone reference in `implementations/economic_forecasting/predictors/`
 4. ✅ `BacktestSpec` + `BacktestResult` Pydantic models
 5. ✅ `backtest()` function — iterates origins, scores with CRPS via `properscoring`
 6. ✅ `released_at` fix for StatCan CPI (21-day approximation)
