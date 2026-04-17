@@ -31,9 +31,20 @@ def _resolve_colors(
     predictors: list[str],
     colors: dict[str, str] | None,
 ) -> dict[str, str]:
-    if colors is not None:
-        return colors
-    return {pid: DEFAULT_PREDICTOR_PALETTE[i % len(DEFAULT_PREDICTOR_PALETTE)] for i, pid in enumerate(predictors)}
+    """Return a ``predictor_id -> colour`` map that covers every predictor.
+
+    Any explicit entries in ``colors`` are preserved; missing predictors get
+    filled in from :data:`DEFAULT_PREDICTOR_PALETTE` so callers don't have to
+    line up their keys with the exact predictor_id strings.
+    """
+    resolved: dict[str, str] = dict(colors or {})
+    next_idx = 0
+    for pid in predictors:
+        if pid in resolved:
+            continue
+        resolved[pid] = DEFAULT_PREDICTOR_PALETTE[next_idx % len(DEFAULT_PREDICTOR_PALETTE)]
+        next_idx += 1
+    return resolved
 
 
 # ---------------------------------------------------------------------------
