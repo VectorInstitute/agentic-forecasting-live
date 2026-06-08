@@ -72,6 +72,7 @@ from aieng.forecasting.methods.agentic.curriculum import (
     format_backtest_report,
     load_context_documents,
 )
+from aieng.forecasting.methods.agentic.forecast_tool import ForecastTool
 from aieng.forecasting.methods.agentic.outputs import (
     AgentForecastOutput,
     AgentQuantileForecast,
@@ -86,9 +87,6 @@ __all__: list[str] = [
     "AdaptiveSkillState",
     "AdaptiveSkillStore",
     "AdkTextRunner",
-    "build_curriculum_prompt",
-    "format_backtest_report",
-    "load_context_documents",
     "AdkTextRunnerConfig",
     "AgentConfig",
     "AgentForecastOutput",
@@ -100,5 +98,9 @@ __all__: list[str] = [
     "ContextRetrievalConfig",
     "DiscreteAgentForecastOutput",
     "ForecastPromptBuilder",
+    "ForecastTool",
     "build_adk_agent",
+    "build_curriculum_prompt",
+    "format_backtest_report",
+    "load_context_documents",
 ]

@@ -161,6 +161,24 @@ class TestBuildAdkAgent:
 
         assert agent.generate_content_config.automatic_function_calling is None
 
+    def test_function_tools_are_attached(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """Conventional function tools in the config are appended to the agent."""
+        monkeypatch.delenv("PROXY_BASE_URL", raising=False)
+
+        def my_tool(x: str) -> str:
+            """Echo the input. Args: x: anything. Returns: the same string."""
+            return x
+
+        agent = build_adk_agent(
+            AgentConfig(
+                instruction="Forecast the supplied series.",
+                function_tools=[my_tool],
+                proxy_base_url=None,
+            )
+        )
+
+        assert len(agent.tools) == 1
+
 
 class TestSmrShimRegistration:
     """build_adk_agent registers the set_model_response shim on the proxy path.
