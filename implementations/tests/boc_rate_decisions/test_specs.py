@@ -50,7 +50,7 @@ class TestSpecScheduleConsistency:
 
     @pytest.mark.parametrize("name", DIRECTION_BACKTEST_SPECS)
     def test_origins_resolve_to_scheduled_meetings(self, name: str) -> None:
-        """origin + horizon lands exactly on a meeting from the calendar."""
+        """Origin + horizon lands exactly on a meeting from the calendar."""
         spec = _load_backtest(name)
         meetings = set(load_meeting_schedule())
         lead = _lead(spec)
@@ -91,9 +91,7 @@ class TestSpecScheduleConsistency:
         spec = _load_eval("boc_rate_direction_eval.yaml")
         lead = _lead(spec)
         covered = {pd.Timestamp(o) + lead for o in spec.origins()}
-        expected = {
-            m for m in load_meeting_schedule() if pd.Timestamp("2025-01-01") <= m <= pd.Timestamp("2026-06-30")
-        }
+        expected = {m for m in load_meeting_schedule() if pd.Timestamp("2025-01-01") <= m <= pd.Timestamp("2026-06-30")}
         assert len(expected) == 12
         assert covered == expected
 
