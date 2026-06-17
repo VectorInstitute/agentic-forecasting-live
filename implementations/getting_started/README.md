@@ -58,14 +58,14 @@ This registers all 47 Canada-wide CPI series from StatCan table
 
 ## Walkthrough
 
-### 1. Warm up - `cpi_data_exploration.ipynb`
+### 1. Warm up - `01_cpi_data_exploration.ipynb`
 
 Nine cells.  Registers three focus series (all-items, gasoline,
 shelter), shows the cutoff-enforcement pattern, plots levels and
 year-over-year change, and constructs a `ForecastingTask` by hand so
 you can see what the YAML spec turns into.
 
-### 2. Run the backtest - `cpi_backtest_demo.ipynb`
+### 2. Run the backtest - `02_cpi_backtest_demo.ipynb`
 
 Ten cells.  Walks through the full cycle:
 
@@ -144,8 +144,8 @@ what you're building:
 getting_started/                 # this directory
 ├── README.md
 ├── specs/                       # backtest and eval YAML
-├── cpi_data_exploration.ipynb
-└── cpi_backtest_demo.ipynb
+├── 01_cpi_data_exploration.ipynb
+└── 02_cpi_backtest_demo.ipynb
 ```
 
 Reference predictors live in the `aieng-forecasting` package under

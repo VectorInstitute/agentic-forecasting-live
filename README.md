@@ -23,15 +23,17 @@ Every method can be used in one of two modes, and the distinction runs through t
 
 Each is independent and self-contained — pick the one that matches the problem you care about, and read that directory's `README.md` for the full walkthrough. They are not meant to be worked in order.
 
-| Implementation | The problem | Concepts & techniques it demonstrates |
-| --- | --- | --- |
-| [`getting_started/`](implementations/getting_started/) | One CPI series, one month ahead. | The smallest end-to-end loop: a `Predictor`, a `BacktestSpec` and `EvalSpec`, naive + AutoARIMA baselines, CRPS scoring. The place to learn the evaluation framework. |
-| [`food_price_forecasting/`](implementations/food_price_forecasting/) | A multivariate food-CPI trajectory (CFPR-style). | Nine correlated sub-indices, a 12-step trajectory, a domain metric (avg/avg YoY), baselines vs LLM-Process predictors, leakage-aware backtests, and cached artifacts for fast iteration. |
-| [`energy_oil_forecasting/`](implementations/energy_oil_forecasting/) | Daily WTI crude-oil price under regime-breaking news. | A capability progression — Prophet → LLM-Process → news-grounded agent → code-executing agent — plus an adaptive agent that learns a strategy from data and is scored before vs after. Continuous trajectories, a binary up-shock task, and interactive scenario analysis. |
-| [`boc_rate_decisions/`](implementations/boc_rate_decisions/) | Will the Bank of Canada cut, hold, or hike at its next meeting? | Discrete-event forecasting: ordered-categorical outcomes on an irregular calendar, RPS scoring and one-vs-rest calibration (instead of CRPS), a binary (Brier) special case, cutoff-aware document ingestion, and an LLM-as-judge that scores an agent's reasoning against the official rationale. |
-| [`sp500_forecasting/`](implementations/sp500_forecasting/) | S&P 500 multivariate numerical comparison. | A template for deep numerical-methods comparison on financial-market series with covariates. (In active development.) |
 
-## Data sources
+| Implementation                                                       | The problem                                                                     | Concepts & techniques it demonstrates                                                                                                                                                                                                                                                              |
+| -------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `[getting_started/](implementations/getting_started/)`               | One CPI series, one month ahead.                                                | The smallest end-to-end loop: a `Predictor`, a `BacktestSpec` and `EvalSpec`, naive + AutoARIMA baselines, CRPS scoring. The place to learn the evaluation framework.                                                                                                                              |
+| `[food_price_forecasting/](implementations/food_price_forecasting/)` | A multivariate food-CPI trajectory, in the style of Canada's Food Price Report. | Nine correlated sub-indices, a 12-step trajectory, a domain metric (avg/avg YoY), baselines vs LLM-Process predictors, leakage-aware backtests, and cached artifacts for fast iteration.                                                                                                           |
+| `[energy_oil_forecasting/](implementations/energy_oil_forecasting/)` | Daily WTI crude-oil price under regime-breaking news.                           | A capability progression — Prophet → LLM-Process → news-grounded agent → code-executing agent — plus an adaptive agent that learns a strategy from data and is scored before vs after. Continuous trajectories, a binary up-shock task, and interactive scenario analysis.                         |
+| `[boc_rate_decisions/](implementations/boc_rate_decisions/)`         | Will the Bank of Canada cut, hold, or hike at its next meeting?                 | Discrete-event forecasting: ordered-categorical outcomes on an irregular calendar, RPS scoring and one-vs-rest calibration (instead of CRPS), a binary (Brier) special case, cutoff-aware document ingestion, and an LLM-as-judge that scores an agent's reasoning against the official rationale. |
+| `[sp500_forecasting/](implementations/sp500_forecasting/)`           | S&P 500 multivariate numerical comparison.                                      | A template for deep numerical-methods comparison on financial-market series with covariates. (In active development.)                                                                                                                                                                              |
+
+
+## Time Series Data sources
 
 - **StatCan** — Canadian CPI and related macroeconomic series.
 - **FRED** — macroeconomic and commodity series.
@@ -54,7 +56,7 @@ playground/          # Exploration and archived demos (not reference implementat
 Install dependencies from the repo root:
 
 ```bash
-git clone <repo-url>
+git clone <repo-url>. # If running locally. Coder environment setup clones repo automatically.
 cd agentic-forecasting
 uv sync
 ```
@@ -81,13 +83,13 @@ Agentic forecasters can run code in an E2B cloud sandbox. Do this once before en
 
 1. Create a free account at [e2b.dev](https://e2b.dev) and copy your API key.
 2. Add it to your `.env` file alongside the other keys (see `.env.example`):
-   ```
+  ```
    E2B_API_KEY=your_e2b_api_key
-   ```
+  ```
 3. Build the template (takes a few minutes on first run):
-   ```bash
+  ```bash
    uv run --env-file .env scripts/build_e2b_template.py
-   ```
+  ```
 
 The template name is the default in `CodeExecutionConfig.template_name`, so notebooks pick it up automatically.
 

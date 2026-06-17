@@ -171,23 +171,14 @@ read-only skill when the reference material is fixed.
 
 ## 6. Checklist for adding a skill
 
-- [ ] The skill has at least one file in `references/`, `assets/`, or
-      `scripts/`. If not, move the SKILL.md content into the agent instruction
-      and leave it out of `skills_dirs` (Rule 1).
-- [ ] If it has `references/`/`assets/` **but no `scripts/`**, the agent
-      instruction says so explicitly (Rule 2) — ADK advertises
-      `run_skill_script` regardless.
-- [ ] If it has `scripts/`, every script the model is likely to call actually
-      exists, and the SKILL.md body lists the available scripts.
-- [ ] The SKILL.md body is minimal — nothing that duplicates the system prompt
-      (Rule 3).
-- [ ] For an adaptive skill: state lives in a `AdaptiveSkillState` subclass,
-      mutations go through `extra_tools` (never `run_skill_script`), and the
-      evidence threshold stays on the store.
-- [ ] A test confirms the skill directory loads and its L1 metadata (name,
-      description) is what you expect.
-- [ ] After wiring it up, run one trace and confirm no spurious
-      `run_skill_script` / `load_skill_resource` errors appear.
+- [ ] The skill has at least one file in `references/`, `assets/`, or `scripts/`. If not, move the SKILL.md content into the agent instruction and leave it out of `skills_dirs` (Rule 1).
+      
+- [ ] If it has `references/`/`assets/` **but no `scripts/`**, the agent instruction says so explicitly (Rule 2) — ADK advertises `run_skill_script` regardless.
+- [ ] If it has `scripts/`, every script the model is likely to call actually exists, and the SKILL.md body lists the available scripts.
+- [ ] The SKILL.md body is minimal — nothing that duplicates the system prompt (Rule 3).
+- [ ] For an adaptive skill: state lives in a `AdaptiveSkillState` subclass, mutations go through `extra_tools` (never `run_skill_script`), and the evidence threshold stays on the store.
+- [ ] A test confirms the skill directory loads and its L1 metadata (name, description) is what you expect.
+- [ ] After wiring it up, run one trace and confirm no spurious `run_skill_script` / `load_skill_resource` errors appear.
 
 ---
 
