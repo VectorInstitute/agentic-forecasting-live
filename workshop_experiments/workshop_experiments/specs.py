@@ -20,12 +20,21 @@ from aieng.forecasting.evaluation import MultiTargetBacktestSpec
 #: Directory holding the committed workshop spec YAMLs.
 SPECS_DIR = Path(__file__).resolve().parent / "specs"
 
-#: The canonical workshop specs, in method-ladder-friendly order.
+#: The canonical S&P 500 workshop specs, in method-ladder-friendly order.
 SPEC_NAMES: tuple[str, ...] = (
     "sp500_ws_smoke",
     "sp500_ws_backtest_2025_weekly",
     "sp500_ws_eval_2026_weekly",
     "sp500_ws_daily_2025_2026",
+)
+
+#: The Canada-focused S&P/TSX Composite workshop specs (the deployed primary
+#: target), mirroring the S&P 500 spec conventions rung-for-rung.
+TSX_SPEC_NAMES: tuple[str, ...] = (
+    "tsx_ws_smoke",
+    "tsx_ws_backtest_2025_weekly",
+    "tsx_ws_eval_2026_weekly",
+    "tsx_ws_daily_2025_2026",
 )
 
 
@@ -44,7 +53,8 @@ def spec_path(name_or_path: str) -> Path:
     resolved = SPECS_DIR / stem
     if not resolved.exists():
         raise FileNotFoundError(
-            f"No workshop spec {name_or_path!r} (looked for {resolved}). Known: {', '.join(SPEC_NAMES)}."
+            f"No workshop spec {name_or_path!r} (looked for {resolved}). "
+            f"Known: {', '.join((*SPEC_NAMES, *TSX_SPEC_NAMES))}."
         )
     return resolved
 
@@ -73,6 +83,7 @@ def origin_count(spec: MultiTargetBacktestSpec) -> int:
 __all__ = [
     "SPECS_DIR",
     "SPEC_NAMES",
+    "TSX_SPEC_NAMES",
     "load_spec",
     "origin_count",
     "spec_path",

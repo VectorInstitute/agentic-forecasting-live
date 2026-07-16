@@ -1,10 +1,16 @@
-# Deployed ladder for the live daily S&P 500 forecasting harness (stage 2b).
+# Deployed ladder for the live daily S&P/TSX Composite forecasting harness.
 #
-# One run per trading day, shortly after the US market close: every predictor
-# below forecasts S&P 500 cumulative log returns at h = 1 / 5 / 21 business days
-# from today's close. Predictions + rationales are written as schema-conforming
-# records into the append-only log; resolutions and scores land as horizons
-# mature; the monitor aggregates are regenerated; everything is committed+pushed.
+# The Vector live experiment is Canada-focused: one run per trading day, shortly
+# after the Toronto market close, every predictor below forecasts S&P/TSX
+# Composite (^GSPTSE) cumulative log returns at h = 1 / 5 / 21 business days from
+# today's close. Predictions + rationales are written as schema-conforming records
+# into the append-only log; resolutions and scores land as horizons mature; the
+# monitor aggregates are regenerated; everything is committed+pushed.
+#
+# The S&P 500 machinery is retained for retrospective use (registry `naive`/
+# `agent_*`/... methods, sp500_ws_* specs); it is simply not the deployed live
+# ladder any more. To redeploy S&P 500, set `target_family: sp500`, `target_ticker:
+# ^GSPC`, and swap the `tsx_*` registry methods below for their bare counterparts.
 #
 # Model lists are CONFIG, not code — edit the `models:` arrays to change the
 # deployed matrix. The registry-method -> schema-method-enum binding lives in
@@ -13,7 +19,10 @@
 schema_version: "1.1.0"
 
 # Target and horizons ------------------------------------------------------
-target_ticker: "^GSPC"
+target_ticker: "^GSPTSE"
+# Target family prefix: drives the `{family}_logret_{h}b` task ids and the
+# `{family}_<method>` predictor join keys. `tsx` is the deployed experiment.
+target_family: "tsx"
 horizons: [1, 5, 21]
 
 # Submission timing --------------------------------------------------------
@@ -35,24 +44,24 @@ paths:
   log_dir: "workshop_experiments/workshop_experiments/live/log"
   aggregates_dir: "monitor/site/data"
   # Committed smoke predictions used as fake "today" outputs by `--simulate`.
-  smoke_store: "workshop_experiments/workshop_experiments/data/predictions/sp500_ws_smoke"
+  smoke_store: "workshop_experiments/workshop_experiments/data/predictions/tsx_ws_smoke"
 
-# The deployed predictor ladder -------------------------------------------
+# The deployed predictor ladder (S&P/TSX Composite) ------------------------
 predictors:
   # Free, local, API-free methods. Each maps to a distinct (schema_method,
   # model_label) pair so the leaderboard keeps them as separate rows.
   conventional:
-    - method: naive
-    - method: ets
-    - method: kalman
-    - method: autoarima
-    - method: lightgbm
-    - method: lightgbm_cov
+    - method: tsx_naive
+    - method: tsx_ets
+    - method: tsx_kalman
+    - method: tsx_autoarima
+    - method: tsx_lightgbm
+    - method: tsx_lightgbm_cov
 
   # LLM-Process quantile-grid variants: one structured completion per origin.
   # `_cov` folds the covariate panel into the prompt. Runs across every model.
   llmp:
-    methods: [llmp_qgrid, llmp_qgrid_cov]
+    methods: [tsx_llmp_qgrid, tsx_llmp_qgrid_cov]
     models:
       - gemini-3.1-flash-lite-preview
       - gemini-3.5-flash
@@ -64,7 +73,7 @@ predictors:
   # News-grounded and code-executing analyst agents. Deliberately a narrower
   # model set — agents are the most expensive rungs.
   agent:
-    methods: [agent_news, agent_code]
+    methods: [tsx_agent_news, tsx_agent_code]
     models:
       - gemini-3.5-flash
       - claude-sonnet-4-6

@@ -47,6 +47,19 @@ SCHEMA_METHOD: dict[str, str] = {
     "llmp_qgrid_cov": "llm_process_cov",
     "agent_news": "agent_news",
     "agent_code": "agent_code",
+    # TSX (Canada-focused) rungs map to the SAME target-agnostic method enum
+    # values (schema 1.1.0); the target family is carried by the predictor_id
+    # prefix and the task ids, not by the method enum.
+    "tsx_naive": "naive",
+    "tsx_ets": "ets",
+    "tsx_kalman": "kalman",
+    "tsx_autoarima": "autoarima",
+    "tsx_lightgbm": "lightgbm",
+    "tsx_lightgbm_cov": "lightgbm_cov",
+    "tsx_llmp_qgrid": "llm_process",
+    "tsx_llmp_qgrid_cov": "llm_process_cov",
+    "tsx_agent_news": "agent_news",
+    "tsx_agent_code": "agent_code",
     # Stage-2c adaptive twins — same data-contract method enum values (1.1.0).
     "adaptive_frozen": "adaptive_frozen",
     "adaptive_learning": "adaptive_learning",
@@ -99,6 +112,11 @@ class LiveConfig:
 
     schema_version: str
     target_ticker: str
+    #: Target family prefix (``tsx`` for the deployed Canada-focused experiment,
+    #: ``sp500`` for the retrospective S&P 500 machinery). Drives both the target
+    #: task ids (``{family}_logret_{h}b``) and the ``{family}_<method>`` predictor
+    #: join keys, so no two families' records ever collide.
+    target_family: str
     horizons: tuple[int, ...]
     submission_time_local: str
     timezone: str
@@ -117,7 +135,7 @@ class LiveConfig:
 
     def task_id_for_horizon(self, horizon: int) -> str:
         """Return the workshop target/task id for a business-day *horizon*."""
-        return f"sp500_logret_{horizon}b"
+        return f"{self.target_family}_logret_{horizon}b"
 
     def by_group(self, group: str) -> list[LivePredictor]:
         """Return the configured predictors in one scope *group*."""
@@ -131,11 +149,11 @@ class LiveConfig:
         raise KeyError(f"no twin {twin_id!r} configured (have: {[t.twin_id for t in self.twins]})")
 
 
-def _expand_conventional(entries: list[dict[str, Any]]) -> list[LivePredictor]:
+def _expand_conventional(entries: list[dict[str, Any]], family: str) -> list[LivePredictor]:
     """Expand the conventional block into :class:`LivePredictor` rungs.
 
     Conventional rungs carry ``model = None`` (they consume no model) and the
-    contract's ``sp500_<method>`` predictor-id convention.
+    contract's ``{family}_<method>`` predictor-id convention.
     """
     out: list[LivePredictor] = []
     for entry in entries:
@@ -147,19 +165,19 @@ def _expand_conventional(entries: list[dict[str, Any]]) -> list[LivePredictor]:
                 model=None,
                 schema_method=schema_method,
                 model_label=None,
-                predictor_id=f"sp500_{schema_method}",
+                predictor_id=f"{family}_{schema_method}",
                 group="conventional",
             )
         )
     return out
 
 
-def _expand_api(block: dict[str, Any], group: str) -> list[LivePredictor]:
+def _expand_api(block: dict[str, Any], group: str, family: str) -> list[LivePredictor]:
     """Expand an API (llmp/agent) method x model matrix into rungs.
 
     API rungs carry the plain backing-model id as their public ``model`` label
     (no variant suffixes — the covariate variant is expressed by the method)
-    and the contract's ``sp500_<method>__<model>`` predictor-id convention.
+    and the contract's ``{family}_<method>__<model>`` predictor-id convention.
     """
     out: list[LivePredictor] = []
     methods = list(block.get("methods", []))
@@ -173,7 +191,7 @@ def _expand_api(block: dict[str, Any], group: str) -> list[LivePredictor]:
                     model=model,
                     schema_method=schema_method,
                     model_label=model,
-                    predictor_id=f"sp500_{schema_method}__{model}",
+                    predictor_id=f"{family}_{schema_method}__{model}",
                     group=group,
                 )
             )
@@ -187,7 +205,7 @@ def _expand_api(block: dict[str, Any], group: str) -> list[LivePredictor]:
 TWIN_IDS: tuple[str, ...] = ("adaptive_frozen", "adaptive_learning")
 
 
-def _expand_twins(block: dict[str, Any]) -> tuple[LivePredictor, ...]:
+def _expand_twins(block: dict[str, Any], family: str) -> tuple[LivePredictor, ...]:
     """Expand the optional ``twins:`` block into the two twin rungs.
 
     The block carries a single ``model`` (both twins share it — the only degree
@@ -207,7 +225,7 @@ def _expand_twins(block: dict[str, Any]) -> tuple[LivePredictor, ...]:
                 model=model,
                 schema_method=schema_method,
                 model_label=model,
-                predictor_id=f"sp500_{schema_method}__{model}",
+                predictor_id=f"{family}_{schema_method}__{model}",
                 group="twins",
                 twin_id=twin_id,
             )
@@ -215,17 +233,18 @@ def _expand_twins(block: dict[str, Any]) -> tuple[LivePredictor, ...]:
     return tuple(out)
 
 
-def expand_predictors(raw: dict[str, Any]) -> tuple[LivePredictor, ...]:
+def expand_predictors(raw: dict[str, Any], family: str = "sp500") -> tuple[LivePredictor, ...]:
     """Expand the ``predictors:`` block into the full, ordered ladder.
 
     Order is conventional, then LLMP, then agents — the fixed method order the
-    monitor renders in. Raises ``ValueError`` if two rungs would collide on
-    ``predictor_id`` or on ``(schema_method, model_label)``.
+    monitor renders in. ``family`` is the target-family prefix baked into every
+    rung's ``predictor_id`` join key. Raises ``ValueError`` if two rungs would
+    collide on ``predictor_id`` or on ``(schema_method, model_label)``.
     """
     predictors: list[LivePredictor] = []
-    predictors += _expand_conventional(raw.get("conventional", []))
-    predictors += _expand_api(raw.get("llmp", {}), "llmp")
-    predictors += _expand_api(raw.get("agent", {}), "agent")
+    predictors += _expand_conventional(raw.get("conventional", []), family)
+    predictors += _expand_api(raw.get("llmp", {}), "llmp", family)
+    predictors += _expand_api(raw.get("agent", {}), "agent", family)
 
     ids = [p.predictor_id for p in predictors]
     if len(set(ids)) != len(ids):
@@ -277,9 +296,11 @@ def load_config(path: Path | str | None = None, *, repo_root: Path | None = None
     submission = raw["submission"]
     retry = raw["retry"]
     paths = raw["paths"]
+    family = str(raw.get("target_family", "sp500"))
     return LiveConfig(
         schema_version=str(raw["schema_version"]),
         target_ticker=str(raw["target_ticker"]),
+        target_family=family,
         horizons=tuple(int(h) for h in raw["horizons"]),
         submission_time_local=str(submission["time_local"]),
         timezone=str(submission["timezone"]),
@@ -291,8 +312,8 @@ def load_config(path: Path | str | None = None, *, repo_root: Path | None = None
         log_dir=_resolve_path(root, paths["log_dir"]),
         aggregates_dir=_resolve_path(root, paths["aggregates_dir"]),
         smoke_store=_resolve_path(root, paths["smoke_store"]),
-        predictors=expand_predictors(raw["predictors"]),
-        twins=_expand_twins(raw.get("twins", {})),
+        predictors=expand_predictors(raw["predictors"], family),
+        twins=_expand_twins(raw.get("twins", {}), family),
         gate_params=dict(raw.get("gates", {})),
     )
 

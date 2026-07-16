@@ -31,11 +31,12 @@ def test_ladder_groups_have_expected_counts() -> None:
 
 
 def test_predictor_ids_are_unique() -> None:
-    """Every rung has a distinct, stable sp500_ predictor_id join key."""
+    """Every rung has a distinct, stable tsx_ predictor_id key (deployed family)."""
     config = load_config()
     ids = [p.predictor_id for p in config.predictors]
     assert len(set(ids)) == len(ids)
-    assert all(pid.startswith("sp500_") for pid in ids)
+    assert config.target_family == "tsx"
+    assert all(pid.startswith("tsx_") for pid in ids)
 
 
 def test_leaderboard_cell_keys_are_unique() -> None:
@@ -82,8 +83,8 @@ def test_conventional_rungs_carry_null_model() -> None:
 def test_covariate_llmp_variant_is_distinct_cell() -> None:
     """The _cov variant is a distinct method; both carry the plain model id."""
     config = load_config()
-    base = next(p for p in config.predictors if p.predictor_id == "sp500_llm_process__gemini-3.5-flash")
-    cov = next(p for p in config.predictors if p.predictor_id == "sp500_llm_process_cov__gemini-3.5-flash")
+    base = next(p for p in config.predictors if p.predictor_id == "tsx_llm_process__gemini-3.5-flash")
+    cov = next(p for p in config.predictors if p.predictor_id == "tsx_llm_process_cov__gemini-3.5-flash")
     assert base.schema_method == "llm_process"
     assert cov.schema_method == "llm_process_cov"
     assert base.model_label == cov.model_label == "gemini-3.5-flash"
@@ -96,10 +97,10 @@ def test_agent_rungs_use_per_rung_methods() -> None:
     assert {p.schema_method for p in agents} == {"agent_news", "agent_code"}
     assert all(p.model_label == p.model for p in agents)
     assert {p.predictor_id for p in agents} == {
-        "sp500_agent_news__gemini-3.5-flash",
-        "sp500_agent_news__claude-sonnet-4-6",
-        "sp500_agent_code__gemini-3.5-flash",
-        "sp500_agent_code__claude-sonnet-4-6",
+        "tsx_agent_news__gemini-3.5-flash",
+        "tsx_agent_news__claude-sonnet-4-6",
+        "tsx_agent_code__gemini-3.5-flash",
+        "tsx_agent_code__claude-sonnet-4-6",
     }
 
 
