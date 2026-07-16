@@ -13,8 +13,20 @@ from workshop_experiments.live.gitops import commit_message, stage_and_commit
 
 
 def test_commit_message_format() -> None:
-    """The daily commit subject matches the sanctioned format."""
-    assert commit_message("2026-07-15", 22, 12) == "live: 2026-07-15 predictions (22 methods) / resolutions (12)"
+    """The daily commit subject matches the sanctioned format.
+
+    The UTC submission timestamp is appended after ``@`` as a human-readable
+    cross-check against the attestation Release's server-set ``created_at``.
+    """
+    assert commit_message("2026-07-15", 22, 12, "2026-07-15T21:32:04Z") == (
+        "live: 2026-07-15 predictions (22 methods) / resolutions (12) @ 2026-07-15T21:32:04Z"
+    )
+
+
+def test_commit_message_includes_submission_timestamp() -> None:
+    """The exact UTC submission timestamp appears verbatim in the subject."""
+    subject = commit_message("2026-01-02", 6, 0, "2026-01-02T22:05:59Z")
+    assert subject.endswith(" @ 2026-01-02T22:05:59Z")
 
 
 def _init_repo(root: Path) -> None:

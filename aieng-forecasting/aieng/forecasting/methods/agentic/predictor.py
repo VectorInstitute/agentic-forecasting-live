@@ -225,6 +225,10 @@ class AgentPredictor(Predictor):
                         "model": str(built_agent.model),
                         "output_modality": self._forecast_output_modality,
                     },
+                    # Thread the graceful tool-iteration cap (if the config opts
+                    # in) so a runaway analysis loop ends with a final submit
+                    # turn instead of an unbounded run.
+                    max_tool_iterations=agent_config.max_tool_iterations,
                 ),
             )
         else:

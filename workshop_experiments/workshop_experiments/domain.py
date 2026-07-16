@@ -41,6 +41,7 @@ from aieng.forecasting.methods.agentic.domain import (
     DomainConfig,
     build_analyst_config,
     render_analyst_instruction,
+    render_code_exec_supplement,
 )
 from aieng.forecasting.methods.agentic.history import compress_history
 from aieng.forecasting.models import ADVANCED_MODEL, LITE_MODEL
@@ -214,6 +215,14 @@ between calls. Never make a preliminary connectivity/import check — assume the
 environment works and produce your complete result in the first call.\
 """
 
+#: Generous default graceful cap on tool cycles for the live code-executing
+#: agent. Trace analysis of the 3-origin smoke found the agent looping 30+ times
+#: with ~2-minute model generations over a growing context (up to ~26 min wall);
+#: this bounds the loop so a runaway run still ends with a valid forecast (see
+#: :attr:`AgentConfig.max_tool_iterations`). Conventional/news paths are
+#: unaffected — only the code config opts in.
+_CODE_AGENT_MAX_TOOL_ITERATIONS = 12
+
 
 # ---------------------------------------------------------------------------
 # AgentConfig factories
@@ -271,12 +280,19 @@ def build_sp500_code_config(
     verifier_model: str = ADVANCED_MODEL,
     verifier_max_attempts: int = 3,
     verifier_confidence_threshold: int = 8,
+    max_tool_iterations: int | None = _CODE_AGENT_MAX_TOOL_ITERATIONS,
 ) -> AgentConfig:
     """Build the code-executing analyst :class:`AgentConfig` for the S&P 500.
 
     Combines bounded, cutoff-aware Google Search with an E2B Python sandbox so
     the agent can run its own statistical analysis over the return history
     before forecasting.
+
+    The instruction appends the shared code-execution *workstyle* supplement
+    (:func:`~aieng.forecasting.methods.agentic.domain.render_code_exec_supplement`)
+    so the agent runs short, focused analysis bursts, and opts into a generous
+    graceful tool-iteration cap so a runaway loop still ends with a valid
+    forecast.
 
     Parameters
     ----------
@@ -293,11 +309,15 @@ def build_sp500_code_config(
         Maximum search-then-verify attempts before the failure sentinel.
     verifier_confidence_threshold : int
         Minimum verifier confidence (1-10) required to accept a result.
+    max_tool_iterations : int or None, default=12
+        Graceful cap on tool cycles before the agent is asked to submit with
+        what it has (see :attr:`AgentConfig.max_tool_iterations`). Pass ``None``
+        to disable the cap.
     """
     return build_analyst_config(
         SP500_DOMAIN,
         name_suffix="code",
-        instruction=_SP500_ANALYST_INSTRUCTION + _CODE_EXEC_SUPPLEMENT,
+        instruction=_SP500_ANALYST_INSTRUCTION + _CODE_EXEC_SUPPLEMENT + render_code_exec_supplement(SP500_DOMAIN),
         model=model,
         max_output_tokens=max_output_tokens,
         context_retrieval=ContextRetrievalConfig(
@@ -309,6 +329,7 @@ def build_sp500_code_config(
             verifier_confidence_threshold=verifier_confidence_threshold,
         ),
         code_execution=CodeExecutionConfig(enabled=True),
+        max_tool_iterations=max_tool_iterations,
     )
 
 

@@ -11,6 +11,7 @@ raises :class:`ImportError`.
 
 from __future__ import annotations
 
+import logging
 import types as py_types
 from typing import Any
 
@@ -19,6 +20,7 @@ from pydantic import BaseModel, Field
 
 try:
     from google.adk.agents.base_agent import BaseAgent
+    from google.adk.agents.invocation_context import LlmCallsLimitExceededError
     from google.adk.agents.run_config import RunConfig
     from google.adk.runners import InMemoryRunner
     from google.genai import types as genai_types
@@ -26,6 +28,19 @@ except ModuleNotFoundError as exc:
     raise ImportError(
         "This module requires the 'agentic' extra. Install it with 'pip install aieng-forecasting[agentic]'."
     ) from exc
+
+
+logger = logging.getLogger(__name__)
+
+#: Default prompt for the graceful final turn issued when the tool-iteration
+#: cap is reached. It tells the agent to stop analysing and submit immediately
+#: with whatever it already has, so a capped run still returns a valid forecast.
+DEFAULT_FINAL_TURN_INSTRUCTION = (
+    "You have reached the analysis budget for this forecast. Stop running tools now. "
+    "Using only the results you already have, submit your final forecast immediately by "
+    "calling `set_model_response` with the complete structured JSON. Do not run any more "
+    "code or searches."
+)
 
 
 #: Defensive cap on the number of tool calls captured per run. The public
@@ -195,6 +210,26 @@ class AdkTextRunnerConfig(BaseModel):
         description=(
             "Optional ``version`` for independently versioned parts of the app (e.g. agent "
             "revision). Use short US-ASCII values suitable for span attributes."
+        ),
+    )
+    max_tool_iterations: int | None = Field(
+        default=None,
+        ge=1,
+        description=(
+            "Graceful cap on tool-calling model generations per run. When set, the run's "
+            "``RunConfig.max_llm_calls`` is bounded to this value; if the agent hits the "
+            "limit mid-loop, the runner catches ADK's ``LlmCallsLimitExceededError`` and "
+            "issues one final, uncapped turn (``final_turn_instruction``) asking the agent "
+            "to submit its forecast with what it has — so a capped run still yields a valid "
+            "structured output instead of a hard kill. ``None`` (default) disables the cap. "
+            "Ignored when the caller passes an explicit ``run_config``."
+        ),
+    )
+    final_turn_instruction: str = Field(
+        default=DEFAULT_FINAL_TURN_INSTRUCTION,
+        description=(
+            "User message sent for the graceful final turn after ``max_tool_iterations`` is "
+            "reached. Should instruct the agent to stop using tools and submit immediately."
         ),
     )
 
@@ -395,12 +430,25 @@ class AdkTextRunner:
         tool_calls: list[dict[str, str]] = []
         self._last_tool_calls = tool_calls
 
-        async def drain_run() -> str:
+        # Graceful tool-iteration cap. We bound the main turn with ADK's
+        # ``max_llm_calls`` (one LLM call per tool-calling generation). ADK
+        # raises ``LlmCallsLimitExceededError`` *before* the next LLM call — at
+        # that point the prior tool responses are already recorded, so the
+        # session is in a clean state. We catch it and issue one final,
+        # UNCAPPED turn asking the agent to submit, reusing the same session so
+        # it keeps all of its analysis context. The caller's explicit
+        # ``run_config`` (if any) always wins and disables this behaviour.
+        cap = self.config.max_tool_iterations
+        capped_run_config = run_config
+        if run_config is None and cap is not None:
+            capped_run_config = RunConfig(max_llm_calls=cap)
+
+        async def drain_turn(message: genai_types.Content, *, turn_run_config: RunConfig | None) -> str:
             async for event in self._runner.run_async(
                 user_id=user_id,
                 session_id=session_id,
-                new_message=content,
-                run_config=run_config,
+                new_message=message,
+                run_config=turn_run_config,
             ):
                 _collect_tool_calls(event, tool_calls)
                 if event.is_final_response() and event.content and event.content.parts:
@@ -415,7 +463,22 @@ class AdkTextRunner:
             state under SMR_STATE_KEY.  We prefer that over the model's
             subsequent "Task complete." text response.
             """
-            text = await drain_run()
+            try:
+                text = await drain_turn(content, turn_run_config=capped_run_config)
+            except LlmCallsLimitExceededError:
+                # Cap reached: give the agent one final, uncapped turn to submit
+                # with what it has, rather than failing the prediction outright.
+                logger.info(
+                    "Tool-iteration cap (%s) reached; issuing graceful final submit turn.",
+                    cap,
+                )
+                final_message = genai_types.Content(
+                    role="user",
+                    parts=[genai_types.Part(text=self.config.final_turn_instruction)],
+                )
+                # Uncapped final turn: run_config default (max_llm_calls=500) is
+                # a generous safety net so the submit turn itself can complete.
+                text = await drain_turn(final_message, turn_run_config=run_config or RunConfig())
             session = await self._runner.session_service.get_session(
                 app_name=self.config.app_name,
                 user_id=user_id,

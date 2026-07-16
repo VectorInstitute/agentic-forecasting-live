@@ -341,6 +341,47 @@ def render_adaptive_analyst_instruction(domain: DomainConfig) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Code-execution workstyle supplement
+# ---------------------------------------------------------------------------
+
+
+def render_code_exec_supplement(domain: DomainConfig) -> str:
+    """Render the shared code-execution *workstyle* supplement.
+
+    Appended to a code-executing analyst's instruction (see
+    :func:`build_analyst_config`'s ``code_execution`` callers).  It governs *how*
+    to use the sandbox economically, not *what* the agent may look at: every
+    ``run_code`` call is preceded by a slow model generation over an
+    ever-growing context, so a handful of well-planned scripts finish far sooner
+    than a long chain of exploratory ones.  This is purely workstyle guidance —
+    it never restricts or alters the data the agent can access.
+
+    Kept in the shared library (rather than each implementation's hand-written
+    supplement) so every code-exec domain inherits the same discipline; the oil
+    heritage lives in ``energy_oil_forecasting.analyst_agent`` as
+    ``_CODE_EXEC_SKILLS_SUPPLEMENT``.
+    """
+    return (
+        "\n\n## Code-execution workstyle\n\n"
+        "Code execution is for **short, focused bursts** of time-series analysis — "
+        f"diagnostics, rolling statistics, empirical forward-return distributions, and "
+        f"simple calibration checks over the {domain.target_short_name} series you already "
+        "have. It is **not** for fitting heavy ML models or running full experiments: for a "
+        "single-origin forecast those cost far more time than they add.\n\n"
+        "**Plan the analysis first, then batch it.** Decide the handful of quantities you "
+        "actually need, and group related computations into a small number of "
+        "self-contained scripts — aim for roughly **4–6 `run_code` executions per "
+        "forecast**, not dozens. A few well-chosen scripts beat a long exploratory chain, "
+        "because each execution waits on a fresh model generation over your growing "
+        "context.\n\n"
+        "**Print compact numeric summaries** — the specific statistics, quantiles, or "
+        "regime labels you will reason from. Never dump raw or near-raw data frames: long "
+        "outputs re-enter your context and slow every subsequent step. What you choose to "
+        "compute is still up to you — keep it lean."
+    )
+
+
+# ---------------------------------------------------------------------------
 # Config builders
 # ---------------------------------------------------------------------------
 
@@ -356,6 +397,7 @@ def build_analyst_config(
     skills_dirs: Sequence[Path] = (),
     function_tools: Sequence[Callable[..., Any]] = (),
     max_output_tokens: int | None = None,
+    max_tool_iterations: int | None = None,
 ) -> AgentConfig:
     """Assemble a stateless analyst :class:`AgentConfig` for *domain*.
 
@@ -363,6 +405,12 @@ def build_analyst_config(
     Only the knobs a variant actually uses need be passed; the rest fall back to
     :class:`AgentConfig` defaults so the resulting config matches a hand-written
     one field-for-field.
+
+    ``max_tool_iterations`` is a defensive, graceful bound on how many tool
+    cycles the agent runs before it is asked to submit with what it has (see
+    :attr:`AgentConfig.max_tool_iterations`).  It defaults to ``None`` (no cap),
+    so existing call sites are unaffected; a code-executing variant opts in with
+    a generous value to stop runaway analysis loops.
     """
     return AgentConfig(
         name=f"{domain.analyst_agent_name_prefix}_{name_suffix}",
@@ -373,6 +421,7 @@ def build_analyst_config(
         skills_dirs=tuple(skills_dirs),
         function_tools=tuple(function_tools),
         max_output_tokens=max_output_tokens,
+        max_tool_iterations=max_tool_iterations,
     )
 
 

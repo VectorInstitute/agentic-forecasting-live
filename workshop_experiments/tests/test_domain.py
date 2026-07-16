@@ -73,3 +73,27 @@ def test_agent_configs_build_and_are_oil_free() -> None:
     assert code.code_execution.enabled
     _assert_no_oil_terms(news.instruction)
     _assert_no_oil_terms(code.instruction)
+
+
+def test_code_config_instruction_carries_workstyle_guidance() -> None:
+    """The code-exec config's instruction carries the burst/batch workstyle guidance."""
+    code = build_sp500_code_config()
+    text = code.instruction
+    assert "Code-execution workstyle" in text
+    assert "short, focused bursts" in text
+    assert "4–6" in text  # batching target
+    assert "compact numeric summaries" in text.lower()
+
+
+def test_workstyle_guidance_is_code_config_only() -> None:
+    """The workstyle guidance is scoped to code execution — not the news config."""
+    news = build_sp500_news_config()
+    assert "Code-execution workstyle" not in news.instruction
+
+
+def test_code_config_opts_into_graceful_cap() -> None:
+    """The code config opts into a generous tool-iteration cap; news does not."""
+    assert build_sp500_code_config().max_tool_iterations == 12
+    assert build_sp500_news_config().max_tool_iterations is None
+    # Callers can disable the cap explicitly.
+    assert build_sp500_code_config(max_tool_iterations=None).max_tool_iterations is None

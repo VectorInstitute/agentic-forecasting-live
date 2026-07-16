@@ -1,0 +1,105 @@
+name: attest live log
+
+# Tamper-evident submission timestamps for the live forecast log.
+#
+# The paper claims the commit history of this public fork proves *when* each
+# daily prediction was submitted. Git author/committer dates are client-supplied
+# and trivially forgeable (`git commit --date=...`), so they cannot be the trust
+# anchor. This workflow makes GitHub the timestamping authority: on every push to
+# `main` that touches the append-only live log, it cuts a lightweight GitHub
+# Release. A Release's `created_at` is set server-side by GitHub at creation and
+# cannot be back-dated by a client — that server timestamp is the anchor.
+#
+# An auditor compares the Release `created_at` against the `submission_timestamp`
+# inside the newly-committed log record: they should agree to within minutes.
+# See workshop_experiments/workshop_experiments/live/ops/HONESTY.md for the full
+# trust model and its limitations.
+#
+# The `paths:` filter mirrors `log_dir` in
+# workshop_experiments/workshop_experiments/live/live_config.yaml.
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - workshop_experiments/workshop_experiments/live/log/**
+
+# Least privilege: creating a Release (and its tag) needs contents: write only.
+permissions:
+  contents: write
+
+# Never run two attestations for the same head concurrently.
+concurrency:
+  group: attest-live-log-${{ github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  attest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.0
+        with:
+          # Need the previous commit to diff which log files changed.
+          fetch-depth: 2
+
+      - name: Create attestation release
+        env:
+          # gh CLI authenticates via GITHUB_TOKEN.
+          GH_TOKEN: ${{ github.token }}
+          BEFORE_SHA: ${{ github.event.before }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          LOG_PATH="workshop_experiments/workshop_experiments/live/log"
+          SHORT_SHA="$(git rev-parse --short=7 "$HEAD_SHA")"
+          UTC_DATE="$(date -u +%Y-%m-%d)"
+          TAG="attest/${UTC_DATE}-${SHORT_SHA}"
+
+          # Idempotent: if this attestation tag already exists, do nothing. This
+          # makes re-runs safe and avoids duplicate releases for the same head.
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists; skipping."
+            exit 0
+          fi
+
+          # Which log files changed in this push? Diff against the pre-push tip
+          # when we have it; otherwise fall back to the head commit alone (first
+          # push to a branch, or a force-push, reports an all-zero before-sha).
+          ZERO_SHA="0000000000000000000000000000000000000000"
+          if [ -n "${BEFORE_SHA:-}" ] && [ "$BEFORE_SHA" != "$ZERO_SHA" ] \
+             && git cat-file -e "${BEFORE_SHA}^{commit}" 2>/dev/null; then
+            CHANGED="$(git diff --name-only "$BEFORE_SHA" "$HEAD_SHA" -- "$LOG_PATH" || true)"
+          else
+            CHANGED="$(git show --name-only --pretty=format: "$HEAD_SHA" -- "$LOG_PATH" | sed '/^$/d' || true)"
+          fi
+
+          # Assemble the release body. Server-side `created_at` (visible in the
+          # release metadata / API) is the trust anchor; the head SHA and file
+          # list below are the human-readable cross-check.
+          {
+            echo "Server-timestamped attestation of live forecast-log submission."
+            echo
+            echo "- **Head commit:** \`${HEAD_SHA}\`"
+            echo "- **Attested at (UTC date):** ${UTC_DATE}"
+            echo
+            echo "The trust anchor is this Release's server-set \`created_at\`, not any"
+            echo "git author/committer date. See"
+            echo "\`workshop_experiments/workshop_experiments/live/ops/HONESTY.md\`."
+            echo
+            echo "**Changed log files:**"
+            echo
+            if [ -n "$CHANGED" ]; then
+              echo "$CHANGED" | sed 's/^/- `/; s/$/`/'
+            else
+              echo "- (none detected under \`${LOG_PATH}\`)"
+            fi
+          } > release_body.md
+
+          gh release create "$TAG" \
+            --title "Live log attestation ${UTC_DATE} (${SHORT_SHA})" \
+            --notes-file release_body.md \
+            --target "$HEAD_SHA"
+
+          echo "Created release $TAG."
