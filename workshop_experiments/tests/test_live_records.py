@@ -139,6 +139,42 @@ def test_curated_trace_summary_keeps_only_tool_and_title() -> None:
     assert summary == {"tool_calls": [{"tool": "search_web", "query_title": "Fed guidance"}]}
 
 
+def test_curated_trace_summary_reads_capture_title_key() -> None:
+    """The agent-runtime ``title`` key maps to the schema's ``query_title`` field."""
+    metadata = {
+        "tool_calls": [
+            {"tool": "search_web", "title": "Fed rate decision"},
+            {"tool": "run_code", "title": "python (3 lines)"},
+        ]
+    }
+    summary = curated_trace_summary(metadata)
+    assert summary == {
+        "tool_calls": [
+            {"tool": "search_web", "query_title": "Fed rate decision"},
+            {"tool": "run_code", "query_title": "python (3 lines)"},
+        ]
+    }
+
+
+def test_prediction_record_with_tool_calls_validates_against_schema() -> None:
+    """A record built from tool_calls metadata carries them and stays schema-valid."""
+    config = load_config()
+    calls = [{"tool": "search_web", "title": "Fed rate decision December"}]
+    preds = {
+        h: _prediction(
+            config.task_id_for_horizon(h),
+            _symmetric_grid(),
+            metadata={"rationale": "steady", "tool_calls": calls},
+        )
+        for h in config.horizons
+    }
+    record = build_prediction_record(_live(), preds, origin=ORIGIN, submission_timestamp="2025-10-20T21:30:00Z")
+    assert record["curated_trace_summary"] == {
+        "tool_calls": [{"tool": "search_web", "query_title": "Fed rate decision December"}]
+    }
+    assert validate("prediction", record) == []
+
+
 def test_group_predictions_by_horizon_uses_task_binding() -> None:
     """Predictions are keyed to horizons via the task-id binding."""
     config = load_config()

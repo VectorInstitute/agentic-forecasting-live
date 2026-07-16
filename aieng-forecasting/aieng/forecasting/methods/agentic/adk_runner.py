@@ -28,6 +28,85 @@ except ModuleNotFoundError as exc:
     ) from exc
 
 
+#: Defensive cap on the number of tool calls captured per run. The public
+#: dashboard only needs a representative summary, so an unbounded transcript is
+#: neither useful nor safe to surface.
+_MAX_TOOL_CALLS = 50
+
+#: Maximum length of a curated tool-call title (e.g. a search query).
+_TOOL_TITLE_MAX_CHARS = 120
+
+#: Tool names treated as code execution for title curation. The E2B-backed
+#: ``CodeInterpreter`` registers its callable as ``run_code``; the others are
+#: defensive aliases so a renamed code tool still gets a body-free label.
+_CODE_EXEC_TOOLS = frozenset({"run_code", "execute_code", "code_execution"})
+
+
+def _curate_tool_call_title(tool_name: str, args: dict[str, Any]) -> str:
+    """Return a short, PUBLIC-safe title for one tool invocation.
+
+    This is the curation policy, enforced at *capture* time so that no raw
+    tool payload is ever retained beyond this point:
+
+    * ``search_web`` -> the query string, truncated to
+      :data:`_TOOL_TITLE_MAX_CHARS` characters.
+    * code execution (see :data:`_CODE_EXEC_TOOLS`) -> a length label such as
+      ``"python (N lines)"``; the code body is never retained.
+    * any other tool -> the tool name (a stable, non-sensitive label).
+
+    Retrieved article text is never emitted, and source URLs are omitted
+    entirely.
+
+    Parameters
+    ----------
+    tool_name : str
+        The invoked tool's name.
+    args : dict of str to Any
+        The tool-call arguments as reported by the model.
+
+    Returns
+    -------
+    str
+        A curated, human-readable title safe to publish.
+    """
+    if tool_name == "search_web":
+        query = args.get("query")
+        return query[:_TOOL_TITLE_MAX_CHARS] if isinstance(query, str) else ""
+    if tool_name in _CODE_EXEC_TOOLS:
+        code = args.get("code")
+        if isinstance(code, str) and code:
+            return f"python ({code.count(chr(10)) + 1} lines)"
+        return "python"
+    return tool_name
+
+
+def _collect_tool_calls(event: Any, sink: list[dict[str, str]]) -> None:
+    """Append curated ``{"tool", "title"}`` entries for *event*'s tool calls.
+
+    Inspects the event's content parts for ``function_call`` payloads and, for
+    each one carrying a real string name, records a curated summary in *sink*.
+    The scan is deliberately defensive: events without a proper ``parts`` list
+    (e.g. intermediate/non-content events) are skipped, and *sink* is never
+    grown past :data:`_MAX_TOOL_CALLS`.
+    """
+    if len(sink) >= _MAX_TOOL_CALLS:
+        return
+    content = getattr(event, "content", None)
+    parts = getattr(content, "parts", None)
+    if not isinstance(parts, (list, tuple)):
+        return
+    for part in parts:
+        function_call = getattr(part, "function_call", None)
+        name = getattr(function_call, "name", None)
+        if not isinstance(name, str) or not name:
+            continue
+        args = getattr(function_call, "args", None)
+        args = args if isinstance(args, dict) else {}
+        sink.append({"tool": name, "title": _curate_tool_call_title(name, args)})
+        if len(sink) >= _MAX_TOOL_CALLS:
+            return
+
+
 class AdkTextRunnerConfig(BaseModel):
     """Configuration for :class:`AdkTextRunner`.
 
@@ -161,6 +240,9 @@ class AdkTextRunner:
         self._conversation_session_by_user: dict[str, str] = {}
         # Trace id captured during the most recent traced run (see ``last_trace_id``).
         self._last_trace_id: str | None = None
+        # Curated tool-call summaries captured during the most recent run
+        # (see ``last_tool_calls``).
+        self._last_tool_calls: list[dict[str, str]] = []
         if config.enable_langfuse_tracing:
             from aieng.forecasting.langfuse_tracing import init_langfuse_tracing  # noqa: PLC0415
 
@@ -176,6 +258,20 @@ class AdkTextRunner:
         run produced no trace.
         """
         return self._last_trace_id
+
+    @property
+    def last_tool_calls(self) -> list[dict[str, str]]:
+        """Curated tool-call summaries captured during the most recent run.
+
+        Each entry is a ``{"tool": <name>, "title": <curated title>}`` dict, in
+        invocation order, capped at :data:`_MAX_TOOL_CALLS`. Titles are curated
+        at capture time (see :func:`_curate_tool_call_title`) so the list is
+        safe to surface publicly — it never contains code bodies or retrieved
+        article text. Empty when the last run made no tool calls (or captured
+        none). A predictor threads this into prediction metadata so the live
+        harness can publish a ``curated_trace_summary``.
+        """
+        return self._last_tool_calls
 
     @property
     def runner(self) -> InMemoryRunner:
@@ -294,6 +390,11 @@ class AdkTextRunner:
 
         content = genai_types.Content(role="user", parts=[genai_types.Part(text=prompt)])
 
+        # Reset per-run capture and expose it live so callers see whatever was
+        # recorded even if the run raises partway through.
+        tool_calls: list[dict[str, str]] = []
+        self._last_tool_calls = tool_calls
+
         async def drain_run() -> str:
             async for event in self._runner.run_async(
                 user_id=user_id,
@@ -301,6 +402,7 @@ class AdkTextRunner:
                 new_message=content,
                 run_config=run_config,
             ):
+                _collect_tool_calls(event, tool_calls)
                 if event.is_final_response() and event.content and event.content.parts:
                     return event.content.parts[0].text or ""
             return ""

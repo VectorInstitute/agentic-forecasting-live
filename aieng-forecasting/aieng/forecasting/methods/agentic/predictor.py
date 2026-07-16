@@ -311,6 +311,16 @@ class AgentPredictor(Predictor):
             logger.error("Error converting output to list of predictions: %s", e)
             return []
 
+        # Attach the run's curated tool-call summaries so the live harness can
+        # publish a ``curated_trace_summary``. The runner already curated each
+        # entry to ``{"tool", "title"}`` (no code bodies, no article text). This
+        # is independent of Langfuse tracing; absent/empty is tolerated
+        # downstream, so only set the key when there is something to surface.
+        tool_calls = getattr(self._runner, "last_tool_calls", None)
+        if tool_calls:
+            for prediction in predictions:
+                prediction.metadata.setdefault("tool_calls", tool_calls)
+
         # Link each prediction back to its Langfuse trace so side-channel
         # evaluators can attach scores. The agent runs on a worker event loop whose
         # trace context isn't active here, so use the id the runner captured during

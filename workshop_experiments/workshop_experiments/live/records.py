@@ -10,12 +10,12 @@ matured horizons. Enforces the three non-schema writer invariants from
 2. values are non-decreasing across the grid;
 3. ``point_estimate`` equals the 0.50 quantile value.
 
-Known limitation (accepted): ``curated_trace_summary`` is populated *when
-available* — the writer curates whatever structured ``tool_calls`` list the
-agent path surfaces in prediction metadata, but the current agent runtime does
-not yet emit one, so agent records legitimately carry an empty ``tool_calls``
-list until that upstream wiring lands. An empty list means "no structured tool
-calls captured", not "no tools used".
+``curated_trace_summary`` is populated *when available* — the writer curates
+whatever structured ``tool_calls`` list the agent path surfaces in prediction
+metadata (the ADK runner captures one per run and the agent predictor threads it
+through). Records still carry an empty ``tool_calls`` list for conventional/LLMP
+rungs, or for an agent run that happened to make no captured tool calls. An empty
+list means "no structured tool calls captured", not "no tools used".
 """
 
 from __future__ import annotations
@@ -90,9 +90,13 @@ def curated_trace_summary(metadata: dict[str, Any] | None) -> dict[str, list[dic
     """Curate the public trace summary: tool names + query titles ONLY.
 
     Reads an optional ``tool_calls`` list from prediction metadata and keeps only
-    the ``tool`` and ``query_title`` of each entry. Never emits retrieved article
-    bodies or prompt scaffolding — anything else in metadata is dropped. Returns
-    an empty ``tool_calls`` list when no structured tool calls are present.
+    the tool name and a short title for each entry. The agent runtime surfaces
+    the title under ``title`` (already curated to be body-free); ``query_title``
+    is accepted as a legacy alias. The output uses the schema's ``query_title``
+    field (see ``curated_trace_summary`` in ``monitor/schemas/prediction.schema.json``).
+    Never emits retrieved article bodies or prompt scaffolding — anything else in
+    metadata is dropped. Returns an empty ``tool_calls`` list when no structured
+    tool calls are present.
     """
     tool_calls: list[dict[str, str]] = []
     for call in (metadata or {}).get("tool_calls", []) or []:
@@ -101,7 +105,8 @@ def curated_trace_summary(metadata: dict[str, Any] | None) -> dict[str, list[dic
         tool = call.get("tool")
         if not tool:
             continue
-        tool_calls.append({"tool": str(tool), "query_title": str(call.get("query_title", ""))})
+        title = call.get("title", call.get("query_title", ""))
+        tool_calls.append({"tool": str(tool), "query_title": str(title)})
     return {"tool_calls": tool_calls}
 
 
