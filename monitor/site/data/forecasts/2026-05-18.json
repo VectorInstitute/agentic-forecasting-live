@@ -1,0 +1,2505 @@
+{
+  "schema_version": "1.0.0",
+  "generated_by": "mock",
+  "generated_at": "2026-07-15T02:30:00Z",
+  "origin_date": "2026-05-18",
+  "realized": [
+    {
+      "horizon": 1,
+      "forecast_date": "2026-05-19",
+      "realized_value": -0.001369
+    },
+    {
+      "horizon": 5,
+      "forecast_date": "2026-05-25",
+      "realized_value": -0.019757
+    },
+    {
+      "horizon": 21,
+      "forecast_date": "2026-06-16",
+      "realized_value": -0.023702
+    }
+  ],
+  "predictions": [
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "origin_timestamp": "2026-05-18T20:00:00Z",
+      "submission_timestamp": "2026-05-18T20:34:00Z",
+      "method": "naive",
+      "model": null,
+      "predictor_id": "sp500_naive",
+      "horizons": [
+        {
+          "horizon": 1,
+          "point_estimate": 0.0,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.020521
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.015989
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.0105
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.006542
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.003161
+            },
+            {
+              "quantile": 0.5,
+              "value": 0.0
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.003161
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.006542
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.0105
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.015989
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.020521
+            }
+          ]
+        },
+        {
+          "horizon": 5,
+          "point_estimate": 0.0,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.049657
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.038689
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.025408
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.015831
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.007648
+            },
+            {
+              "quantile": 0.5,
+              "value": 0.0
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.007648
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.015831
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.025408
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.038689
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.049657
+            }
+          ]
+        },
+        {
+          "horizon": 21,
+          "point_estimate": 0.0,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.096379
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.075091
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.049314
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.030727
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.014845
+            },
+            {
+              "quantile": 0.5,
+              "value": 0.0
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.014845
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.030727
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.049314
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.075091
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.096379
+            }
+          ]
+        }
+      ],
+      "rationale": "",
+      "curated_trace_summary": {
+        "tool_calls": []
+      },
+      "langfuse_trace_id": null
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "origin_timestamp": "2026-05-18T20:00:00Z",
+      "submission_timestamp": "2026-05-18T20:18:00Z",
+      "method": "classical",
+      "model": null,
+      "predictor_id": "sp500_classical",
+      "horizons": [
+        {
+          "horizon": 1,
+          "point_estimate": -0.001255,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.018414
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.014624
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.010035
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.006725
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.003898
+            },
+            {
+              "quantile": 0.5,
+              "value": -0.001255
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.001388
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.004216
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.007525
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.012115
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.015905
+            }
+          ]
+        },
+        {
+          "horizon": 5,
+          "point_estimate": 0.00735,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.034033
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.024893
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.013824
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.005843
+            },
+            {
+              "quantile": 0.4,
+              "value": 0.000976
+            },
+            {
+              "quantile": 0.5,
+              "value": 0.00735
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.013725
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.020544
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.028525
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.039594
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.048734
+            }
+          ]
+        },
+        {
+          "horizon": 21,
+          "point_estimate": 0.00082,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.079014
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.061381
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.040029
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.024632
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.011476
+            },
+            {
+              "quantile": 0.5,
+              "value": 0.00082
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.013116
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.026272
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.041668
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.06302
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.080653
+            }
+          ]
+        }
+      ],
+      "rationale": "",
+      "curated_trace_summary": {
+        "tool_calls": []
+      },
+      "langfuse_trace_id": null
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "origin_timestamp": "2026-05-18T20:00:00Z",
+      "submission_timestamp": "2026-05-18T20:18:00Z",
+      "method": "lightgbm",
+      "model": null,
+      "predictor_id": "sp500_lightgbm",
+      "horizons": [
+        {
+          "horizon": 1,
+          "point_estimate": 0.001275,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.015999
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.012183
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.007563
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.004232
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.001386
+            },
+            {
+              "quantile": 0.5,
+              "value": 0.001275
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.003936
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.006782
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.010113
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.014733
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.018549
+            }
+          ]
+        },
+        {
+          "horizon": 5,
+          "point_estimate": 0.00232,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.036359
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.027816
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.017471
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.010011
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.003637
+            },
+            {
+              "quantile": 0.5,
+              "value": 0.00232
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.008278
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.014652
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.022111
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.032456
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.041
+            }
+          ]
+        },
+        {
+          "horizon": 21,
+          "point_estimate": -0.00972,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.08243
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.066371
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.046924
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.032901
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.02092
+            },
+            {
+              "quantile": 0.5,
+              "value": -0.00972
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.001479
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.01346
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.027483
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.04693
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.062989
+            }
+          ]
+        }
+      ],
+      "rationale": "",
+      "curated_trace_summary": {
+        "tool_calls": []
+      },
+      "langfuse_trace_id": null
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "origin_timestamp": "2026-05-18T20:00:00Z",
+      "submission_timestamp": "2026-05-18T20:18:00Z",
+      "method": "llm_process",
+      "model": "gemini-3.1-flash-lite-preview",
+      "predictor_id": "sp500_llm_process__gemini-3.1-flash-lite-preview",
+      "horizons": [
+        {
+          "horizon": 1,
+          "point_estimate": -0.002078,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.021369
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.017108
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.011949
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.008229
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.00505
+            },
+            {
+              "quantile": 0.5,
+              "value": -0.002078
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.000893
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.004072
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.007792
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.012952
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.017212
+            }
+          ]
+        },
+        {
+          "horizon": 5,
+          "point_estimate": 0.003395,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.037564
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.028517
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.017562
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.009663
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.002914
+            },
+            {
+              "quantile": 0.5,
+              "value": 0.003395
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.009704
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.016453
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.024353
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.035307
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.044354
+            }
+          ]
+        },
+        {
+          "horizon": 21,
+          "point_estimate": -0.003541,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.092448
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.072811
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.049032
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.031886
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.017235
+            },
+            {
+              "quantile": 0.5,
+              "value": -0.003541
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.010153
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.024804
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.04195
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.065729
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.085366
+            }
+          ]
+        }
+      ],
+      "rationale": "Quantile grid drawn from the model's conditional distribution given returns through 2026-05-18; central path modestly higher, bands scaled by horizon.",
+      "curated_trace_summary": {
+        "tool_calls": []
+      },
+      "langfuse_trace_id": "b45d9dca1cc1e40528e628edae4afb07"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "origin_timestamp": "2026-05-18T20:00:00Z",
+      "submission_timestamp": "2026-05-18T20:35:00Z",
+      "method": "llm_process",
+      "model": "gemini-3.5-flash",
+      "predictor_id": "sp500_llm_process__gemini-3.5-flash",
+      "horizons": [
+        {
+          "horizon": 1,
+          "point_estimate": 0.001472,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.015229
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.01154
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.007073
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.003852
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.0011
+            },
+            {
+              "quantile": 0.5,
+              "value": 0.001472
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.004045
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.006797
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.010018
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.014485
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.018174
+            }
+          ]
+        },
+        {
+          "horizon": 5,
+          "point_estimate": -0.001946,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.039218
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.030985
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.021017
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.013828
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.007686
+            },
+            {
+              "quantile": 0.5,
+              "value": -0.001946
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.003795
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.009937
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.017125
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.027094
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.035326
+            }
+          ]
+        },
+        {
+          "horizon": 21,
+          "point_estimate": -0.008956,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.08464
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.067924
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.047682
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.033085
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.020614
+            },
+            {
+              "quantile": 0.5,
+              "value": -0.008956
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.002701
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.015173
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.029769
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.050011
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.066727
+            }
+          ]
+        }
+      ],
+      "rationale": "Quantile grid drawn from the model's conditional distribution given returns through 2026-05-18; central path slightly lower, bands scaled by horizon.",
+      "curated_trace_summary": {
+        "tool_calls": []
+      },
+      "langfuse_trace_id": "3815d218012bcfaaffe4cd8d9c6f64a8"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "origin_timestamp": "2026-05-18T20:00:00Z",
+      "submission_timestamp": "2026-05-18T20:16:00Z",
+      "method": "llm_process",
+      "model": "claude-haiku-4.5",
+      "predictor_id": "sp500_llm_process__claude-haiku-4.5",
+      "horizons": [
+        {
+          "horizon": 1,
+          "point_estimate": 0.001934,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.016231
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.012219
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.00736
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.003857
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.000863
+            },
+            {
+              "quantile": 0.5,
+              "value": 0.001934
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.004732
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.007726
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.011229
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.016088
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.0201
+            }
+          ]
+        },
+        {
+          "horizon": 5,
+          "point_estimate": -0.004851,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.045819
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.03677
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.025813
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.017912
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.011161
+            },
+            {
+              "quantile": 0.5,
+              "value": -0.004851
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.001459
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.00821
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.016111
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.027069
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.036117
+            }
+          ]
+        },
+        {
+          "horizon": 21,
+          "point_estimate": 0.000657,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.077936
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.060577
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.039557
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.0244
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.011448
+            },
+            {
+              "quantile": 0.5,
+              "value": 0.000657
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.012762
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.025713
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.04087
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.061891
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.07925
+            }
+          ]
+        }
+      ],
+      "rationale": "Quantile grid drawn from the model's conditional distribution given returns through 2026-05-18; central path modestly higher, bands scaled by horizon.",
+      "curated_trace_summary": {
+        "tool_calls": []
+      },
+      "langfuse_trace_id": "e8e1bb438a23f22b6392b7c0fb7d0c01"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "origin_timestamp": "2026-05-18T20:00:00Z",
+      "submission_timestamp": "2026-05-18T20:31:00Z",
+      "method": "analyst_agent",
+      "model": "gemini-3.1-flash-lite-preview",
+      "predictor_id": "sp500_analyst_agent__gemini-3.1-flash-lite-preview",
+      "horizons": [
+        {
+          "horizon": 1,
+          "point_estimate": -0.001554,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.021772
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.017307
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.011899
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.008
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.004668
+            },
+            {
+              "quantile": 0.5,
+              "value": -0.001554
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.00156
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.004892
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.008791
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.014199
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.018665
+            }
+          ]
+        },
+        {
+          "horizon": 5,
+          "point_estimate": -0.002773,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.049794
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.039408
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.026832
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.017764
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.010015
+            },
+            {
+              "quantile": 0.5,
+              "value": -0.002773
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.004469
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.012218
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.021286
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.033863
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.044248
+            }
+          ]
+        },
+        {
+          "horizon": 21,
+          "point_estimate": 0.007138,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.084233
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.064052
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.039614
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.021992
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.006935
+            },
+            {
+              "quantile": 0.5,
+              "value": 0.007138
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.021212
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.036269
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.05389
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.078329
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.09851
+            }
+          ]
+        }
+      ],
+      "rationale": "As of the May 18, 2026 close I read the tape as slightly lower over the next month. Retrieved coverage this week centers on the Fed's next move and steady mega-cap earnings; no scheduled catalyst before the h=5 horizon resolves. Realized vol has drifted lower, so I kept the central path near flat but widened the lower tail to respect headline risk into the h=21 window. Nothing in the narrative justified a directional bet beyond a small drift.",
+      "curated_trace_summary": {
+        "tool_calls": [
+          {
+            "tool": "news_search",
+            "query_title": "S&P 500 outlook and Fed path, week of 2026-05-18"
+          },
+          {
+            "tool": "news_search",
+            "query_title": "mega-cap earnings reactions and forward guidance"
+          }
+        ]
+      },
+      "langfuse_trace_id": "9971192af5f9d7247142fd0483360daa"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "origin_timestamp": "2026-05-18T20:00:00Z",
+      "submission_timestamp": "2026-05-18T20:15:00Z",
+      "method": "analyst_agent",
+      "model": "gemini-3.5-flash",
+      "predictor_id": "sp500_analyst_agent__gemini-3.5-flash",
+      "horizons": [
+        {
+          "horizon": 1,
+          "point_estimate": -0.00188,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.019535
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.015635
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.010913
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.007509
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.004599
+            },
+            {
+              "quantile": 0.5,
+              "value": -0.00188
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.000839
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.003748
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.007153
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.011875
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.015774
+            }
+          ]
+        },
+        {
+          "horizon": 5,
+          "point_estimate": 0.000185,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.040445
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.031471
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.020604
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.012768
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.006073
+            },
+            {
+              "quantile": 0.5,
+              "value": 0.000185
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.006443
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.013138
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.020974
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.031841
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.040815
+            }
+          ]
+        },
+        {
+          "horizon": 21,
+          "point_estimate": 0.007911,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.076184
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.05761
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.035118
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.0189
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.005042
+            },
+            {
+              "quantile": 0.5,
+              "value": 0.007911
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.020863
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.034721
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.050939
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.073431
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.092005
+            }
+          ]
+        }
+      ],
+      "rationale": "As of the May 18, 2026 close I read the tape as roughly flat over the next month. Retrieved coverage this week centers on the Fed's next move and steady mega-cap earnings; no scheduled catalyst before the h=5 horizon resolves. Realized vol has drifted lower, so I kept the central path near flat but widened the lower tail to respect headline risk into the h=21 window. Nothing in the narrative justified a directional bet beyond a small drift.",
+      "curated_trace_summary": {
+        "tool_calls": [
+          {
+            "tool": "news_search",
+            "query_title": "S&P 500 outlook and Fed path, week of 2026-05-18"
+          },
+          {
+            "tool": "news_search",
+            "query_title": "mega-cap earnings reactions and forward guidance"
+          }
+        ]
+      },
+      "langfuse_trace_id": "7d9abe01fa4dc48b9e2b3b25960f9275"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "origin_timestamp": "2026-05-18T20:00:00Z",
+      "submission_timestamp": "2026-05-18T20:24:00Z",
+      "method": "analyst_agent",
+      "model": "claude-haiku-4.5",
+      "predictor_id": "sp500_analyst_agent__claude-haiku-4.5",
+      "horizons": [
+        {
+          "horizon": 1,
+          "point_estimate": -0.001264,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.01986
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.015752
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.010779
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.007192
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.004128
+            },
+            {
+              "quantile": 0.5,
+              "value": -0.001264
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.001601
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.004665
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.008251
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.013225
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.017332
+            }
+          ]
+        },
+        {
+          "horizon": 5,
+          "point_estimate": -0.002413,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.043191
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.034185
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.023278
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.015414
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.008694
+            },
+            {
+              "quantile": 0.5,
+              "value": -0.002413
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.003868
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.010587
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.018452
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.029358
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.038365
+            }
+          ]
+        },
+        {
+          "horizon": 21,
+          "point_estimate": 0.006152,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.081492
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.062134
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.038693
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.02179
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.007348
+            },
+            {
+              "quantile": 0.5,
+              "value": 0.006152
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.019651
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.034094
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.050997
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.074438
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.093796
+            }
+          ]
+        }
+      ],
+      "rationale": "As of the May 18, 2026 close I read the tape as modestly higher over the next month. Retrieved coverage this week centers on the Fed's next move and steady mega-cap earnings; no scheduled catalyst before the h=5 horizon resolves. Realized vol has drifted lower, so I kept the central path near flat but widened the lower tail to respect headline risk into the h=21 window. Nothing in the narrative justified a directional bet beyond a small drift.",
+      "curated_trace_summary": {
+        "tool_calls": [
+          {
+            "tool": "news_search",
+            "query_title": "S&P 500 outlook and Fed path, week of 2026-05-18"
+          },
+          {
+            "tool": "news_search",
+            "query_title": "mega-cap earnings reactions and forward guidance"
+          }
+        ]
+      },
+      "langfuse_trace_id": "e9f6387f803a7b740fbf90de2fc167fe"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "origin_timestamp": "2026-05-18T20:00:00Z",
+      "submission_timestamp": "2026-05-18T20:29:00Z",
+      "method": "code_agent",
+      "model": "gemini-3.1-flash-lite-preview",
+      "predictor_id": "sp500_code_agent__gemini-3.1-flash-lite-preview",
+      "horizons": [
+        {
+          "horizon": 1,
+          "point_estimate": 0.000751,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.018253
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.014055
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.008973
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.005308
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.002176
+            },
+            {
+              "quantile": 0.5,
+              "value": 0.000751
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.003678
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.006809
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.010474
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.015557
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.019754
+            }
+          ]
+        },
+        {
+          "horizon": 5,
+          "point_estimate": -0.003455,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.047981
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.038146
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.026237
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.01765
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.010313
+            },
+            {
+              "quantile": 0.5,
+              "value": -0.003455
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.003404
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.010741
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.019328
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.031237
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.041072
+            }
+          ]
+        },
+        {
+          "horizon": 21,
+          "point_estimate": 0.00039,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.086046
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.066955
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.043837
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.027167
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.012923
+            },
+            {
+              "quantile": 0.5,
+              "value": 0.00039
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.013703
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.027947
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.044616
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.067734
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.086825
+            }
+          ]
+        }
+      ],
+      "rationale": "Computed 20-day realized vol and a short-horizon momentum score on the panel through 2026-05-18. Realized vol sits below its trailing median and the trend state is mildly positive, so I nudged the median modestly higher and set band width from the empirical 20-day return distribution rather than a constant. Widened h=21 bands to cover the fatter monthly tail I measured on history.",
+      "curated_trace_summary": {
+        "tool_calls": [
+          {
+            "tool": "code_execution",
+            "query_title": "20-day realized volatility on the price panel"
+          },
+          {
+            "tool": "code_execution",
+            "query_title": "empirical 21-day forward-return distribution"
+          }
+        ]
+      },
+      "langfuse_trace_id": "e51be70a29cdb1bbcf7dcfa44620a975"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "origin_timestamp": "2026-05-18T20:00:00Z",
+      "submission_timestamp": "2026-05-18T20:32:00Z",
+      "method": "code_agent",
+      "model": "gemini-3.5-flash",
+      "predictor_id": "sp500_code_agent__gemini-3.5-flash",
+      "horizons": [
+        {
+          "horizon": 1,
+          "point_estimate": 0.002743,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.014557
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.010736
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.006109
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.002772
+            },
+            {
+              "quantile": 0.4,
+              "value": 7.9e-05
+            },
+            {
+              "quantile": 0.5,
+              "value": 0.002743
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.005408
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.008259
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.011595
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.016222
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.020043
+            }
+          ]
+        },
+        {
+          "horizon": 5,
+          "point_estimate": -0.003497,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.042717
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.034055
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.023565
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.016001
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.009538
+            },
+            {
+              "quantile": 0.5,
+              "value": -0.003497
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.002544
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.009008
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.016572
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.027062
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.035724
+            }
+          ]
+        },
+        {
+          "horizon": 21,
+          "point_estimate": 0.010462,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.06624
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.049299
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.028784
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.013992
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.001352
+            },
+            {
+              "quantile": 0.5,
+              "value": 0.010462
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.022276
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.034915
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.049708
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.070222
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.087164
+            }
+          ]
+        }
+      ],
+      "rationale": "Computed 20-day realized vol and a short-horizon momentum score on the panel through 2026-05-18. Realized vol sits below its trailing median and the trend state is mildly positive, so I nudged the median modestly higher and set band width from the empirical 20-day return distribution rather than a constant. Widened h=21 bands to cover the fatter monthly tail I measured on history.",
+      "curated_trace_summary": {
+        "tool_calls": [
+          {
+            "tool": "code_execution",
+            "query_title": "20-day realized volatility on the price panel"
+          },
+          {
+            "tool": "code_execution",
+            "query_title": "empirical 21-day forward-return distribution"
+          }
+        ]
+      },
+      "langfuse_trace_id": "caf714ea53ca561c754066f8695d1dec"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "origin_timestamp": "2026-05-18T20:00:00Z",
+      "submission_timestamp": "2026-05-18T20:24:00Z",
+      "method": "code_agent",
+      "model": "claude-haiku-4.5",
+      "predictor_id": "sp500_code_agent__claude-haiku-4.5",
+      "horizons": [
+        {
+          "horizon": 1,
+          "point_estimate": 0.001425,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.016829
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.012797
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.007915
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.004395
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.001387
+            },
+            {
+              "quantile": 0.5,
+              "value": 0.001425
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.004236
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.007244
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.010765
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.015647
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.019679
+            }
+          ]
+        },
+        {
+          "horizon": 5,
+          "point_estimate": -0.000119,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.038987
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.030402
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.020006
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.01251
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.006105
+            },
+            {
+              "quantile": 0.5,
+              "value": -0.000119
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.005868
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.012273
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.019769
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.030164
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.038749
+            }
+          ]
+        },
+        {
+          "horizon": 21,
+          "point_estimate": -0.000184,
+          "quantiles": [
+            {
+              "quantile": 0.05,
+              "value": -0.084659
+            },
+            {
+              "quantile": 0.1,
+              "value": -0.066001
+            },
+            {
+              "quantile": 0.2,
+              "value": -0.043407
+            },
+            {
+              "quantile": 0.3,
+              "value": -0.027116
+            },
+            {
+              "quantile": 0.4,
+              "value": -0.013195
+            },
+            {
+              "quantile": 0.5,
+              "value": -0.000184
+            },
+            {
+              "quantile": 0.6,
+              "value": 0.012827
+            },
+            {
+              "quantile": 0.7,
+              "value": 0.026747
+            },
+            {
+              "quantile": 0.8,
+              "value": 0.043039
+            },
+            {
+              "quantile": 0.9,
+              "value": 0.065632
+            },
+            {
+              "quantile": 0.95,
+              "value": 0.08429
+            }
+          ]
+        }
+      ],
+      "rationale": "Computed 20-day realized vol and a short-horizon momentum score on the panel through 2026-05-18. Realized vol sits below its trailing median and the trend state is mildly positive, so I nudged the median slightly lower and set band width from the empirical 20-day return distribution rather than a constant. Widened h=21 bands to cover the fatter monthly tail I measured on history.",
+      "curated_trace_summary": {
+        "tool_calls": [
+          {
+            "tool": "code_execution",
+            "query_title": "20-day realized volatility on the price panel"
+          },
+          {
+            "tool": "code_execution",
+            "query_title": "empirical 21-day forward-return distribution"
+          }
+        ]
+      },
+      "langfuse_trace_id": "a141772b6605e461bb0a33a5fabb8915"
+    }
+  ],
+  "resolutions": [
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "naive",
+      "model": null,
+      "predictor_id": "sp500_naive",
+      "horizon": 1,
+      "forecast_date": "2026-05-19",
+      "realized_value": -0.001369,
+      "crps": 0.002975,
+      "resolved_at": "2026-05-19T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "naive",
+      "model": null,
+      "predictor_id": "sp500_naive",
+      "horizon": 5,
+      "forecast_date": "2026-05-25",
+      "realized_value": -0.019757,
+      "crps": 0.012037,
+      "resolved_at": "2026-05-25T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "naive",
+      "model": null,
+      "predictor_id": "sp500_naive",
+      "horizon": 21,
+      "forecast_date": "2026-06-16",
+      "realized_value": -0.023702,
+      "crps": 0.017467,
+      "resolved_at": "2026-06-16T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "classical",
+      "model": null,
+      "predictor_id": "sp500_classical",
+      "horizon": 1,
+      "forecast_date": "2026-05-19",
+      "realized_value": -0.001369,
+      "crps": 0.002438,
+      "resolved_at": "2026-05-19T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "classical",
+      "model": null,
+      "predictor_id": "sp500_classical",
+      "horizon": 5,
+      "forecast_date": "2026-05-25",
+      "realized_value": -0.019757,
+      "crps": 0.016522,
+      "resolved_at": "2026-05-25T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "classical",
+      "model": null,
+      "predictor_id": "sp500_classical",
+      "horizon": 21,
+      "forecast_date": "2026-06-16",
+      "realized_value": -0.023702,
+      "crps": 0.016183,
+      "resolved_at": "2026-06-16T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "lightgbm",
+      "model": null,
+      "predictor_id": "sp500_lightgbm",
+      "horizon": 1,
+      "forecast_date": "2026-05-19",
+      "realized_value": -0.001369,
+      "crps": 0.002718,
+      "resolved_at": "2026-05-19T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "lightgbm",
+      "model": null,
+      "predictor_id": "sp500_lightgbm",
+      "horizon": 5,
+      "forecast_date": "2026-05-25",
+      "realized_value": -0.019757,
+      "crps": 0.013207,
+      "resolved_at": "2026-05-25T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "lightgbm",
+      "model": null,
+      "predictor_id": "sp500_lightgbm",
+      "horizon": 21,
+      "forecast_date": "2026-06-16",
+      "realized_value": -0.023702,
+      "crps": 0.01208,
+      "resolved_at": "2026-06-16T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "llm_process",
+      "model": "gemini-3.1-flash-lite-preview",
+      "predictor_id": "sp500_llm_process__gemini-3.1-flash-lite-preview",
+      "horizon": 1,
+      "forecast_date": "2026-05-19",
+      "realized_value": -0.001369,
+      "crps": 0.002758,
+      "resolved_at": "2026-05-19T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "llm_process",
+      "model": "gemini-3.1-flash-lite-preview",
+      "predictor_id": "sp500_llm_process__gemini-3.1-flash-lite-preview",
+      "horizon": 5,
+      "forecast_date": "2026-05-25",
+      "realized_value": -0.019757,
+      "crps": 0.013838,
+      "resolved_at": "2026-05-25T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "llm_process",
+      "model": "gemini-3.1-flash-lite-preview",
+      "predictor_id": "sp500_llm_process__gemini-3.1-flash-lite-preview",
+      "horizon": 21,
+      "forecast_date": "2026-06-16",
+      "realized_value": -0.023702,
+      "crps": 0.015597,
+      "resolved_at": "2026-06-16T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "llm_process",
+      "model": "gemini-3.5-flash",
+      "predictor_id": "sp500_llm_process__gemini-3.5-flash",
+      "horizon": 1,
+      "forecast_date": "2026-05-19",
+      "realized_value": -0.001369,
+      "crps": 0.002688,
+      "resolved_at": "2026-05-19T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "llm_process",
+      "model": "gemini-3.5-flash",
+      "predictor_id": "sp500_llm_process__gemini-3.5-flash",
+      "horizon": 5,
+      "forecast_date": "2026-05-25",
+      "realized_value": -0.019757,
+      "crps": 0.01061,
+      "resolved_at": "2026-05-25T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "llm_process",
+      "model": "gemini-3.5-flash",
+      "predictor_id": "sp500_llm_process__gemini-3.5-flash",
+      "horizon": 21,
+      "forecast_date": "2026-06-16",
+      "realized_value": -0.023702,
+      "crps": 0.012622,
+      "resolved_at": "2026-06-16T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "llm_process",
+      "model": "claude-haiku-4.5",
+      "predictor_id": "sp500_llm_process__claude-haiku-4.5",
+      "horizon": 1,
+      "forecast_date": "2026-05-19",
+      "realized_value": -0.001369,
+      "crps": 0.002972,
+      "resolved_at": "2026-05-19T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "llm_process",
+      "model": "claude-haiku-4.5",
+      "predictor_id": "sp500_llm_process__claude-haiku-4.5",
+      "horizon": 5,
+      "forecast_date": "2026-05-25",
+      "realized_value": -0.019757,
+      "crps": 0.009277,
+      "resolved_at": "2026-05-25T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "llm_process",
+      "model": "claude-haiku-4.5",
+      "predictor_id": "sp500_llm_process__claude-haiku-4.5",
+      "horizon": 21,
+      "forecast_date": "2026-06-16",
+      "realized_value": -0.023702,
+      "crps": 0.016016,
+      "resolved_at": "2026-06-16T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "analyst_agent",
+      "model": "gemini-3.1-flash-lite-preview",
+      "predictor_id": "sp500_analyst_agent__gemini-3.1-flash-lite-preview",
+      "horizon": 1,
+      "forecast_date": "2026-05-19",
+      "realized_value": -0.001369,
+      "crps": 0.002874,
+      "resolved_at": "2026-05-19T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "analyst_agent",
+      "model": "gemini-3.1-flash-lite-preview",
+      "predictor_id": "sp500_analyst_agent__gemini-3.1-flash-lite-preview",
+      "horizon": 5,
+      "forecast_date": "2026-05-25",
+      "realized_value": -0.019757,
+      "crps": 0.010592,
+      "resolved_at": "2026-05-25T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "analyst_agent",
+      "model": "gemini-3.1-flash-lite-preview",
+      "predictor_id": "sp500_analyst_agent__gemini-3.1-flash-lite-preview",
+      "horizon": 21,
+      "forecast_date": "2026-06-16",
+      "realized_value": -0.023702,
+      "crps": 0.019642,
+      "resolved_at": "2026-06-16T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "analyst_agent",
+      "model": "gemini-3.5-flash",
+      "predictor_id": "sp500_analyst_agent__gemini-3.5-flash",
+      "horizon": 1,
+      "forecast_date": "2026-05-19",
+      "realized_value": -0.001369,
+      "crps": 0.002518,
+      "resolved_at": "2026-05-19T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "analyst_agent",
+      "model": "gemini-3.5-flash",
+      "predictor_id": "sp500_analyst_agent__gemini-3.5-flash",
+      "horizon": 5,
+      "forecast_date": "2026-05-25",
+      "realized_value": -0.019757,
+      "crps": 0.011868,
+      "resolved_at": "2026-05-25T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "analyst_agent",
+      "model": "gemini-3.5-flash",
+      "predictor_id": "sp500_analyst_agent__gemini-3.5-flash",
+      "horizon": 21,
+      "forecast_date": "2026-06-16",
+      "realized_value": -0.023702,
+      "crps": 0.019507,
+      "resolved_at": "2026-06-16T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "analyst_agent",
+      "model": "claude-haiku-4.5",
+      "predictor_id": "sp500_analyst_agent__claude-haiku-4.5",
+      "horizon": 1,
+      "forecast_date": "2026-05-19",
+      "realized_value": -0.001369,
+      "crps": 0.002642,
+      "resolved_at": "2026-05-19T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "analyst_agent",
+      "model": "claude-haiku-4.5",
+      "predictor_id": "sp500_analyst_agent__claude-haiku-4.5",
+      "horizon": 5,
+      "forecast_date": "2026-05-25",
+      "realized_value": -0.019757,
+      "crps": 0.010446,
+      "resolved_at": "2026-05-25T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "analyst_agent",
+      "model": "claude-haiku-4.5",
+      "predictor_id": "sp500_analyst_agent__claude-haiku-4.5",
+      "horizon": 21,
+      "forecast_date": "2026-06-16",
+      "realized_value": -0.023702,
+      "crps": 0.018956,
+      "resolved_at": "2026-06-16T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "code_agent",
+      "model": "gemini-3.1-flash-lite-preview",
+      "predictor_id": "sp500_code_agent__gemini-3.1-flash-lite-preview",
+      "horizon": 1,
+      "forecast_date": "2026-05-19",
+      "realized_value": -0.001369,
+      "crps": 0.002855,
+      "resolved_at": "2026-05-19T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "code_agent",
+      "model": "gemini-3.1-flash-lite-preview",
+      "predictor_id": "sp500_code_agent__gemini-3.1-flash-lite-preview",
+      "horizon": 5,
+      "forecast_date": "2026-05-25",
+      "realized_value": -0.019757,
+      "crps": 0.010129,
+      "resolved_at": "2026-05-25T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "code_agent",
+      "model": "gemini-3.1-flash-lite-preview",
+      "predictor_id": "sp500_code_agent__gemini-3.1-flash-lite-preview",
+      "horizon": 21,
+      "forecast_date": "2026-06-16",
+      "realized_value": -0.023702,
+      "crps": 0.016611,
+      "resolved_at": "2026-06-16T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "code_agent",
+      "model": "gemini-3.5-flash",
+      "predictor_id": "sp500_code_agent__gemini-3.5-flash",
+      "horizon": 1,
+      "forecast_date": "2026-05-19",
+      "realized_value": -0.001369,
+      "crps": 0.003091,
+      "resolved_at": "2026-05-19T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "code_agent",
+      "model": "gemini-3.5-flash",
+      "predictor_id": "sp500_code_agent__gemini-3.5-flash",
+      "horizon": 5,
+      "forecast_date": "2026-05-25",
+      "realized_value": -0.019757,
+      "crps": 0.009832,
+      "resolved_at": "2026-05-25T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "code_agent",
+      "model": "gemini-3.5-flash",
+      "predictor_id": "sp500_code_agent__gemini-3.5-flash",
+      "horizon": 21,
+      "forecast_date": "2026-06-16",
+      "realized_value": -0.023702,
+      "crps": 0.020459,
+      "resolved_at": "2026-06-16T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "code_agent",
+      "model": "claude-haiku-4.5",
+      "predictor_id": "sp500_code_agent__claude-haiku-4.5",
+      "horizon": 1,
+      "forecast_date": "2026-05-19",
+      "realized_value": -0.001369,
+      "crps": 0.002873,
+      "resolved_at": "2026-05-19T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "code_agent",
+      "model": "claude-haiku-4.5",
+      "predictor_id": "sp500_code_agent__claude-haiku-4.5",
+      "horizon": 5,
+      "forecast_date": "2026-05-25",
+      "realized_value": -0.019757,
+      "crps": 0.011683,
+      "resolved_at": "2026-05-25T22:00:00Z"
+    },
+    {
+      "schema_version": "1.0.0",
+      "origin_date": "2026-05-18",
+      "method": "code_agent",
+      "model": "claude-haiku-4.5",
+      "predictor_id": "sp500_code_agent__claude-haiku-4.5",
+      "horizon": 21,
+      "forecast_date": "2026-06-16",
+      "realized_value": -0.023702,
+      "crps": 0.016225,
+      "resolved_at": "2026-06-16T22:00:00Z"
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+name: deploy monitor
+
+# Publishes the zero-backend experiment-monitor site (monitor/site/) to GitHub Pages.
+# A fixture-validation gate runs first, so a data file that violates the schemas fails
+# the deploy instead of shipping. Requires a one-time repo setting:
+#   Settings -> Pages -> Source: GitHub Actions   (see monitor/README.md).
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - monitor/site/**
+      - monitor/schemas/**
+      - monitor/validate_fixtures.py
+      - .github/workflows/deploy-monitor.yml
+  workflow_dispatch:
+
+# Least-privilege token for Pages deploy.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One in-flight deploy at a time; don't cancel a running publish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  validate-fixtures:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.0
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39
+        with:
+          version: "0.9.11"
+          enable-cache: true
+
+      - name: "Set up Python"
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version-file: ".python-version"
+
+      - name: Validate fixtures against schemas
+        # --no-project keeps this fast: no workspace build, just jsonschema (+ referencing).
+        run: uv run --no-project --with jsonschema python monitor/validate_fixtures.py
+
+  deploy:
+    needs: validate-fixtures
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7.0.0
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload site artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: monitor/site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

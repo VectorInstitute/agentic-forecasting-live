@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/VectorInstitute/agentic-forecasting-live/main/monitor/schemas/resolution.schema.json",
+  "title": "Resolution record",
+  "description": "The outcome and score for one (method, model, horizon) at one origin, appended when the horizon resolves. Append-only.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "origin_date",
+    "method",
+    "model",
+    "predictor_id",
+    "horizon",
+    "forecast_date",
+    "realized_value",
+    "crps",
+    "resolved_at"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "origin_date": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+      "description": "Origin of the prediction being resolved (join key to the prediction record)."
+    },
+    "method": {
+      "type": "string",
+      "enum": [
+        "naive",
+        "classical",
+        "lightgbm",
+        "llm_process",
+        "analyst_agent",
+        "code_agent",
+        "twin_frozen",
+        "twin_learning"
+      ]
+    },
+    "model": { "type": ["string", "null"] },
+    "predictor_id": { "type": "string", "minLength": 1 },
+    "horizon": { "type": "integer", "minimum": 1 },
+    "forecast_date": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+      "description": "Trading day the horizon resolved on (origin + horizon business days)."
+    },
+    "realized_value": {
+      "type": "number",
+      "description": "Realized cumulative log return from origin close to forecast_date close."
+    },
+    "crps": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Continuous Ranked Probability Score of the predictive distribution against realized_value (lower is better)."
+    },
+    "resolved_at": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$",
+      "description": "Wall-clock time the scoring job appended this resolution."
+    }
+  }
+}

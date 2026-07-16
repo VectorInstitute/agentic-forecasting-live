@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0.0",
+  "generated_by": "mock",
+  "generated_at": "2026-07-15T02:30:00Z",
+  "mutations": [
+    {
+      "schema_version": "1.0.0",
+      "event_id": "mut-2026-06-30-001",
+      "twin_id": "twin_learning",
+      "occurred_at": "2026-06-30T21:10:00Z",
+      "origin_date": "2026-06-30",
+      "tier": "observation",
+      "gate_outcome": "appended",
+      "version": "strategy-v3",
+      "rationale": "Logged that the h=5 miss on 2026-06-18 coincided with an unpriced CPI surprise."
+    },
+    {
+      "schema_version": "1.0.0",
+      "event_id": "mut-2026-07-07-002",
+      "twin_id": "twin_learning",
+      "occurred_at": "2026-07-07T21:05:00Z",
+      "origin_date": "2026-07-07",
+      "tier": "hypothesis",
+      "gate_outcome": "confirmed",
+      "version": "strategy-v4",
+      "rationale": "Third confirmation that widening the h=21 lower tail in low-VIX regimes improves CRPS.",
+      "confirmations": 3
+    },
+    {
+      "schema_version": "1.0.0",
+      "event_id": "mut-2026-07-10-003",
+      "twin_id": "twin_learning",
+      "occurred_at": "2026-07-10T21:12:00Z",
+      "origin_date": "2026-07-10",
+      "tier": "behavioral",
+      "gate_outcome": "shadowing",
+      "version": "strategy-v5-candidate",
+      "rationale": "Calibration correction (+8% band width at h=21) entered a forward shadow gate for M=5 origins."
+    }
+  ]
+}

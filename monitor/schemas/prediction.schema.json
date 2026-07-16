@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/VectorInstitute/agentic-forecasting-live/main/monitor/schemas/prediction.schema.json",
+  "title": "Prediction record",
+  "description": "One forecast submission for a single (method, model) at one origin, covering all requested horizons. Append-only; never revised after commit.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "origin_date",
+    "origin_timestamp",
+    "submission_timestamp",
+    "method",
+    "model",
+    "predictor_id",
+    "horizons",
+    "curated_trace_summary"
+  ],
+  "properties": {
+    "schema_version": { "$ref": "#/$defs/schema_version" },
+    "origin_date": {
+      "$ref": "#/$defs/date",
+      "description": "Trading day whose close the forecast is conditioned on (data-through-close)."
+    },
+    "origin_timestamp": {
+      "$ref": "#/$defs/timestamp",
+      "description": "Market-close timestamp defining the information cutoff for this forecast."
+    },
+    "submission_timestamp": {
+      "$ref": "#/$defs/timestamp",
+      "description": "Exact wall-clock time the forecast was committed. Recorded per the submission rule."
+    },
+    "method": { "$ref": "#/$defs/method" },
+    "model": {
+      "description": "Backing model id for LLM/agent methods; null for conventional methods.",
+      "type": ["string", "null"]
+    },
+    "predictor_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stable predictor identifier (committed caches key on this string)."
+    },
+    "twin_id": {
+      "description": "Present only for adaptive twins; identifies the frozen/learning arm.",
+      "type": "string"
+    },
+    "horizons": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/horizon_forecast" }
+    },
+    "rationale": {
+      "type": "string",
+      "description": "Agent-authored overall rationale. PUBLIC. Empty for conventional methods."
+    },
+    "curated_trace_summary": { "$ref": "#/$defs/curated_trace_summary" },
+    "langfuse_trace_id": {
+      "description": "Langfuse trace id for this run; null for conventional methods. Links authorized users to the full internal trace.",
+      "type": ["string", "null"]
+    }
+  },
+  "$defs": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Semantic version of the data contract this record conforms to."
+    },
+    "date": { "type": "string", "format": "date", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "method": {
+      "type": "string",
+      "enum": [
+        "naive",
+        "classical",
+        "lightgbm",
+        "llm_process",
+        "analyst_agent",
+        "code_agent",
+        "twin_frozen",
+        "twin_learning"
+      ]
+    },
+    "horizon": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Business-day horizon (the live experiment uses 1, 5, 21)."
+    },
+    "horizon_forecast": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["horizon", "point_estimate", "quantiles"],
+      "properties": {
+        "horizon": { "$ref": "#/$defs/horizon" },
+        "point_estimate": {
+          "type": "number",
+          "description": "Central forecast; must equal the 0.50 quantile value (harness invariant)."
+        },
+        "quantiles": {
+          "type": "array",
+          "minItems": 11,
+          "maxItems": 11,
+          "description": "The standard 11-point quantile grid, non-decreasing in value (harness invariant).",
+          "items": { "$ref": "#/$defs/quantile_point" }
+        },
+        "horizon_rationale": {
+          "type": "string",
+          "description": "Optional horizon-specific rationale. PUBLIC."
+        }
+      }
+    },
+    "quantile_point": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["quantile", "value"],
+      "properties": {
+        "quantile": {
+          "type": "number",
+          "enum": [0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95]
+        },
+        "value": { "type": "number" }
+      }
+    },
+    "curated_trace_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tool_calls"],
+      "description": "Curated, PUBLIC trace summary. Tool names and query TITLES only; never raw retrieved article text or internal prompt scaffolding.",
+      "properties": {
+        "tool_calls": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["tool", "query_title"],
+            "properties": {
+              "tool": { "type": "string", "minLength": 1 },
+              "query_title": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}
