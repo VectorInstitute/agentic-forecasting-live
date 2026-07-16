@@ -8,8 +8,14 @@ They intentionally avoid testing ADK's runner/session internals.
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
-from aieng.forecasting.methods.agentic.adk_runner import AdkTextRunner, AdkTextRunnerConfig
+from aieng.forecasting.methods.agentic.adk_runner import (
+    _MAX_TOOL_CALLS,
+    _TOOL_TITLE_MAX_CHARS,
+    AdkTextRunner,
+    AdkTextRunnerConfig,
+)
 from aieng.forecasting.methods.agentic.agent_factory import SMR_STATE_KEY
+from google.genai import types as genai_types
 
 
 # ---------------------------------------------------------------------------
@@ -42,6 +48,15 @@ def _final_event_no_content() -> MagicMock:
     event = MagicMock()
     event.is_final_response.return_value = True
     event.content = None
+    return event
+
+
+def _tool_call_event(*calls: tuple[str, dict]) -> MagicMock:
+    """Build a non-final event carrying one or more real ADK function calls."""
+    parts = [genai_types.Part(function_call=genai_types.FunctionCall(name=name, args=args)) for name, args in calls]
+    event = MagicMock()
+    event.is_final_response.return_value = False
+    event.content = genai_types.Content(role="model", parts=parts)
     return event
 
 
@@ -502,6 +517,79 @@ class TestSmrStatePrecedence:
         result = await runner.run_text_async("hello", user_id="alice")
 
         assert result == "direct text reply"
+
+
+# ---------------------------------------------------------------------------
+# Tool-call capture and curation
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.asyncio
+class TestToolCallCapture:
+    """AdkTextRunner records curated, body-free tool-call summaries per run."""
+
+    async def test_captures_tool_and_curated_title_in_order(self, patch_runner_cls, mock_agent) -> None:
+        """search_web -> query title; code exec -> line-count label; no bodies."""
+        patch_runner_cls.run_async.return_value = _stream(
+            _tool_call_event(("search_web", {"query": "Fed rate decision December", "cutoff_date": "2025-01-01"})),
+            _tool_call_event(("run_code", {"code": "import numpy as np\nprint(1)\nprint(2)"})),
+            _final_event("done"),
+        )
+        runner = AdkTextRunner(mock_agent, config=AdkTextRunnerConfig(app_name="app"))
+
+        await runner.run_text_async("hi")
+
+        assert runner.last_tool_calls == [
+            {"tool": "search_web", "title": "Fed rate decision December"},
+            {"tool": "run_code", "title": "python (3 lines)"},
+        ]
+
+    async def test_search_query_title_is_truncated(self, patch_runner_cls, mock_agent) -> None:
+        """An over-long search query is truncated to the title cap."""
+        long_query = "x" * 500
+        patch_runner_cls.run_async.return_value = _stream(
+            _tool_call_event(("search_web", {"query": long_query})),
+            _final_event("done"),
+        )
+        runner = AdkTextRunner(mock_agent, config=AdkTextRunnerConfig(app_name="app"))
+
+        await runner.run_text_async("hi")
+
+        title = runner.last_tool_calls[0]["title"]
+        assert title == "x" * _TOOL_TITLE_MAX_CHARS
+        assert len(title) == _TOOL_TITLE_MAX_CHARS
+
+    async def test_capture_is_capped(self, patch_runner_cls, mock_agent) -> None:
+        """The captured list never grows past the defensive cap."""
+        events = [_tool_call_event(("search_web", {"query": f"q{i}"})) for i in range(_MAX_TOOL_CALLS + 10)]
+        patch_runner_cls.run_async.return_value = _stream(*events, _final_event("done"))
+        runner = AdkTextRunner(mock_agent, config=AdkTextRunnerConfig(app_name="app"))
+
+        await runner.run_text_async("hi")
+
+        assert len(runner.last_tool_calls) == _MAX_TOOL_CALLS
+
+    async def test_no_tool_calls_yields_empty_list(self, patch_runner_cls, mock_agent) -> None:
+        """A plain text run captures no tool calls (final text event is not a call)."""
+        patch_runner_cls.run_async.return_value = _stream(_final_event("just text"))
+        runner = AdkTextRunner(mock_agent, config=AdkTextRunnerConfig(app_name="app"))
+
+        await runner.run_text_async("hi")
+
+        assert runner.last_tool_calls == []
+
+    async def test_capture_resets_between_runs(self, patch_runner_cls, mock_agent) -> None:
+        """Each run reports only its own tool calls, not the previous run's."""
+        patch_runner_cls.run_async.side_effect = [
+            _stream(_tool_call_event(("search_web", {"query": "first"})), _final_event("one")),
+            _stream(_final_event("two")),
+        ]
+        runner = AdkTextRunner(mock_agent, config=AdkTextRunnerConfig(app_name="app"))
+
+        await runner.run_text_async("first")
+        assert [c["title"] for c in runner.last_tool_calls] == ["first"]
+        await runner.run_text_async("second")
+        assert runner.last_tool_calls == []
 
 
 # ---------------------------------------------------------------------------

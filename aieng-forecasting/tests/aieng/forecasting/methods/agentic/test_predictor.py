@@ -50,6 +50,7 @@ class _StubRunner:
         *,
         agent_name: str = "stub_agent",
         model: Any = "stub-model",
+        tool_calls: list[dict[str, str]] | None = None,
     ) -> None:
         self._response = response
         self._agent = MagicMock()
@@ -57,6 +58,8 @@ class _StubRunner:
         self._agent.model = model
         # No tracing in unit tests, so no trace is captured.
         self.last_trace_id: str | None = None
+        # Curated tool-call summaries the real runner would have captured.
+        self.last_tool_calls: list[dict[str, str]] = tool_calls or []
         self.run_text_async_calls: list[dict[str, Any]] = []
 
     @property
@@ -128,9 +131,10 @@ def _make_predictor(
     model: Any = "stub-model",
     agent_name: str = "stub_agent",
     prompt_builder: Any | None = None,
+    tool_calls: list[dict[str, str]] | None = None,
 ) -> tuple[AgentPredictor, Any]:
     """Build a predictor wired to a stub runner. Return ``(predictor, builder)``."""
-    runner = _StubRunner(response, agent_name=agent_name, model=model)
+    runner = _StubRunner(response, agent_name=agent_name, model=model, tool_calls=tool_calls)
     builder = prompt_builder if prompt_builder is not None else _prompt_builder()
     predictor = AgentPredictor(
         _config(),
@@ -205,6 +209,26 @@ class TestPredictHappyPath:
 
         assert prediction.metadata["rationale"] == "overall rationale"
         assert prediction.metadata["horizon_rationale"] == "horizon 1 rationale"
+
+    def test_captured_tool_calls_thread_into_each_prediction(self) -> None:
+        """The runner's curated tool_calls land in every prediction's metadata."""
+        calls = [
+            {"tool": "search_web", "title": "Fed guidance"},
+            {"tool": "run_code", "title": "python (4 lines)"},
+        ]
+        predictor, _ = _make_predictor(response=_output_json([1, 2]), tool_calls=calls)
+
+        predictions = predictor.predict(_task([1, 2]), _context())
+
+        assert all(p.metadata["tool_calls"] == calls for p in predictions)
+
+    def test_no_tool_calls_leaves_metadata_key_absent(self) -> None:
+        """With no captured tool calls, the metadata key is not added."""
+        predictor, _ = _make_predictor(response=_output_json([1]), tool_calls=[])
+
+        prediction = predictor.predict(_task([1]), _context())[0]
+
+        assert "tool_calls" not in prediction.metadata
 
     def test_prompt_builder_is_invoked_with_task_and_context(self) -> None:
         """The predictor must call the prompt builder with the exact task/context."""
