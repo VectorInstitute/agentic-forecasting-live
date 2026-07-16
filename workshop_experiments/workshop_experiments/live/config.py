@@ -47,6 +47,9 @@ SCHEMA_METHOD: dict[str, str] = {
     "llmp_qgrid_cov": "llm_process_cov",
     "agent_news": "agent_news",
     "agent_code": "agent_code",
+    # Stage-2c adaptive twins — same data-contract method enum values (1.1.0).
+    "adaptive_frozen": "adaptive_frozen",
+    "adaptive_learning": "adaptive_learning",
 }
 
 
@@ -78,6 +81,7 @@ class LivePredictor:
     model_label: str | None
     predictor_id: str
     group: str
+    twin_id: str | None = None
 
 
 @dataclass(frozen=True)
@@ -103,6 +107,13 @@ class LiveConfig:
     aggregates_dir: Path
     smoke_store: Path
     predictors: tuple[LivePredictor, ...] = field(default_factory=tuple)
+    #: Stage-2c adaptive twins (deployed later; kept OUT of ``predictors`` so the
+    #: stateless-ladder counts stay stable). Empty until a ``twins:`` block is set.
+    twins: tuple[LivePredictor, ...] = field(default_factory=tuple)
+    #: Raw ``gates:`` block (fed to ``GateConfig.from_mapping`` by the twin
+    #: runtime). Kept as a plain mapping so ``config.py`` never imports the gate
+    #: package (which would import ``config`` back).
+    gate_params: dict[str, Any] = field(default_factory=dict)
 
     def task_id_for_horizon(self, horizon: int) -> str:
         """Return the workshop target/task id for a business-day *horizon*."""
@@ -111,6 +122,13 @@ class LiveConfig:
     def by_group(self, group: str) -> list[LivePredictor]:
         """Return the configured predictors in one scope *group*."""
         return [p for p in self.predictors if p.group == group]
+
+    def twin(self, twin_id: str) -> LivePredictor:
+        """Return the twin rung with the given ``twin_id`` (raises if absent)."""
+        for rung in self.twins:
+            if rung.twin_id == twin_id:
+                return rung
+        raise KeyError(f"no twin {twin_id!r} configured (have: {[t.twin_id for t in self.twins]})")
 
 
 def _expand_conventional(entries: list[dict[str, Any]]) -> list[LivePredictor]:
@@ -160,6 +178,41 @@ def _expand_api(block: dict[str, Any], group: str) -> list[LivePredictor]:
                 )
             )
     return out
+
+
+#: The two adaptive twins, both built from the same adaptive predictor config
+#: pointed at the trained strategy dir. The frozen twin is read-only; the
+#: learning twin carries the mutation tools + gates. Their ``predictor_id`` join
+#: keys follow the ``sp500_<method>__<model>`` convention like the agent rungs.
+TWIN_IDS: tuple[str, ...] = ("adaptive_frozen", "adaptive_learning")
+
+
+def _expand_twins(block: dict[str, Any]) -> tuple[LivePredictor, ...]:
+    """Expand the optional ``twins:`` block into the two twin rungs.
+
+    The block carries a single ``model`` (both twins share it — the only degree
+    of freedom between them is experience) and an ``enabled`` flag (twins deploy
+    later than the stateless ladder, so they default off). Returns an empty tuple
+    when absent or disabled.
+    """
+    if not block or not block.get("enabled", False):
+        return ()
+    model = str(block["model"])
+    out: list[LivePredictor] = []
+    for twin_id in TWIN_IDS:
+        schema_method = SCHEMA_METHOD[twin_id]
+        out.append(
+            LivePredictor(
+                registry_method=twin_id,
+                model=model,
+                schema_method=schema_method,
+                model_label=model,
+                predictor_id=f"sp500_{schema_method}__{model}",
+                group="twins",
+                twin_id=twin_id,
+            )
+        )
+    return tuple(out)
 
 
 def expand_predictors(raw: dict[str, Any]) -> tuple[LivePredictor, ...]:
@@ -239,6 +292,8 @@ def load_config(path: Path | str | None = None, *, repo_root: Path | None = None
         aggregates_dir=_resolve_path(root, paths["aggregates_dir"]),
         smoke_store=_resolve_path(root, paths["smoke_store"]),
         predictors=expand_predictors(raw["predictors"]),
+        twins=_expand_twins(raw.get("twins", {})),
+        gate_params=dict(raw.get("gates", {})),
     )
 
 
@@ -266,6 +321,7 @@ __all__ = [
     "DEFAULT_CONFIG_PATH",
     "REPO_ROOT",
     "SCHEMA_METHOD",
+    "TWIN_IDS",
     "LiveConfig",
     "LivePredictor",
     "RetryPolicy",

@@ -68,3 +68,24 @@ predictors:
     models:
       - gemini-3.5-flash
       - claude-sonnet-4-6
+
+# Adaptive twins (stage 2c) ------------------------------------------------
+# Two rungs built from ONE adaptive predictor config pointed at the trained
+# strategy dir. Frozen twin: strategy read-only forever (the control). Learning
+# twin: same agent + the gated adaptation mechanism. Kept OUT of the `predictors`
+# ladder above — they deploy later (twin deployment date is a first-class event)
+# and must not perturb the stateless-ladder record. `enabled: false` until the
+# study has produced a trained strategy and Ethan signs off on the twin launch.
+twins:
+  enabled: false
+  model: gemini-3.5-flash
+
+# Tiered-gate parameters (provisional, pending Ethan) ----------------------
+# Config, not constants: the learning twin's gate reads these.
+gates:
+  confirmation_threshold: 3      # k — confirmations before a hypothesis graduates
+  shadow_window_days: 10         # M — trading days a tier-3 candidate runs in shadow
+  circuit_breaker_window: 21     # trailing window for the learner-vs-frozen CRPS check
+  circuit_breaker_ratio: 1.15    # learner mean CRPS may not exceed 1.15x the frozen twin's
+  max_graduations_per_week: 1    # rate limit on graduated behavioral changes
+  max_open_hypotheses: 5         # cap on simultaneously-open hypotheses
