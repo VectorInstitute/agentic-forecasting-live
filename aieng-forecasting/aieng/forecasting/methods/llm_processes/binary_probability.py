@@ -205,7 +205,7 @@ def _sample_probability(
         {"role": "user", "content": user_prompt},
     ]
     response_format = make_json_schema_response_format(
-        "BinaryProbability", _build_binary_probability_schema(cfg.elicit_reasoning)
+        "BinaryProbability", _build_binary_probability_schema(cfg.elicit_reasoning), model=cfg.model
     )
 
     parsed, cost_usd, in_tokens, out_tokens, parse_failures = run_async(

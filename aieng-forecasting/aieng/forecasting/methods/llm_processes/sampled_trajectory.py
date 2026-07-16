@@ -274,7 +274,7 @@ def _sample_trajectories(
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_prompt},
     ]
-    response_format = make_json_schema_response_format("Trajectory", _TRAJECTORY_JSON_SCHEMA)
+    response_format = make_json_schema_response_format("Trajectory", _TRAJECTORY_JSON_SCHEMA, model=cfg.model)
 
     result: tuple[list[_Trajectory], float, int, int, int] = run_async(
         sample_n_async(

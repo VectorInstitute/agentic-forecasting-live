@@ -53,7 +53,7 @@ from workshop_experiments.domain import (
 
 #: Factory signature: ``(model) -> Predictor``. ``model`` is honoured by the
 #: LLMP and agent factories and ignored by the conventional ones.
-PredictorFactory = Callable[[str], Predictor]
+PredictorFactory = Callable[[str, list[str]], Predictor]
 
 
 # ---------------------------------------------------------------------------
@@ -89,28 +89,32 @@ _LLMP_USER_PROMPT_SUFFIX = (
 # ---------------------------------------------------------------------------
 
 
-def _make_naive(model: str) -> Predictor:
+def _make_naive(model: str, covariate_panel: list[str]) -> Predictor:
     return LastValuePredictor()
 
 
-def _make_ets(model: str) -> Predictor:
+def _make_ets(model: str, covariate_panel: list[str]) -> Predictor:
     return DartsExponentialSmoothingPredictor()
 
 
-def _make_kalman(model: str) -> Predictor:
+def _make_kalman(model: str, covariate_panel: list[str]) -> Predictor:
     return DartsKalmanForecasterPredictor()
 
 
-def _make_autoarima(model: str) -> Predictor:
+def _make_autoarima(model: str, covariate_panel: list[str]) -> Predictor:
     return DartsAutoARIMAPredictor()
 
 
-def _make_lightgbm(model: str) -> Predictor:
+def _make_lightgbm(model: str, covariate_panel: list[str]) -> Predictor:
     return DartsLightGBMPredictor()
 
 
-def _make_lightgbm_cov(model: str) -> Predictor:
-    return DartsLightGBMPredictor(covariate_series_ids=list(SP500_COVARIATE_PANEL))
+def _make_lightgbm_cov(model: str, covariate_panel: list[str]) -> Predictor:
+    if not covariate_panel:
+        raise ValueError(
+            "lightgbm_cov requires a non-empty covariate panel (is --no-covariates set, or are all covariates unavailable?)"
+        )
+    return DartsLightGBMPredictor(covariate_series_ids=list(covariate_panel))
 
 
 # ---------------------------------------------------------------------------
@@ -118,7 +122,7 @@ def _make_lightgbm_cov(model: str) -> Predictor:
 # ---------------------------------------------------------------------------
 
 
-def _make_llmp_qgrid(model: str) -> Predictor:
+def _make_llmp_qgrid(model: str, covariate_panel: list[str]) -> Predictor:
     return QuantileGridLLMPredictor(
         QuantileGridLLMPredictorConfig(
             model=model,
@@ -130,14 +134,18 @@ def _make_llmp_qgrid(model: str) -> Predictor:
     )
 
 
-def _make_llmp_qgrid_cov(model: str) -> Predictor:
+def _make_llmp_qgrid_cov(model: str, covariate_panel: list[str]) -> Predictor:
+    if not covariate_panel:
+        raise ValueError(
+            "llmp_qgrid_cov requires a non-empty covariate panel (is --no-covariates set, or are all covariates unavailable?)"
+        )
     return QuantileGridLLMPredictor(
         QuantileGridLLMPredictorConfig(
             model=model,
             history_window=_LLMP_HISTORY_WINDOW,
             series_description=_LLMP_SERIES_DESCRIPTION,
             user_prompt_suffix=_LLMP_USER_PROMPT_SUFFIX,
-            covariate_series_ids=list(SP500_COVARIATE_PANEL),
+            covariate_series_ids=list(covariate_panel),
             variant_tag="sp500_ws_cov",
         )
     )
@@ -149,11 +157,11 @@ def _make_llmp_qgrid_cov(model: str) -> Predictor:
 # ---------------------------------------------------------------------------
 
 
-def _make_agent_news(model: str) -> Predictor:
+def _make_agent_news(model: str, covariate_panel: list[str]) -> Predictor:
     return build_sp500_agent_predictor(build_sp500_news_config(model=model))
 
 
-def _make_agent_code(model: str) -> Predictor:
+def _make_agent_code(model: str, covariate_panel: list[str]) -> Predictor:
     return build_sp500_agent_predictor(build_sp500_code_config(model=model))
 
 
@@ -193,7 +201,7 @@ API_METHODS: tuple[str, ...] = LLMP_METHODS + AGENT_METHODS
 ALL_METHODS: tuple[str, ...] = CONVENTIONAL_METHODS + API_METHODS
 
 
-def build_predictor(name: str, *, model: str = LITE_MODEL) -> Predictor:
+def build_predictor(name: str, *, model: str = LITE_MODEL, covariate_panel: list[str] | None = None) -> Predictor:
     """Construct the predictor registered under *name*.
 
     Parameters
@@ -202,6 +210,11 @@ def build_predictor(name: str, *, model: str = LITE_MODEL) -> Predictor:
         A key in :data:`REGISTRY` (see :data:`ALL_METHODS`).
     model : str, default=LITE_MODEL
         Model id for LLMP / agent methods. Ignored by conventional methods.
+    covariate_panel : list[str] | None, default=None
+        Covariate series ids for the ``*_cov`` variants. ``None`` falls back
+        to the full :data:`SP500_COVARIATE_PANEL`; callers that have built the
+        data service should pass the panel filtered to actually-registered
+        series (some covariates, e.g. gold, can be unavailable upstream).
 
     Returns
     -------
@@ -217,7 +230,8 @@ def build_predictor(name: str, *, model: str = LITE_MODEL) -> Predictor:
         factory = REGISTRY[name]
     except KeyError:
         raise KeyError(f"Unknown predictor {name!r}. Known methods: {', '.join(ALL_METHODS)}.") from None
-    return factory(model)
+    panel = list(SP500_COVARIATE_PANEL) if covariate_panel is None else list(covariate_panel)
+    return factory(model, panel)
 
 
 def resolve_methods(methods: list[str]) -> list[str]:

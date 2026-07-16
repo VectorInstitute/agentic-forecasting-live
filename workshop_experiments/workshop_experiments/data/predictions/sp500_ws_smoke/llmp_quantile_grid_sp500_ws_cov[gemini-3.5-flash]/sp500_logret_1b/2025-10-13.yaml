@@ -1,0 +1,46 @@
+as_of: '2025-10-13T00:00:00'
+wall_time_s: 2.269496374996379
+predictions:
+- predictor_id: llmp_quantile_grid_sp500_ws_cov[gemini-3.5-flash]
+  task_id: sp500_logret_1b
+  issued_at: '2026-07-16T02:50:22.387908'
+  as_of: '2025-10-13T00:00:00'
+  forecast_date: '2025-10-14T00:00:00'
+  payload:
+    point_forecast: 0.0002
+    quantiles:
+      '0.05': -0.0235
+      '0.1': -0.0165
+      '0.2': -0.0105
+      '0.3': -0.006
+      '0.4': -0.0025
+      '0.5': 0.0002
+      '0.6': 0.003
+      '0.7': 0.0065
+      '0.8': 0.011
+      '0.9': 0.017
+      '0.95': 0.024
+  metadata:
+    model: gemini-3.5-flash
+    n_report_docs: 0
+    covariate_series_ids:
+    - vix_level_l1b
+    - vix_log_ret_1b_l1b
+    - ust10y_level_l1b
+    - ust2y10y_spread_l1b
+    - fed_funds_level_l1b
+    - cpi_mom_logdiff_l1b
+    - unemployment_rate_l1b
+    - oil_log_ret_1b_l1b
+    - dollar_index_log_ret_1b_l1b
+    - nasdaq_log_ret_1b_l1b
+    temperature: 1.0
+    reasoning_effort: null
+    cost_usd: 0.0
+    input_tokens: 12847
+    output_tokens: 183
+    parse_failures: 0
+    variant_tag: sp500_ws_cov
+    history_window: 64
+    langfuse_trace_id: d8884a6461b018286d55e611055c971c
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/d8884a6461b018286d55e611055c971c

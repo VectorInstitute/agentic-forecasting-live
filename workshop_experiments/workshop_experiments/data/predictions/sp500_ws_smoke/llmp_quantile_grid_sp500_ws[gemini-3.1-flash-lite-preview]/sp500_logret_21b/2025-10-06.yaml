@@ -1,0 +1,35 @@
+as_of: '2025-10-06T00:00:00'
+wall_time_s: 7.855074834020343
+predictions:
+- predictor_id: llmp_quantile_grid_sp500_ws[gemini-3.1-flash-lite-preview]
+  task_id: sp500_logret_21b
+  issued_at: '2026-07-16T02:41:16.232964'
+  as_of: '2025-10-06T00:00:00'
+  forecast_date: '2025-11-04T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.095
+      '0.1': -0.085
+      '0.2': -0.07
+      '0.3': -0.06
+      '0.4': -0.03
+      '0.5': 0.0
+      '0.6': 0.03
+      '0.7': 0.065
+      '0.8': 0.075
+      '0.9': 0.09
+      '0.95': 0.1
+  metadata:
+    model: gemini-3.1-flash-lite-preview
+    n_report_docs: 0
+    temperature: 1.0
+    reasoning_effort: null
+    cost_usd: 0.0
+    input_tokens: 1537
+    output_tokens: 3259
+    parse_failures: 0
+    variant_tag: sp500_ws
+    history_window: 64
+    langfuse_trace_id: c90f8c287cc87bb115aed05ed2ef41a7
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/c90f8c287cc87bb115aed05ed2ef41a7
