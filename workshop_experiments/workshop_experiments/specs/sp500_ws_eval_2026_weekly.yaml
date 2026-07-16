@@ -1,0 +1,45 @@
+# Protected eval grid — weekly origins across early/mid 2026 (held out).
+#
+# 2026 is unambiguously after the Gemini training cutoff. Origins end mid-June so
+# the h=21 forecast from the last origin resolves by ~2026-07-15. The workshop's
+# leakage discipline is the smoke-gate plus resumable, immediately-persisted
+# per-origin predictions (scoring never re-calls the API), so this is modelled as
+# a MultiTargetBacktestSpec rather than a budgeted eval spec. Spend it on your
+# finalists after iterating on the 2025 backtest.
+
+spec_id: sp500_ws_eval_2026_weekly
+
+description: >-
+  Workshop protected eval: weekly origins across early/mid 2026 (post-cutoff,
+  held out), forecasting S&P 500 close-to-close cumulative log returns at
+  1 / 5 / 21 business days. Origins end mid-June so h=21 resolves by mid-July.
+
+tasks:
+  - task_id: sp500_logret_1b
+    target_series_id: sp500_logret_1b
+    horizons: [1]
+    frequency: B
+    description: >-
+      S&P 500 close-to-close cumulative log return, 1 business day ahead
+      (next-session return / direction).
+
+  - task_id: sp500_logret_5b
+    target_series_id: sp500_logret_5b
+    horizons: [5]
+    frequency: B
+    description: >-
+      S&P 500 close-to-close cumulative log return, 5 business days ahead
+      (forward 1-week return).
+
+  - task_id: sp500_logret_21b
+    target_series_id: sp500_logret_21b
+    horizons: [21]
+    frequency: B
+    description: >-
+      S&P 500 close-to-close cumulative log return, 21 business days ahead
+      (forward 1-month return).
+
+start: "2026-01-05"
+end: "2026-06-15"
+stride: 5            # weekly origins (~24)
+warmup: 250
