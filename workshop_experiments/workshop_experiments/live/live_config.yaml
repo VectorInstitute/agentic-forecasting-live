@@ -1,0 +1,70 @@
+# Deployed ladder for the live daily S&P 500 forecasting harness (stage 2b).
+#
+# One run per trading day, shortly after the US market close: every predictor
+# below forecasts S&P 500 cumulative log returns at h = 1 / 5 / 21 business days
+# from today's close. Predictions + rationales are written as schema-conforming
+# records into the append-only log; resolutions and scores land as horizons
+# mature; the monitor aggregates are regenerated; everything is committed+pushed.
+#
+# Model lists are CONFIG, not code — edit the `models:` arrays to change the
+# deployed matrix. The registry-method -> schema-method-enum binding lives in
+# `config.py` (it is a taxonomy binding, not a tuning knob).
+
+schema_version: "1.1.0"
+
+# Target and horizons ------------------------------------------------------
+target_ticker: "^GSPC"
+horizons: [1, 5, 21]
+
+# Submission timing --------------------------------------------------------
+# One submission attempt per trading day at this local wall-clock time.
+submission:
+  time_local: "17:30"
+  timezone: "America/Toronto"
+
+# Retry policy for a failed submission evening -----------------------------
+# Bounded, same-evening retries only; a hard stop guarantees the run never
+# bleeds into the next day. Exhausted methods become logged gaps, not backfills.
+retry:
+  max_attempts: 3
+  backoff_minutes: 20
+  hard_stop_local: "21:00"
+
+# Paths (repo-root relative) ----------------------------------------------
+paths:
+  log_dir: "workshop_experiments/workshop_experiments/live/log"
+  aggregates_dir: "monitor/site/data"
+  # Committed smoke predictions used as fake "today" outputs by `--simulate`.
+  smoke_store: "workshop_experiments/workshop_experiments/data/predictions/sp500_ws_smoke"
+
+# The deployed predictor ladder -------------------------------------------
+predictors:
+  # Free, local, API-free methods. Each maps to a distinct (schema_method,
+  # model_label) pair so the leaderboard keeps them as separate rows.
+  conventional:
+    - method: naive
+    - method: ets
+    - method: kalman
+    - method: autoarima
+    - method: lightgbm
+    - method: lightgbm_cov
+
+  # LLM-Process quantile-grid variants: one structured completion per origin.
+  # `_cov` folds the covariate panel into the prompt. Runs across every model.
+  llmp:
+    methods: [llmp_qgrid, llmp_qgrid_cov]
+    models:
+      - gemini-3.1-flash-lite-preview
+      - gemini-3.5-flash
+      - claude-sonnet-4-6
+      - claude-opus-4-7
+      - gpt-5.4
+      - gpt-5.5
+
+  # News-grounded and code-executing analyst agents. Deliberately a narrower
+  # model set — agents are the most expensive rungs.
+  agent:
+    methods: [agent_news, agent_code]
+    models:
+      - gemini-3.5-flash
+      - claude-sonnet-4-6

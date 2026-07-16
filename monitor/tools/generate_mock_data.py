@@ -27,25 +27,30 @@ from pathlib import Path
 from statistics import NormalDist
 
 
-SCHEMA_VERSION = "1.0.0"
+SCHEMA_VERSION = "1.1.0"
 
 # The canonical grid from aieng.forecasting.evaluation.prediction.STANDARD_QUANTILES.
 STANDARD_QUANTILES: list[float] = [0.05, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 0.95]
 
 HORIZONS: list[int] = [1, 5, 21]
 
-CONVENTIONAL_METHODS = ["naive", "classical", "lightgbm"]
-LLM_METHODS = ["llm_process", "analyst_agent", "code_agent"]
+# Per-rung method enum values (schema 1.1.0): one value per deployed rung.
+CONVENTIONAL_METHODS = ["naive", "ets", "kalman", "autoarima", "lightgbm", "lightgbm_cov"]
+LLM_METHODS = ["llm_process", "llm_process_cov", "agent_news", "agent_code"]
 LLM_MODELS = ["gemini-3.1-flash-lite-preview", "gemini-3.5-flash", "claude-haiku-4.5"]
 
 # Relative CRPS skill: 1.0 == well calibrated; >1 == inflated/miscalibrated bands.
 METHOD_SKILL: dict[str, float] = {
     "naive": 1.35,
-    "classical": 1.12,
+    "ets": 1.14,
+    "kalman": 1.12,
+    "autoarima": 1.10,
     "lightgbm": 1.05,
+    "lightgbm_cov": 1.03,
     "llm_process": 1.08,
-    "analyst_agent": 1.18,
-    "code_agent": 1.10,
+    "llm_process_cov": 1.06,
+    "agent_news": 1.18,
+    "agent_code": 1.10,
 }
 MODEL_SKILL: dict[str, float] = {
     "gemini-3.1-flash-lite-preview": 1.10,
@@ -189,7 +194,7 @@ def rationale_text(method: str, origin: date, direction: str) -> str:
     str
         Public rationale text (no retrieved article bodies, no prompt scaffolding).
     """
-    if method == "analyst_agent":
+    if method == "agent_news":
         return (
             f"As of the {origin:%B %d, %Y} close I read the tape as {direction} over the next month. "
             "Retrieved coverage this week centers on the Fed's next move and steady mega-cap earnings; "
@@ -197,7 +202,7 @@ def rationale_text(method: str, origin: date, direction: str) -> str:
             "kept the central path near flat but widened the lower tail to respect headline risk into the "
             "h=21 window. Nothing in the narrative justified a directional bet beyond a small drift."
         )
-    if method == "code_agent":
+    if method == "agent_code":
         return (
             f"Computed 20-day realized vol and a short-horizon momentum score on the panel through "
             f"{origin:%Y-%m-%d}. Realized vol sits below its trailing median and the trend state is mildly "
@@ -229,12 +234,12 @@ def curated_trace(method: str, origin: date) -> dict[str, object]:
     dict[str, object]
         Curated trace summary with a ``tool_calls`` list.
     """
-    if method == "analyst_agent":
+    if method == "agent_news":
         tool_calls = [
             {"tool": "news_search", "query_title": f"S&P 500 outlook and Fed path, week of {origin:%Y-%m-%d}"},
             {"tool": "news_search", "query_title": "mega-cap earnings reactions and forward guidance"},
         ]
-    elif method == "code_agent":
+    elif method == "agent_code":
         tool_calls = [
             {"tool": "code_execution", "query_title": "20-day realized volatility on the price panel"},
             {"tool": "code_execution", "query_title": "empirical 21-day forward-return distribution"},

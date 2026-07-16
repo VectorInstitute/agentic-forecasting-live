@@ -6,7 +6,7 @@ This is the **versioned interface** between the live forecasting harness (stage 
 side imports the other's code — the JSON schemas in [`schemas/`](schemas/) are the only
 coupling.
 
-- **Schema version:** `1.0.0` (semantic). Every record and aggregate carries
+- **Schema version:** `1.1.0` (semantic). Every record and aggregate carries
   `schema_version`. Additive, backward-compatible changes bump the minor version; a
   breaking change bumps the major and the site branches on it.
 - **Validation:** [`validate_fixtures.py`](validate_fixtures.py) validates every fixture
@@ -61,6 +61,22 @@ Key fields: `schema_version`, `origin_date`, `origin_timestamp` (market-close cu
 `point_estimate` (= 0.50 quantile), and the 11-point `quantiles[]` grid — `rationale`
 (public), `curated_trace_summary.tool_calls[]` (`{tool, query_title}` only),
 `langfuse_trace_id`. Optional `twin_id` for adaptive twins.
+
+**`method` enum (1.1.0):** one value per deployed rung — `naive`, `ets`, `kalman`,
+`autoarima`, `lightgbm`, `lightgbm_cov`, `llm_process`, `llm_process_cov`,
+`agent_news`, `agent_code`, plus the stage-2c forward declarations
+`adaptive_frozen` / `adaptive_learning`. `model` is `null` for the conventional
+methods and carries the plain backing-model id for LLM/agent rungs
+(`llm_process_cov` carries the same model id as `llm_process` — the covariate
+variant is expressed by the method, never by a model-label suffix). Leaderboard
+cells key on `(method, model, horizon)`, so per-rung methods keep every cell
+unique without overloading `model`.
+
+**`curated_trace_summary` is populated when available.** The writer curates
+whatever structured tool-call list the agent path surfaces (tool names + query
+titles only); until the agent runtime exposes one, records legitimately carry an
+empty `tool_calls` list. An empty list means "no structured tool calls captured",
+not "no tools used".
 
 **Harness invariants not expressible in JSON Schema** (assert them in the writer): the
 `quantiles` set equals the standard grid exactly; values are non-decreasing;
@@ -133,3 +149,17 @@ harness's real aggregates (or have the harness write there) with `generated_by:
   distinction for the leakage-free claim.
 - **Version bumps:** additive fields → minor bump, site keeps working; anything renamed or
   removed → major bump and a heads-up so the site can branch.
+
+## Changelog
+
+- **1.1.0 (2026-07-15, pre-deployment)** — per-rung `method` enum. Replaced the
+  coarse `classical` / `analyst_agent` / `code_agent` / `twin_*` values with one
+  enum value per deployed rung (`ets`, `kalman`, `autoarima`, `lightgbm_cov`,
+  `llm_process_cov`, `agent_news`, `agent_code`, `adaptive_frozen`,
+  `adaptive_learning`), so `(method, model, horizon)` uniquely keys every
+  leaderboard cell and `model` is never overloaded as a variant label. Applied
+  to `prediction` and `resolution` schemas, the mock generator + fixtures, and
+  the site's method ordering/labels. Made **before** any live record was
+  committed, so no live artifact carries the 1.0.0 method values; treated as a
+  minor bump because the contract's shape is unchanged.
+- **1.0.0** — initial contract: five core records, envelope schemas, mock flag.

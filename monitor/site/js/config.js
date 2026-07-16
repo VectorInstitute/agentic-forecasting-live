@@ -2,37 +2,52 @@
 // Method colors follow the dataviz categorical palette in FIXED ORDER
 // (never cycled); each maps to a CSS custom property defined in style.css.
 
+// Schema 1.1.0: one method enum value per deployed rung.
 export const METHOD_ORDER = [
   "naive",
-  "classical",
+  "ets",
+  "kalman",
+  "autoarima",
   "lightgbm",
+  "lightgbm_cov",
   "llm_process",
-  "analyst_agent",
-  "code_agent",
+  "llm_process_cov",
+  "agent_news",
+  "agent_code",
 ];
 
 export const METHOD_LABEL = {
   naive: "Naive floor",
-  classical: "Classical",
+  ets: "ETS",
+  kalman: "Kalman",
+  autoarima: "AutoARIMA",
   lightgbm: "LightGBM",
+  lightgbm_cov: "LightGBM +cov",
   llm_process: "LLM-Process",
-  analyst_agent: "Analyst agent",
-  code_agent: "Code agent",
-  twin_frozen: "Twin (frozen)",
-  twin_learning: "Twin (learning)",
+  llm_process_cov: "LLM-Process +cov",
+  agent_news: "News agent",
+  agent_code: "Code agent",
+  adaptive_frozen: "Twin (frozen)",
+  adaptive_learning: "Twin (learning)",
 };
 
-// CSS variable holding each method's categorical hue.
+// CSS variable holding each method's categorical hue. Method *families* share
+// a hue (the palette stays at six fixed categorical colors); variants within a
+// family are distinguished by their row label, not by color.
 export const METHOD_VAR = {
   naive: "--m-naive",
-  classical: "--m-classical",
+  ets: "--m-classical",
+  kalman: "--m-classical",
+  autoarima: "--m-classical",
   lightgbm: "--m-lightgbm",
+  lightgbm_cov: "--m-lightgbm",
   llm_process: "--m-llm_process",
-  analyst_agent: "--m-analyst_agent",
-  code_agent: "--m-code_agent",
+  llm_process_cov: "--m-llm_process",
+  agent_news: "--m-analyst_agent",
+  agent_code: "--m-code_agent",
 };
 
-export const CONVENTIONAL = new Set(["naive", "classical", "lightgbm"]);
+export const CONVENTIONAL = new Set(["naive", "ets", "kalman", "autoarima", "lightgbm", "lightgbm_cov"]);
 
 export const HORIZONS = [1, 5, 21];
 
