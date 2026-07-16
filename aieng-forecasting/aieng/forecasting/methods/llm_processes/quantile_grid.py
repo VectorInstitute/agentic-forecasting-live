@@ -31,6 +31,7 @@ from aieng.forecasting.methods.llm_processes.base import (
     LLMPredictor,
     LLMPredictorConfig,
     apply_report_context,
+    build_covariate_block,
     fetch_report_docs,
     get_history_and_meta,
     serialize_history,
@@ -71,6 +72,18 @@ class QuantileGridLLMPredictorConfig(LLMPredictorConfig):
     user_prompt_suffix: str | None = Field(
         default=None,
         description="Free-form text appended to the user prompt after the standard forecast instruction.",
+    )
+    covariate_series_ids: list[str] | None = Field(
+        default=None,
+        description=(
+            "Optional list of registered covariate series ids to serialize into "
+            "the prompt as labeled, cutoff-safe history blocks (Context-is-Key "
+            "§5.4 style), letting the model condition on exogenous series. Each "
+            "is fetched via ``context.get_series`` and truncated to "
+            "``history_window``. ``None`` (default) is target-only. Set a "
+            "distinct ``variant_tag`` to keep covariate vs target-only runs "
+            "separate on leaderboards and in artifact storage."
+        ),
     )
 
 
@@ -171,8 +184,15 @@ def _build_user_prompt(
     n_steps: int,
     series_description_override: str | None = None,
     suffix: str | None = None,
+    covariate_block: str = "",
 ) -> str:
-    """Build the quantile-grid user prompt."""
+    """Build the quantile-grid user prompt.
+
+    ``covariate_block`` (when non-empty) is inserted as labeled exogenous-series
+    context between the target history and the forecast instruction — mirroring
+    the sampled-trajectory predictor so both LLMP elicitation strategies expose
+    the same optional covariate conditioning.
+    """
     if series_description_override is not None:
         meta_block = series_description_override
     else:
@@ -185,6 +205,7 @@ def _build_user_prompt(
         meta_lines.append(f"Frequency: {task.frequency}")
         meta_block = "\n".join(meta_lines)
 
+    covariate_section = f"\n{covariate_block}\n" if covariate_block else ""
     base = (
         f"Task: {task.description}\n"
         "\n"
@@ -192,6 +213,7 @@ def _build_user_prompt(
         "\n"
         "History:\n"
         f"{history_str}\n"
+        f"{covariate_section}"
         "\n"
         f"Forecast the next {n_steps} {task.frequency} values "
         f"({forecast_start.strftime('%Y-%m-%d')} through {forecast_end.strftime('%Y-%m-%d')}).\n"
@@ -281,6 +303,17 @@ class QuantileGridLLMPredictor(LLMPredictor):
 
         history_str = serialize_history(series_df, precision=self.cfg.precision)
 
+        # Labeled covariate blocks (Context-is-Key §5.4): cutoff-safe history of
+        # each exogenous series, truncated to the same window as the target.
+        covariate_block = ""
+        if self.cfg.covariate_series_ids:
+            covariate_block = build_covariate_block(
+                context,
+                self.cfg.covariate_series_ids,
+                precision=self.cfg.precision,
+                history_window=self.cfg.history_window,
+            )
+
         # Report context (before the task/history block): text preamble (CiK
         # Format A) or native PDF parts, per cfg.report_ingestion.
         report_docs = fetch_report_docs(config=self.cfg, context=context)
@@ -295,6 +328,7 @@ class QuantileGridLLMPredictor(LLMPredictor):
             n_steps,
             series_description_override=self.cfg.series_description,
             suffix=self.cfg.user_prompt_suffix,
+            covariate_block=covariate_block,
         )
         user_content = apply_report_context(config=self.cfg, docs=report_docs, user_prompt=user_prompt)
 
@@ -332,6 +366,11 @@ class QuantileGridLLMPredictor(LLMPredictor):
                         extra={
                             "n_report_docs": len(report_docs),
                             **({"report_sources": self.cfg.report_sources} if self.cfg.report_sources else {}),
+                            **(
+                                {"covariate_series_ids": list(self.cfg.covariate_series_ids)}
+                                if self.cfg.covariate_series_ids
+                                else {}
+                            ),
                         },
                     ),
                 ),
