@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  launchd template for the live daily S&P 500 forecasting harness.
+
+  Runs `ops/run.sh` (which sources .env and invokes `ws-live-run`) at 17:30 on
+  weekdays (Mon-Fri). launchd fires against the HOST's local wall-clock time, so
+  the host must be set to America/Toronto for 17:30 to mean 17:30 Toronto — see
+  ops/README.md. A non-session weekday (NYSE holiday) exits cleanly as a
+  non-session day, not a gap.
+
+  Before loading, replace __REPO_ROOT__ with the absolute repo path
+  (e.g. /Users/you/agentic-forecasting). See ops/README.md.
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>ai.vectorinstitute.ws-live-run</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>__REPO_ROOT__/workshop_experiments/workshop_experiments/live/ops/run.sh</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>__REPO_ROOT__</string>
+
+    <!-- Mon-Fri (Weekday 1-5) at 17:30 host-local time. -->
+    <key>StartCalendarInterval</key>
+    <array>
+        <dict><key>Weekday</key><integer>1</integer><key>Hour</key><integer>17</integer><key>Minute</key><integer>30</integer></dict>
+        <dict><key>Weekday</key><integer>2</integer><key>Hour</key><integer>17</integer><key>Minute</key><integer>30</integer></dict>
+        <dict><key>Weekday</key><integer>3</integer><key>Hour</key><integer>17</integer><key>Minute</key><integer>30</integer></dict>
+        <dict><key>Weekday</key><integer>4</integer><key>Hour</key><integer>17</integer><key>Minute</key><integer>30</integer></dict>
+        <dict><key>Weekday</key><integer>5</integer><key>Hour</key><integer>17</integer><key>Minute</key><integer>30</integer></dict>
+    </array>
+
+    <!-- Do not relaunch continuously; this is a scheduled one-shot. -->
+    <key>RunAtLoad</key>
+    <false/>
+
+    <key>StandardOutPath</key>
+    <string>__REPO_ROOT__/workshop_experiments/workshop_experiments/live/log/ws-live-run.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>__REPO_ROOT__/workshop_experiments/workshop_experiments/live/log/ws-live-run.err.log</string>
+</dict>
+</plist>

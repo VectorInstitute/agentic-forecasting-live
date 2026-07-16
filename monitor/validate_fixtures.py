@@ -62,11 +62,16 @@ def load_json(path: Path) -> object:
         return json.load(handle)
 
 
-def build_registry() -> Registry:
-    """Build a referencing registry from every schema in ``monitor/schemas``.
+def build_registry(schema_dir: Path = SCHEMA_DIR) -> Registry:
+    """Build a referencing registry from every schema in *schema_dir*.
 
     Cross-file ``$ref`` targets (the forecast bundle references the prediction
     and resolution schemas by ``$id``) resolve through this registry.
+
+    Parameters
+    ----------
+    schema_dir : Path, default=SCHEMA_DIR
+        Directory of ``*.schema.json`` files to load.
 
     Returns
     -------
@@ -74,7 +79,7 @@ def build_registry() -> Registry:
         A referencing registry containing all monitor schemas.
     """
     resources = []
-    for schema_path in sorted(SCHEMA_DIR.glob("*.schema.json")):
+    for schema_path in sorted(schema_dir.glob("*.schema.json")):
         schema = load_json(schema_path)
         resources.append(Resource.from_contents(schema))
     return Registry().with_resources((resource.id(), resource) for resource in resources)
@@ -97,6 +102,31 @@ def validator_for(schema_name: str, registry: Registry) -> Draft202012Validator:
     """
     schema = registry.get_or_retrieve(SCHEMA_IDS[schema_name]).value.contents
     return Draft202012Validator(schema, registry=registry, format_checker=Draft202012Validator.FORMAT_CHECKER)
+
+
+def validate_instance(schema_name: str, instance: object, *, registry: Registry | None = None) -> list[str]:
+    """Validate one *instance* against a named schema; return error strings.
+
+    A reusable entry point for the live harness (which validates real records
+    before committing) that shares the exact registry + validator machinery this
+    script uses for the fixtures. Empty list means the instance conforms.
+
+    Parameters
+    ----------
+    schema_name : str
+        Key into :data:`SCHEMA_IDS` (e.g. ``"prediction"``, ``"leaderboard"``).
+    instance : object
+        The decoded JSON instance to validate.
+    registry : Registry or None
+        A prebuilt registry to reuse; ``None`` builds one from :data:`SCHEMA_DIR`.
+
+    Returns
+    -------
+    list[str]
+        One formatted message per validation error (empty when valid).
+    """
+    reg = registry if registry is not None else build_registry()
+    return _errors(validator_for(schema_name, reg), instance, schema_name)
 
 
 def _errors(validator: Draft202012Validator, instance: object, label: str) -> list[str]:
