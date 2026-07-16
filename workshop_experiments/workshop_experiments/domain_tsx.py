@@ -43,6 +43,7 @@ from aieng.forecasting.methods.agentic.domain import (
     DomainConfig,
     build_analyst_config,
     render_analyst_instruction,
+    render_code_exec_supplement,
 )
 from aieng.forecasting.methods.agentic.history import compress_history
 from aieng.forecasting.models import ADVANCED_MODEL, LITE_MODEL
@@ -259,6 +260,11 @@ def build_tsx_news_config(
     )
 
 
+#: Graceful tool-cycle cap for the code agent (see AgentConfig.max_tool_iterations);
+#: mirrors the sp500 code config's post-efficiency-PR default.
+_CODE_AGENT_MAX_TOOL_ITERATIONS = 12
+
+
 def build_tsx_code_config(
     model: str = LITE_MODEL,
     search_model: str = LITE_MODEL,
@@ -266,18 +272,23 @@ def build_tsx_code_config(
     verifier_model: str = ADVANCED_MODEL,
     verifier_max_attempts: int = 3,
     verifier_confidence_threshold: int = 8,
+    max_tool_iterations: int | None = _CODE_AGENT_MAX_TOOL_ITERATIONS,
 ) -> AgentConfig:
     """Build the code-executing analyst :class:`AgentConfig` for the TSX.
 
     Combines bounded, cutoff-aware web search with an E2B Python sandbox so the
     agent can run its own statistical analysis over the return history before
-    forecasting.
+    forecasting. Appends the shared code-execution *workstyle* supplement
+    (short, batched analysis bursts; compact printed summaries) and opts into a
+    generous graceful tool-iteration cap so a runaway loop still ends with a
+    valid forecast — mirroring the sp500 code config.
     """
     return build_analyst_config(
         TSX_DOMAIN,
         name_suffix="code",
-        instruction=_TSX_ANALYST_INSTRUCTION + _CODE_EXEC_SUPPLEMENT,
+        instruction=_TSX_ANALYST_INSTRUCTION + _CODE_EXEC_SUPPLEMENT + render_code_exec_supplement(TSX_DOMAIN),
         model=model,
+        max_tool_iterations=max_tool_iterations,
         max_output_tokens=max_output_tokens,
         context_retrieval=ContextRetrievalConfig(
             enabled=True,
