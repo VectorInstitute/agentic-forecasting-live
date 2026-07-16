@@ -99,8 +99,13 @@ def _latest_close_date(data_service: object, series_id: str) -> date:
     return pd.to_datetime(frame["timestamp"]).max().date()
 
 
-def _run_simulate(config: LiveConfig, origin: date, log_dir: Path, out_dir: Path) -> tuple[int, int]:
-    """Predict (offline) -> resolve -> aggregate for one simulated origin."""
+def _run_simulate(config: LiveConfig, origin: date, log_dir: Path, out_dir: Path) -> tuple[int, int, str]:
+    """Predict (offline) -> resolve -> aggregate for one simulated origin.
+
+    Returns ``(n_methods, n_resolutions, submitted_at)`` — the UTC submission
+    timestamp is surfaced so the commit subject can carry it (see
+    :func:`~workshop_experiments.live.gitops.commit_message`).
+    """
     submitted_at = utc_now_z()
     source = SimulatePredictionSource(config=config, origin=origin)
     result = predict_step(config, source, log_dir=log_dir, submission_timestamp=submitted_at)
@@ -109,13 +114,16 @@ def _run_simulate(config: LiveConfig, origin: date, log_dir: Path, out_dir: Path
     aggregate_step(log_dir, out_dir)
     print(f"predict: wrote {len(result.written)}, gapped {len(result.gapped)}, skipped {len(result.skipped)}")
     print(f"resolve: {len(resolutions)} new resolutions")
-    return len(result.written), len(resolutions)
+    return len(result.written), len(resolutions), submitted_at
 
 
-def _run_real(config: LiveConfig, log_dir: Path, out_dir: Path) -> tuple[int, int] | None:
+def _run_real(config: LiveConfig, log_dir: Path, out_dir: Path) -> tuple[int, int, str] | None:
     """Real run: trading-day check, then predict -> resolve -> aggregate.
 
-    Returns ``None`` when today is not a trading session (clean no-op exit).
+    Returns ``(n_methods, n_resolutions, submitted_at)``, or ``None`` when today
+    is not a trading session (clean no-op exit). The UTC submission timestamp is
+    surfaced so the commit subject can carry it (see
+    :func:`~workshop_experiments.live.gitops.commit_message`).
     """
     from workshop_experiments.data import SP500_COVARIATE_PANEL, build_workshop_service  # noqa: PLC0415
 
@@ -139,7 +147,7 @@ def _run_real(config: LiveConfig, log_dir: Path, out_dir: Path) -> tuple[int, in
     aggregate_step(log_dir, out_dir)
     print(f"predict: wrote {len(result.written)}, gapped {len(result.gapped)}, skipped {len(result.skipped)}")
     print(f"resolve: {len(resolutions)} new resolutions")
-    return len(result.written), len(resolutions)
+    return len(result.written), len(resolutions), submitted_at
 
 
 def run(argv: list[str] | None = None) -> int:  # noqa: PLR0911 - linear step gating with early exits
@@ -175,14 +183,14 @@ def run(argv: list[str] | None = None) -> int:  # noqa: PLR0911 - linear step ga
         return 1
     try:
         if args.simulate:
-            n_methods, n_resolutions = _run_simulate(config, origin, log_dir, out_dir)
+            n_methods, n_resolutions, submitted_at = _run_simulate(config, origin, log_dir, out_dir)
         else:
             outcome = _run_real(config, log_dir, out_dir)
             if outcome is None:
                 return 0
-            n_methods, n_resolutions = outcome
+            n_methods, n_resolutions, submitted_at = outcome
 
-        message = commit_message(origin.isoformat(), n_methods, n_resolutions)
+        message = commit_message(origin.isoformat(), n_methods, n_resolutions, submitted_at)
         created = stage_and_commit(_repo_root(config), [log_dir, out_dir], message)
         if not created:
             print("nothing to commit.")

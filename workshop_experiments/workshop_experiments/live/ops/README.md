@@ -13,6 +13,7 @@ wrapper so a macOS host can drive it on a schedule.
 |---|---|
 | `run.sh` | Sources the repo `.env`, then runs one `ws-live-run` cycle. |
 | `ai.vectorinstitute.ws-live-run.plist` | `launchd` job template (Mon–Fri 17:30). |
+| [`HONESTY.md`](HONESTY.md) | Submission-time trust model: why commit dates are not the anchor, and what an auditor checks. |
 
 ## What one run does
 
@@ -21,6 +22,11 @@ single-run lockfile (`live/log/../.ws-live-run.lock`). A non-session weekday
 (NYSE holiday) exits cleanly as a *non-session day* — **not** a gap. A method
 that fails after its retries becomes a per-method gap-log entry and the run
 continues.
+
+The daily commit subject carries the UTC submission timestamp after `@`. On the
+`live` fork, the push then triggers a server-timestamped attestation Release
+(`.github/workflows/attest-live-log.yml`) — the actual proof of submission time.
+See [`HONESTY.md`](HONESTY.md) for why commit dates are not the trust anchor.
 
 Verify the plan first, without any writes/API/network:
 

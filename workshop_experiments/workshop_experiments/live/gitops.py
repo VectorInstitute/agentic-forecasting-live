@@ -13,12 +13,22 @@ import subprocess
 from pathlib import Path
 
 
-def commit_message(origin: str, n_methods: int, n_resolutions: int) -> str:
+def commit_message(origin: str, n_methods: int, n_resolutions: int, submission_timestamp: str) -> str:
     """Return the sanctioned daily commit subject line.
 
-    Example: ``live: 2026-07-15 predictions (22 methods) / resolutions (12)``.
+    The UTC ``submission_timestamp`` is folded into the subject as a cheap,
+    human-readable cross-check: an auditor can eyeball it against the
+    server-side attestation Release's ``created_at`` (see
+    ``live/ops/HONESTY.md``). It is a *convenience marker only* — git
+    author/committer dates and this string are all client-supplied and
+    forgeable, so none of them is the trust anchor. The attestation Release's
+    server-set ``created_at`` is.
+
+    Example subject:
+    ``live: 2026-07-15 predictions (22 methods) / resolutions (12) @ <ts>``
+    where ``<ts>`` is the UTC ``submission_timestamp`` (e.g. ``2026-07-15T21:32:04Z``).
     """
-    return f"live: {origin} predictions ({n_methods} methods) / resolutions ({n_resolutions})"
+    return f"live: {origin} predictions ({n_methods} methods) / resolutions ({n_resolutions}) @ {submission_timestamp}"
 
 
 def _git(repo_root: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess[str]:

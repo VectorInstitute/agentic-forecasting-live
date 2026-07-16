@@ -112,6 +112,13 @@ display. Retrieved article bodies and the agent's system/prompt scaffolding are 
 written to the log. `langfuse_trace_id` is committed and shown as an identifier; opening
 the trace itself requires internal Langfuse access.
 
+**Submission-time honesty.** The "git-timestamped" log (see the data-flow diagram
+below) is timestamped by **GitHub Releases**, not by forgeable git commit dates. Each
+push that touches the live log cuts a server-timestamped attestation Release; an auditor
+checks that Release's `created_at` against the record's `submission_timestamp`. The full
+trust model, what it proves, and its limitations live in
+[`workshop_experiments/workshop_experiments/live/ops/HONESTY.md`](../workshop_experiments/workshop_experiments/live/ops/HONESTY.md).
+
 ## Data flow
 
 ```
