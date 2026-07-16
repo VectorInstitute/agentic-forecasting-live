@@ -20,6 +20,7 @@ import sys
 from pathlib import Path
 
 from workshop_experiments.data import build_workshop_service
+from workshop_experiments.data_tsx import build_tsx_workshop_service
 from workshop_experiments.runner import DEFAULT_STORE_DIR
 from workshop_experiments.scoring import (
     DEFAULT_RESULTS_DIR,
@@ -56,7 +57,9 @@ def main(argv: list[str] | None = None) -> int:
     )
 
     spec = load_spec(args.spec)
-    data_service = build_workshop_service(include_covariates=not args.no_covariates, end=args.end)
+    is_tsx = any(task.target_series_id.startswith("tsx_") for task in spec.tasks)
+    build_service = build_tsx_workshop_service if is_tsx else build_workshop_service
+    data_service = build_service(include_covariates=not args.no_covariates, end=args.end)
 
     frame, _results = score_spec(spec, data_service, store_dir=Path(args.store_dir))
     paths = write_leaderboard_artifacts(frame, spec.spec_id, results_dir=Path(args.results_dir))

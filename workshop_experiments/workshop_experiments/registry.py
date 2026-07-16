@@ -44,10 +44,16 @@ from aieng.forecasting.methods.numerical import (
 from aieng.forecasting.models import LITE_MODEL
 
 from workshop_experiments.data import SP500_COVARIATE_PANEL
+from workshop_experiments.data_tsx import TSX_COVARIATE_PANEL
 from workshop_experiments.domain import (
     build_sp500_agent_predictor,
     build_sp500_code_config,
     build_sp500_news_config,
+)
+from workshop_experiments.domain_tsx import (
+    build_tsx_agent_predictor,
+    build_tsx_code_config,
+    build_tsx_news_config,
 )
 
 
@@ -166,6 +172,101 @@ def _make_agent_code(model: str, covariate_panel: list[str]) -> Predictor:
 
 
 # ---------------------------------------------------------------------------
+# TSX variants (Canada-focused primary target). Distinct method names and, for
+# the model-parameterised rungs, distinct predictor ids (via the ``tsx_ws``
+# variant tag and the ``tsx_analyst_*`` agent names) so caches never collide with
+# the S&P 500 rungs. Conventional rungs reuse the target-agnostic baseline/darts
+# predictors; the runner keys their stores by the tsx_* spec id.
+# ---------------------------------------------------------------------------
+
+_TSX_LLMP_SERIES_DESCRIPTION = (
+    "Series: S&P/TSX Composite (^GSPTSE) close-to-close cumulative log return over a fixed "
+    "number of business days.\n"
+    "Units: log-return (a value of 0.01 is roughly a +1% move).\n"
+    "Frequency: business days (Mon-Fri)."
+)
+
+_TSX_LLMP_USER_PROMPT_SUFFIX = (
+    "Notes for this series:\n"
+    "- Daily index returns are close to a martingale: the *level* of the return "
+    "is barely predictable, so point forecasts should sit near 0 and the value "
+    "is in the *spread* (volatility and tail risk), not a confident direction.\n"
+    "- The TSX is heavy in energy and materials, so oil, gold, and the Canadian "
+    "dollar are primary risk drivers; US equity moves spill over strongly.\n"
+    "- Returns cluster in volatility — calm and turbulent stretches persist — so "
+    "recent realised dispersion is the best guide to the width of your interval.\n"
+    "- Keep the distribution roughly symmetric about ~0 unless the recent history "
+    "or the covariate blocks give a clear reason to skew it; avoid extrapolating "
+    "a short run of up or down days into a trend."
+)
+
+
+def _make_tsx_naive(model: str, covariate_panel: list[str]) -> Predictor:
+    return LastValuePredictor()
+
+
+def _make_tsx_ets(model: str, covariate_panel: list[str]) -> Predictor:
+    return DartsExponentialSmoothingPredictor()
+
+
+def _make_tsx_kalman(model: str, covariate_panel: list[str]) -> Predictor:
+    return DartsKalmanForecasterPredictor()
+
+
+def _make_tsx_autoarima(model: str, covariate_panel: list[str]) -> Predictor:
+    return DartsAutoARIMAPredictor()
+
+
+def _make_tsx_lightgbm(model: str, covariate_panel: list[str]) -> Predictor:
+    return DartsLightGBMPredictor()
+
+
+def _make_tsx_lightgbm_cov(model: str, covariate_panel: list[str]) -> Predictor:
+    if not covariate_panel:
+        raise ValueError(
+            "tsx_lightgbm_cov requires a non-empty covariate panel (is --no-covariates set, or are all covariates unavailable?)"
+        )
+    return DartsLightGBMPredictor(covariate_series_ids=list(covariate_panel))
+
+
+def _make_tsx_llmp_qgrid(model: str, covariate_panel: list[str]) -> Predictor:
+    return QuantileGridLLMPredictor(
+        QuantileGridLLMPredictorConfig(
+            model=model,
+            history_window=_LLMP_HISTORY_WINDOW,
+            series_description=_TSX_LLMP_SERIES_DESCRIPTION,
+            user_prompt_suffix=_TSX_LLMP_USER_PROMPT_SUFFIX,
+            variant_tag="tsx_ws",
+        )
+    )
+
+
+def _make_tsx_llmp_qgrid_cov(model: str, covariate_panel: list[str]) -> Predictor:
+    if not covariate_panel:
+        raise ValueError(
+            "tsx_llmp_qgrid_cov requires a non-empty covariate panel (is --no-covariates set, or are all covariates unavailable?)"
+        )
+    return QuantileGridLLMPredictor(
+        QuantileGridLLMPredictorConfig(
+            model=model,
+            history_window=_LLMP_HISTORY_WINDOW,
+            series_description=_TSX_LLMP_SERIES_DESCRIPTION,
+            user_prompt_suffix=_TSX_LLMP_USER_PROMPT_SUFFIX,
+            covariate_series_ids=list(covariate_panel),
+            variant_tag="tsx_ws_cov",
+        )
+    )
+
+
+def _make_tsx_agent_news(model: str, covariate_panel: list[str]) -> Predictor:
+    return build_tsx_agent_predictor(build_tsx_news_config(model=model))
+
+
+def _make_tsx_agent_code(model: str, covariate_panel: list[str]) -> Predictor:
+    return build_tsx_agent_predictor(build_tsx_code_config(model=model))
+
+
+# ---------------------------------------------------------------------------
 # Registry + method groups
 # ---------------------------------------------------------------------------
 
@@ -180,9 +281,20 @@ REGISTRY: dict[str, PredictorFactory] = {
     "llmp_qgrid_cov": _make_llmp_qgrid_cov,
     "agent_news": _make_agent_news,
     "agent_code": _make_agent_code,
+    # TSX (Canada-focused primary target)
+    "tsx_naive": _make_tsx_naive,
+    "tsx_ets": _make_tsx_ets,
+    "tsx_kalman": _make_tsx_kalman,
+    "tsx_autoarima": _make_tsx_autoarima,
+    "tsx_lightgbm": _make_tsx_lightgbm,
+    "tsx_lightgbm_cov": _make_tsx_lightgbm_cov,
+    "tsx_llmp_qgrid": _make_tsx_llmp_qgrid,
+    "tsx_llmp_qgrid_cov": _make_tsx_llmp_qgrid_cov,
+    "tsx_agent_news": _make_tsx_agent_news,
+    "tsx_agent_code": _make_tsx_agent_code,
 }
 
-#: Free, local, API-free methods — safe to smoke-run without a budget gate.
+#: Free, local, API-free S&P 500 methods — safe to smoke-run without a budget gate.
 CONVENTIONAL_METHODS: tuple[str, ...] = (
     "naive",
     "ets",
@@ -195,10 +307,34 @@ CONVENTIONAL_METHODS: tuple[str, ...] = (
 LLMP_METHODS: tuple[str, ...] = ("llmp_qgrid", "llmp_qgrid_cov")
 #: News-grounded and code-executing analyst agents.
 AGENT_METHODS: tuple[str, ...] = ("agent_news", "agent_code")
+
+#: TSX (Canada-focused) counterparts of every rung.
+TSX_CONVENTIONAL_METHODS: tuple[str, ...] = (
+    "tsx_naive",
+    "tsx_ets",
+    "tsx_kalman",
+    "tsx_autoarima",
+    "tsx_lightgbm",
+    "tsx_lightgbm_cov",
+)
+TSX_LLMP_METHODS: tuple[str, ...] = ("tsx_llmp_qgrid", "tsx_llmp_qgrid_cov")
+TSX_AGENT_METHODS: tuple[str, ...] = ("tsx_agent_news", "tsx_agent_code")
+
 #: Methods that call an LLM/agent API (spend-gated).
-API_METHODS: tuple[str, ...] = LLMP_METHODS + AGENT_METHODS
+API_METHODS: tuple[str, ...] = LLMP_METHODS + AGENT_METHODS + TSX_LLMP_METHODS + TSX_AGENT_METHODS
 #: Every registered method name.
-ALL_METHODS: tuple[str, ...] = CONVENTIONAL_METHODS + API_METHODS
+ALL_METHODS: tuple[str, ...] = (
+    CONVENTIONAL_METHODS
+    + LLMP_METHODS
+    + AGENT_METHODS
+    + TSX_CONVENTIONAL_METHODS
+    + TSX_LLMP_METHODS
+    + TSX_AGENT_METHODS
+)
+
+#: Registry method names that operate on the TSX target (drive covariate-panel
+#: and data-service selection for the caller).
+TSX_METHODS: frozenset[str] = frozenset(TSX_CONVENTIONAL_METHODS + TSX_LLMP_METHODS + TSX_AGENT_METHODS)
 
 
 def build_predictor(name: str, *, model: str = LITE_MODEL, covariate_panel: list[str] | None = None) -> Predictor:
@@ -230,7 +366,10 @@ def build_predictor(name: str, *, model: str = LITE_MODEL, covariate_panel: list
         factory = REGISTRY[name]
     except KeyError:
         raise KeyError(f"Unknown predictor {name!r}. Known methods: {', '.join(ALL_METHODS)}.") from None
-    panel = list(SP500_COVARIATE_PANEL) if covariate_panel is None else list(covariate_panel)
+    if covariate_panel is not None:
+        panel = list(covariate_panel)
+    else:
+        panel = list(TSX_COVARIATE_PANEL) if name in TSX_METHODS else list(SP500_COVARIATE_PANEL)
     return factory(model, panel)
 
 
@@ -251,6 +390,10 @@ def resolve_methods(methods: list[str]) -> list[str]:
         "llmp": LLMP_METHODS,
         "agent": AGENT_METHODS,
         "api": API_METHODS,
+        "tsx_conventional": TSX_CONVENTIONAL_METHODS,
+        "tsx_llmp": TSX_LLMP_METHODS,
+        "tsx_agent": TSX_AGENT_METHODS,
+        "tsx_all": TSX_CONVENTIONAL_METHODS + TSX_LLMP_METHODS + TSX_AGENT_METHODS,
     }
     resolved: list[str] = []
     for token in methods:
@@ -270,6 +413,10 @@ __all__ = [
     "CONVENTIONAL_METHODS",
     "LLMP_METHODS",
     "REGISTRY",
+    "TSX_AGENT_METHODS",
+    "TSX_CONVENTIONAL_METHODS",
+    "TSX_LLMP_METHODS",
+    "TSX_METHODS",
     "PredictorFactory",
     "build_predictor",
     "resolve_methods",

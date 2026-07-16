@@ -1,0 +1,44 @@
+# High-resolution bonus layer — daily origins across 2025 through mid-June 2026.
+#
+# Intended for the free, local conventional methods plus the lite LLM-Process
+# only (agents are too costly at this density). Provides the dense CRPS-over-time
+# and fan-chart substrate for the workshop figures. Loaded as a
+# MultiTargetBacktestSpec, CRPS-scored at h = 1 / 5 / 21 business days, on the
+# Canada-focused S&P/TSX Composite target.
+
+spec_id: tsx_ws_daily_2025_2026
+
+description: >-
+  Workshop daily bonus layer: every business-day origin from 2025-01-02 through
+  2026-06-15, forecasting S&P/TSX Composite close-to-close cumulative log returns
+  at 1 / 5 / 21 business days. Conventional + lite-LLMP only.
+
+tasks:
+  - task_id: tsx_logret_1b
+    target_series_id: tsx_logret_1b
+    horizons: [1]
+    frequency: B
+    description: >-
+      S&P/TSX Composite close-to-close cumulative log return, 1 business day ahead
+      (next-session return / direction).
+
+  - task_id: tsx_logret_5b
+    target_series_id: tsx_logret_5b
+    horizons: [5]
+    frequency: B
+    description: >-
+      S&P/TSX Composite close-to-close cumulative log return, 5 business days ahead
+      (forward 1-week return).
+
+  - task_id: tsx_logret_21b
+    target_series_id: tsx_logret_21b
+    horizons: [21]
+    frequency: B
+    description: >-
+      S&P/TSX Composite close-to-close cumulative log return, 21 business days ahead
+      (forward 1-month return).
+
+start: "2025-01-02"
+end: "2026-06-15"
+stride: 1            # daily origins (~370 business days)
+warmup: 250
