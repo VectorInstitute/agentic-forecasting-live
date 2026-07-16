@@ -115,7 +115,7 @@ SP500_DOMAIN = DomainConfig(
     data_fetch_example=(
         "```python\nraw = ticker.history(start='1990-01-01', end='2026-02-16', auto_adjust=False)\n```"
     ),
-    code_exec_preinstalled="numpy, pandas, sklearn, yfinance, statsmodels, properscoring",
+    code_exec_preinstalled="numpy, pandas, scipy, sklearn, statsmodels, statsforecast, darts, lightgbm, yfinance, properscoring",
     multitask_origin_price_field="origin_log_return",
     # Context retrieval — general equity macro (NOT oil).
     context_retrieval_instruction=_SP500_CONTEXT_RETRIEVAL_INSTRUCTION,
