@@ -5,15 +5,14 @@ name: deploy monitor
 # the deploy instead of shipping. Requires a one-time repo setting:
 #   Settings -> Pages -> Source: GitHub Actions   (see monitor/README.md).
 
+# MANUAL-ONLY (workflow_dispatch) until Vector Institute publication approval lands.
+# The monitor is deliberately NOT auto-published: while approval is pending, the
+# supported way to view the dashboard is locally (see monitor/README.md). We keep
+# this workflow in place so a Pages deploy is one click away once approved, but we
+# do NOT wire a `push` trigger — no commit to `main` should silently publish the
+# site to a public URL before sign-off. Re-add the `push:` trigger (site/schemas/
+# validate_fixtures.py/this file) at that point to restore automatic deploys.
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - monitor/site/**
-      - monitor/schemas/**
-      - monitor/validate_fixtures.py
-      - .github/workflows/deploy-monitor.yml
   workflow_dispatch:
 
 # Least-privilege token for Pages deploy.

@@ -14,6 +14,10 @@ the database; the site just fetches and renders it.
 
 ## Serve locally
 
+**Local viewing is the supported way to see the monitor right now.** The public GitHub
+Pages deploy is deliberately OFF until Vector Institute publication approval lands (see
+[Deployment](#deployment-github-pages) below) — so serve the site yourself.
+
 No build, no backend. From this directory:
 
 ```bash
@@ -77,15 +81,28 @@ committing.
 
 ## Deployment (GitHub Pages)
 
-`.github/workflows/deploy-monitor.yml` validates the fixtures, then publishes
-`monitor/site/` to GitHub Pages on every push to `main` that touches `monitor/site/**`,
-`monitor/schemas/**`, or the workflow itself (and via manual `workflow_dispatch`), using
-the standard `actions/upload-pages-artifact` + `actions/deploy-pages` pattern.
+**Status: OFF (manual-only) pending Vector Institute publication approval.** Until that
+sign-off lands, the monitor is not published to any public URL — [local serving](#serve-locally)
+is the only supported viewing mode. The deploy workflow is retained but gated so nothing
+publishes by accident.
 
-**One-time repo setting (manual, cannot be scripted here):** in the fork's
-**Settings → Pages**, set **Source: GitHub Actions**. Until that is done the workflow will
-run but Pages won't serve. The site is fully static and origin-relative, so it works under
-the project-pages sub-path (`https://<org>.github.io/<repo>/`) with no config.
+`.github/workflows/deploy-monitor.yml` validates the fixtures, then publishes
+`monitor/site/` to GitHub Pages. It is intentionally triggered by **manual
+`workflow_dispatch` only** — there is **no `push` trigger**, so a commit to `main` never
+silently deploys the site while approval is pending. Publishing today is a deliberate,
+explicit act: someone with repo access runs the workflow by hand. It uses the standard
+`actions/upload-pages-artifact` + `actions/deploy-pages` pattern.
+
+**Once approval lands**, two steps turn on automatic deploys:
+
+1. Re-add the `push:` trigger (branch `main`, paths `monitor/site/**`, `monitor/schemas/**`,
+   `monitor/validate_fixtures.py`, and this workflow) to `deploy-monitor.yml`.
+2. **One-time repo setting (manual, cannot be scripted here):** in the fork's
+   **Settings → Pages**, set **Source: GitHub Actions**. Until that is done the workflow
+   will run but Pages won't serve.
+
+The site is fully static and origin-relative, so it works under the project-pages sub-path
+(`https://<org>.github.io/<repo>/`) with no config.
 
 ## Design notes
 
