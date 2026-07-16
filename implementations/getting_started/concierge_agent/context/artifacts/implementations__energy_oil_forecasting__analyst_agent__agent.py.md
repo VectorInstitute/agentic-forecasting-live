@@ -53,115 +53,31 @@ from aieng.forecasting.methods.agentic.agent_factory import (
     CodeExecutionConfig,
     ContextRetrievalConfig,
 )
+from aieng.forecasting.methods.agentic.domain import (
+    build_analyst_config,
+    render_analyst_instruction,
+    render_multitask_analyst_instruction,
+)
+from aieng.forecasting.methods.agentic.history import compress_history
 from aieng.forecasting.methods.numerical.darts_arima import DartsAutoARIMAPredictor
-from aieng.forecasting.models import LITE_MODEL
+from aieng.forecasting.models import ADVANCED_MODEL, LITE_MODEL
 from energy_oil_forecasting.data import WTI_SERIES_ID, build_wti_service
+from energy_oil_forecasting.domain import OIL_DOMAIN
 from pydantic import BaseModel
 
 
 # ---------------------------------------------------------------------------
-# System prompt (root analyst agent)
+# System prompts — rendered from OIL_DOMAIN
 # ---------------------------------------------------------------------------
+#
+# The analyst, multitask, and context-retrieval instructions are rendered from
+# the shared instruction templates over the WTI ``OIL_DOMAIN`` fragments (see
+# :mod:`energy_oil_forecasting.domain`).  A new target series is configured by
+# supplying a different ``DomainConfig`` — no edits to this module.
 
-_WTI_MULTITASK_ANALYST_INSTRUCTION = """\
-## Role
-
-You are an expert WTI crude oil market analyst.
-
-## Input
-
-You will receive a JSON payload containing:
-- `task_spec`: the exact question and required JSON output schema
-- `as_of`: the forecast origin date (temporal cutoff)
-- `origin_price_usd_bbl`: WTI close on the origin date
-- `target_history_csv`: compressed WTI daily close history
-
-When context retrieval is enabled, call ``search_web`` BEFORE answering.
-
-## Output contract
-
-Read the data (and briefing, if retrieved) carefully, then execute the task \
-in `task_spec` precisely.
-
-If a `set_model_response` tool is available, call it with your complete JSON \
-as `json_response` — the exact schema is described in `task_spec`. Otherwise \
-return the JSON directly as plain text with no preamble.\
-"""
-
-
-def _build_wti_analyst_instruction() -> str:
-    """Build the WTI analyst instruction, embedding the output schema from the class.
-
-    Using a function instead of a static string ensures the ``## Output schema``
-    block is always in sync with ``ContinuousAgentForecastOutput`` —
-    no manual JSON to maintain.
-    """
-    schema = ContinuousAgentForecastOutput.prompt_schema_json()
-    return (
-        "## Role\n\n"
-        "You are an expert WTI crude oil market analyst. You produce calibrated "
-        "probabilistic price forecasts for WTI crude oil futures, grounded in "
-        "supply/demand fundamentals, geopolitical risk, and historical price dynamics.\n\n"
-        "## Forecasting contract\n\n"
-        "You will receive a JSON payload containing:\n"
-        "- `task`: the task identifier\n"
-        "- `as_of`: the forecast origin date in YYYY-MM-DD format\n"
-        "- `horizons`: a list of integer horizon steps (business days ahead)\n"
-        "- `standard_quantiles`: the exact quantile levels you must produce\n"
-        "- `target_summary`: last close price, 52-week range, and observation count\n"
-        "- `target_history_csv`: WTI daily close history (recent 6 months daily, "
-        "older history as weekly averages)\n\n"
-        "Rules:\n"
-        "1. Produce one forecast for each horizon listed in `horizons`.\n"
-        "2. Use exactly the quantile levels from `standard_quantiles` — no additions, no omissions.\n"
-        "3. `point_forecast` must exactly equal the 0.50 quantile value.\n"
-        "4. Quantile values must be strictly non-decreasing as quantile levels increase.\n"
-        "5. Document your reasoning in the `rationale` fields.\n"
-        "6. When tools are enabled, conclude with `set_model_response` to return the structured forecast.\n\n"
-        "## Output schema\n\n"
-        "Call `set_model_response` with a `json_response` string matching **exactly**:\n\n"
-        "```json\n" + schema + "\n```\n\n"
-        'Critical: use `"horizon"` (integer, not `"horizon_days"`). '
-        '`"quantiles"` is a **list** of `{"quantile": <level>, "value": <price>}` '
-        "objects — not a dict. Omit any field not shown above.\n\n"
-        "## Analysis discipline\n\n"
-        "When context retrieval is available, call ``search_web`` to gather market "
-        "intelligence BEFORE producing forecasts.\n\n"
-        "Call ``search_web`` with ``query`` and ``cutoff_date`` (set to the ``as_of`` "
-        "date from the payload). The ``cutoff_date`` MUST always equal ``as_of`` — "
-        "this is the temporal fence that prevents post-origin information from "
-        "contaminating historical backtests.\n\n"
-        "Recommended queries (call ``search_web`` once per topic):\n"
-        '- ``search_web(query="WTI crude oil price trend and OPEC+ supply decisions", cutoff_date=<as_of>)``\n'
-        '- ``search_web(query="Persian Gulf geopolitical risk shipping lane disruptions", cutoff_date=<as_of>)``\n'
-        '- ``search_web(query="US Strategic Petroleum Reserve policy and global demand outlook", cutoff_date=<as_of>)``\n\n'
-        "Document your key assumptions (OPEC+ policy, shipping lane risk, inventory "
-        "levels, macro demand) in the `rationale` fields of your forecast output."
-    )
-
-
-_WTI_ANALYST_INSTRUCTION = _build_wti_analyst_instruction()
-
-# ---------------------------------------------------------------------------
-# Context retrieval instruction (sub-agent)
-# ---------------------------------------------------------------------------
-
-_WTI_CONTEXT_RETRIEVAL_INSTRUCTION = """\
-You are an oil market intelligence specialist with access to web search.
-
-Search for information relevant to the query and return a concise structured \
-markdown summary (3-5 paragraphs) covering relevant aspects of:
-- WTI/Brent crude price level and recent trend
-- OPEC+ production decisions and supply outlook
-- Geopolitical risks in the Persian Gulf, Middle East, key shipping lanes
-- US Strategic Petroleum Reserve and energy policy signals
-- Notable tanker/shipping incidents or supply disruption signals
-- Published analyst forecasts or unusual price-target revisions
-
-Ground your summary in the search results you actually retrieve. \
-When a cutoff date is specified, do not report or speculate about events \
-that occurred after that date.\
-"""
+_WTI_ANALYST_INSTRUCTION = render_analyst_instruction(OIL_DOMAIN)
+_WTI_MULTITASK_ANALYST_INSTRUCTION = render_multitask_analyst_instruction(OIL_DOMAIN)
+_WTI_CONTEXT_RETRIEVAL_INSTRUCTION = OIL_DOMAIN.context_retrieval_instruction
 
 # ---------------------------------------------------------------------------
 # Skills supplement (appended to instruction when skills are attached)
@@ -230,45 +146,13 @@ _SKILLS_ROOT = Path(__file__).parent / "skills"
 
 
 # ---------------------------------------------------------------------------
-# History compression
+# History compression — re-exported from the shared library for backward compat
 # ---------------------------------------------------------------------------
 
-
-def compress_history(df: pd.DataFrame) -> str:
-    """Compress WTI daily history to stay within context limits.
-
-    Returns daily bars for the most recent 6 months and weekly averages for
-    older history.  The CSV header is ``date,close``.
-
-    Parameters
-    ----------
-    df : pd.DataFrame
-        DataFrame with columns ``timestamp`` and ``value``.
-
-    Returns
-    -------
-    str
-        CSV string with header ``date,close``.
-    """
-    df = df.copy()
-    df["timestamp"] = pd.to_datetime(df["timestamp"])
-    cutoff = df["timestamp"].max() - pd.DateOffset(months=6)
-
-    recent = df[df["timestamp"] >= cutoff].copy()
-    old = df[df["timestamp"] < cutoff].copy()
-
-    rows: list[str] = ["date,close"]
-
-    if not old.empty:
-        old_indexed = old.set_index("timestamp")["value"]
-        weekly: pd.Series = old_indexed.resample("W").mean().dropna()
-        for date, val in weekly.items():
-            rows.append(f"{date.date()},{val:.2f}")
-
-    for _, row in recent.iterrows():
-        rows.append(f"{row['timestamp'].date()},{row['value']:.2f}")
-
-    return "\n".join(rows)
+# ``compress_history`` now lives in
+# :mod:`aieng.forecasting.methods.agentic.history`; it is imported above and
+# re-exported here so existing ``from ...analyst_agent import compress_history``
+# call sites keep resolving.
 
 
 # ---------------------------------------------------------------------------
@@ -354,16 +238,20 @@ def build_wti_basic_config(model: str = LITE_MODEL) -> AgentConfig:
     -------
     AgentConfig
     """
-    return AgentConfig(
-        name="wti_analyst_basic",
-        model=model,
+    return build_analyst_config(
+        OIL_DOMAIN,
+        name_suffix="basic",
         instruction=_WTI_ANALYST_INSTRUCTION,
+        model=model,
     )
 
 
 def build_wti_multitask_news_config(
     model: str = LITE_MODEL,
     search_model: str = LITE_MODEL,
+    verifier_model: str = ADVANCED_MODEL,
+    verifier_max_attempts: int = 3,
+    verifier_confidence_threshold: int = 8,
 ) -> AgentConfig:
     """News-grounded config for the one-agent-three-tasks demo (NB3).
 
@@ -378,15 +266,29 @@ def build_wti_multitask_news_config(
         Model for the context-retrieval (web-search) sub-tool. Defaults to
         the lite model (``gemini-3.1-flash-lite-preview``) independently of ``model`` so that Gemini
         handles Google Search even when the analyst uses a different provider.
+    verifier_model : str
+        Model for the independent temporal-leakage verifier that audits each
+        ``search_web`` result against ``cutoff_date`` before it is returned.
+        Defaults to the advanced model so it doesn't share ``search_model``'s
+        blind spots.
+    verifier_max_attempts : int
+        Maximum search-then-verify attempts before giving up and returning
+        the ``[SEARCH_VERIFICATION_FAILED]`` sentinel.
+    verifier_confidence_threshold : int
+        Minimum verifier confidence (1-10) required to accept a result.
     """
-    return AgentConfig(
-        name="wti_analyst_multitask",
-        model=model,
+    return build_analyst_config(
+        OIL_DOMAIN,
+        name_suffix="multitask",
         instruction=_WTI_MULTITASK_ANALYST_INSTRUCTION,
+        model=model,
         context_retrieval=ContextRetrievalConfig(
             enabled=True,
             instruction=_WTI_CONTEXT_RETRIEVAL_INSTRUCTION,
             search_model=search_model,
+            verifier_model=verifier_model,
+            verifier_max_attempts=verifier_max_attempts,
+            verifier_confidence_threshold=verifier_confidence_threshold,
         ),
     )
 
@@ -394,12 +296,17 @@ def build_wti_multitask_news_config(
 def build_wti_news_config(
     model: str = LITE_MODEL,
     search_model: str = LITE_MODEL,
+    verifier_model: str = ADVANCED_MODEL,
+    verifier_max_attempts: int = 3,
+    verifier_confidence_threshold: int = 8,
 ) -> AgentConfig:
     """Build an :class:`AgentConfig` with bounded Google Search.
 
     Wires a :class:`~aieng.forecasting.methods.agentic.agent_factory.ContextRetrievalConfig`
     sub-agent that enforces a temporal cutoff on every search call, preventing
-    future information from contaminating historical backtests.
+    future information from contaminating historical backtests. An
+    independent verifier call audits each search result against the cutoff
+    before it reaches the analyst (see :class:`ContextRetrievalConfig`).
 
     Parameters
     ----------
@@ -409,19 +316,33 @@ def build_wti_news_config(
         Model for the context-retrieval (web-search) sub-tool. Defaults to
         the lite model (``gemini-3.1-flash-lite-preview``) independently of ``model`` so that Gemini
         handles Google Search even when the analyst uses a different provider.
+    verifier_model : str
+        Model for the independent temporal-leakage verifier that audits each
+        ``search_web`` result against ``cutoff_date`` before it is returned.
+        Defaults to the advanced model so it doesn't share ``search_model``'s
+        blind spots.
+    verifier_max_attempts : int
+        Maximum search-then-verify attempts before giving up and returning
+        the ``[SEARCH_VERIFICATION_FAILED]`` sentinel.
+    verifier_confidence_threshold : int
+        Minimum verifier confidence (1-10) required to accept a result.
 
     Returns
     -------
     AgentConfig
     """
-    return AgentConfig(
-        name="wti_analyst_news",
-        model=model,
+    return build_analyst_config(
+        OIL_DOMAIN,
+        name_suffix="news",
         instruction=_WTI_ANALYST_INSTRUCTION,
+        model=model,
         context_retrieval=ContextRetrievalConfig(
             enabled=True,
             instruction=_WTI_CONTEXT_RETRIEVAL_INSTRUCTION,
             search_model=search_model,
+            verifier_model=verifier_model,
+            verifier_max_attempts=verifier_max_attempts,
+            verifier_confidence_threshold=verifier_confidence_threshold,
         ),
     )
 
@@ -430,6 +351,9 @@ def build_wti_code_exec_config(
     model: str = LITE_MODEL,
     search_model: str = LITE_MODEL,
     max_output_tokens: int = 16_384,
+    verifier_model: str = ADVANCED_MODEL,
+    verifier_max_attempts: int = 3,
+    verifier_confidence_threshold: int = 8,
 ) -> AgentConfig:
     """Build an :class:`AgentConfig` with E2B code execution and forecasting skills.
 
@@ -454,20 +378,34 @@ def build_wti_code_exec_config(
         LiteLLM's OpenAI-compatible endpoint default of 4096, which is not
         enough for Claude to write a complete ``run_code`` Python script in a
         single function call — causing repeated retries with empty arguments.
+    verifier_model : str
+        Model for the independent temporal-leakage verifier that audits each
+        ``search_web`` result against ``cutoff_date`` before it is returned.
+        Defaults to the advanced model so it doesn't share ``search_model``'s
+        blind spots.
+    verifier_max_attempts : int
+        Maximum search-then-verify attempts before giving up and returning
+        the ``[SEARCH_VERIFICATION_FAILED]`` sentinel.
+    verifier_confidence_threshold : int
+        Minimum verifier confidence (1-10) required to accept a result.
 
     Returns
     -------
     AgentConfig
     """
-    return AgentConfig(
-        name="wti_analyst_code",
-        model=model,
+    return build_analyst_config(
+        OIL_DOMAIN,
+        name_suffix="code",
         instruction=_WTI_ANALYST_INSTRUCTION + _CODE_EXEC_SKILLS_SUPPLEMENT,
+        model=model,
         max_output_tokens=max_output_tokens,
         context_retrieval=ContextRetrievalConfig(
             enabled=True,
             instruction=_WTI_CONTEXT_RETRIEVAL_INSTRUCTION,
             search_model=search_model,
+            verifier_model=verifier_model,
+            verifier_max_attempts=verifier_max_attempts,
+            verifier_confidence_threshold=verifier_confidence_threshold,
         ),
         code_execution=CodeExecutionConfig(enabled=True),
         skills_dirs=[
@@ -483,6 +421,9 @@ def build_wti_tool_config(
     *,
     data_service: DataService | None = None,
     num_samples: int = 200,
+    verifier_model: str = ADVANCED_MODEL,
+    verifier_max_attempts: int = 3,
+    verifier_confidence_threshold: int = 8,
 ) -> AgentConfig:
     """Build an :class:`AgentConfig` with a conventional statistical forecast tool.
 
@@ -510,6 +451,16 @@ def build_wti_tool_config(
     num_samples : int, default=200
         Monte Carlo sample count for AutoARIMA. Kept modest to bound agent
         latency, since AutoARIMA can be slow per origin.
+    verifier_model : str
+        Model for the independent temporal-leakage verifier that audits each
+        ``search_web`` result against ``cutoff_date`` before it is returned.
+        Defaults to the advanced model so it doesn't share ``search_model``'s
+        blind spots.
+    verifier_max_attempts : int
+        Maximum search-then-verify attempts before giving up and returning
+        the ``[SEARCH_VERIFICATION_FAILED]`` sentinel.
+    verifier_confidence_threshold : int
+        Minimum verifier confidence (1-10) required to accept a result.
 
     Returns
     -------
@@ -518,14 +469,18 @@ def build_wti_tool_config(
     service = data_service if data_service is not None else build_wti_service()
     forecast_tool = ForecastTool(service, predictor=DartsAutoARIMAPredictor(num_samples=num_samples))
 
-    return AgentConfig(
-        name="wti_analyst_tool",
-        model=model,
+    return build_analyst_config(
+        OIL_DOMAIN,
+        name_suffix="tool",
         instruction=_WTI_ANALYST_INSTRUCTION + _FORECAST_TOOL_SUPPLEMENT,
+        model=model,
         context_retrieval=ContextRetrievalConfig(
             enabled=True,
             instruction=_WTI_CONTEXT_RETRIEVAL_INSTRUCTION,
             search_model=search_model,
+            verifier_model=verifier_model,
+            verifier_max_attempts=verifier_max_attempts,
+            verifier_confidence_threshold=verifier_confidence_threshold,
         ),
         function_tools=[forecast_tool.as_function_tool()],
     )

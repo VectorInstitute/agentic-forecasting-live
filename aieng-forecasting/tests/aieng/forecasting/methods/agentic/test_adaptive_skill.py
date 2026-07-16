@@ -1,9 +1,8 @@
 """Characterization tests for the generic adaptive-skill persistence layer.
 
-Exercises :class:`~aieng.forecasting.methods.agentic.adaptive_skill.AdaptiveSkillStore`
-against a minimal concrete :class:`~aieng.forecasting.methods.agentic.adaptive_skill.AdaptiveSkillState`
-subclass so the save / load / render / backup contract is pinned before the
-strategy-state machinery is promoted and generalised.
+Exercises ``AdaptiveSkillStore`` against a minimal concrete
+``AdaptiveSkillState`` subclass so the save / load / render / backup contract is
+pinned before the strategy-state machinery is promoted and generalised.
 """
 
 from __future__ import annotations

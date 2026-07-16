@@ -60,6 +60,7 @@ Building a predictor from a config::
 """
 
 from aieng.forecasting.methods.agentic.adaptive_skill import AdaptiveSkillState, AdaptiveSkillStore
+from aieng.forecasting.methods.agentic.adaptive_skill_tools import build_skill_tools
 from aieng.forecasting.methods.agentic.adk_runner import AdkTextRunner, AdkTextRunnerConfig
 from aieng.forecasting.methods.agentic.agent_factory import (
     AgentConfig,
@@ -72,7 +73,13 @@ from aieng.forecasting.methods.agentic.curriculum import (
     format_backtest_report,
     load_context_documents,
 )
+from aieng.forecasting.methods.agentic.domain import (
+    DomainConfig,
+    build_adaptive_config,
+    build_analyst_config,
+)
 from aieng.forecasting.methods.agentic.forecast_tool import ForecastTool
+from aieng.forecasting.methods.agentic.history import compress_history
 from aieng.forecasting.methods.agentic.outputs import (
     AgentCategoryProbability,
     AgentForecastOutput,
@@ -81,8 +88,17 @@ from aieng.forecasting.methods.agentic.outputs import (
     ContinuousAgentForecastOutput,
     ContinuousAgentHorizonForecast,
     DiscreteAgentForecastOutput,
+    ScenarioAgentForecastOutput,
+    ScenarioCard,
 )
 from aieng.forecasting.methods.agentic.predictor import AgentPredictor, ForecastPromptBuilder
+from aieng.forecasting.methods.agentic.strategy_state import (
+    CalibrationCorrection,
+    Hypothesis,
+    Observation,
+    StrategyState,
+    VersionEntry,
+)
 
 
 __all__: list[str] = [
@@ -95,16 +111,28 @@ __all__: list[str] = [
     "AgentForecastOutput",
     "AgentPredictor",
     "AgentQuantileForecast",
+    "CalibrationCorrection",
     "CategoricalAgentForecastOutput",
     "CodeExecutionConfig",
     "ContinuousAgentForecastOutput",
     "ContinuousAgentHorizonForecast",
     "ContextRetrievalConfig",
     "DiscreteAgentForecastOutput",
+    "DomainConfig",
     "ForecastPromptBuilder",
     "ForecastTool",
+    "Hypothesis",
+    "Observation",
+    "ScenarioAgentForecastOutput",
+    "ScenarioCard",
+    "StrategyState",
+    "VersionEntry",
+    "build_adaptive_config",
     "build_adk_agent",
+    "build_analyst_config",
     "build_curriculum_prompt",
+    "build_skill_tools",
+    "compress_history",
     "format_backtest_report",
     "load_context_documents",
 ]

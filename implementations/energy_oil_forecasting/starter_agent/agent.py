@@ -41,11 +41,13 @@ from aieng.forecasting.methods.agentic.agent_factory import (
     CodeExecutionConfig,
     ContextRetrievalConfig,
 )
+from aieng.forecasting.methods.agentic.domain import render_starter_instruction
 from aieng.forecasting.models import LITE_MODEL
 
 # Reuse the existing WTI prompt builder + history compression — these serialise
 # the task/context into the agent's JSON payload and are not worth duplicating.
 from energy_oil_forecasting.analyst_agent import WtiPriceForecastPromptBuilder
+from energy_oil_forecasting.domain import OIL_DOMAIN
 from energy_oil_forecasting.starter_agent.tools import ToolSpec, news_search
 
 
@@ -60,32 +62,14 @@ _FORECASTING_SKILL = _SKILLS_ROOT / "forecasting"
 # ---------------------------------------------------------------------------
 
 
-def _build_starter_instruction() -> str:
-    """Build the task-agnostic, skill-agnostic starter persona.
-
-    Just the analyst's identity and how to behave — no output schema, no payload
-    contract, no skill or tool mechanics. ADK injects the name + description of
-    every attached skill (and every tool) into the system prompt, so the agent
-    already knows what it can load and call; repeating that here would only
-    duplicate dynamically-injected information. The forecasting *contract* lives
-    in the loadable ``forecasting`` skill. Edit the persona freely.
-    """
-    return (
-        "## Role\n\n"
-        "You are a WTI crude oil market analyst — fluent in supply/demand "
-        "fundamentals, OPEC+ policy, geopolitical and shipping-lane risk, and "
-        "price dynamics. This is a starter agent: keep your reasoning "
-        "transparent and your claims honest.\n\n"
-        "## How to respond\n\n"
-        "- For open-ended questions, scenario analysis, or anything "
-        "conversational, answer directly and concisely — do NOT ask for a JSON "
-        "payload.\n"
-        "- When you are handed a task that asks for a structured probabilistic "
-        "forecast, produce a calibrated one."
-    )
-
-
-_STARTER_INSTRUCTION = _build_starter_instruction()
+# The task-agnostic, skill-agnostic starter persona — just the analyst's
+# identity and how to behave. No output schema, no payload contract, no skill or
+# tool mechanics: ADK injects the name + description of every attached skill (and
+# every tool) into the system prompt, so the agent already knows what it can load
+# and call. The forecasting *contract* lives in the loadable ``forecasting``
+# skill. The persona is rendered from the WTI ``OIL_DOMAIN`` fragments; edit it
+# by supplying a different ``DomainConfig``.
+_STARTER_INSTRUCTION = render_starter_instruction(OIL_DOMAIN)
 
 
 # ---------------------------------------------------------------------------

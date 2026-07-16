@@ -48,129 +48,31 @@ from aieng.forecasting.methods.agentic.agent_factory import (
     CodeExecutionConfig,
     ContextRetrievalConfig,
 )
+from aieng.forecasting.methods.agentic.domain import (
+    build_analyst_config,
+    render_analyst_instruction,
+    render_multitask_analyst_instruction,
+)
+from aieng.forecasting.methods.agentic.history import compress_history
 from aieng.forecasting.methods.numerical.darts_arima import DartsAutoARIMAPredictor
 from aieng.forecasting.models import ADVANCED_MODEL, LITE_MODEL
 from energy_oil_forecasting.data import WTI_SERIES_ID, build_wti_service
+from energy_oil_forecasting.domain import OIL_DOMAIN
 from pydantic import BaseModel
 
 
 # ---------------------------------------------------------------------------
-# System prompt (root analyst agent)
+# System prompts — rendered from OIL_DOMAIN
 # ---------------------------------------------------------------------------
+#
+# The analyst, multitask, and context-retrieval instructions are rendered from
+# the shared instruction templates over the WTI ``OIL_DOMAIN`` fragments (see
+# :mod:`energy_oil_forecasting.domain`).  A new target series is configured by
+# supplying a different ``DomainConfig`` — no edits to this module.
 
-_WTI_MULTITASK_ANALYST_INSTRUCTION = """\
-## Role
-
-You are an expert WTI crude oil market analyst.
-
-## Input
-
-You will receive a JSON payload containing:
-- `task_spec`: the exact question and required JSON output schema
-- `as_of`: the forecast origin date (temporal cutoff)
-- `origin_price_usd_bbl`: WTI close on the origin date
-- `target_history_csv`: compressed WTI daily close history
-
-When context retrieval is enabled, call ``search_web`` BEFORE answering.
-
-## Output contract
-
-Read the data (and briefing, if retrieved) carefully, then execute the task \
-in `task_spec` precisely.
-
-If a `set_model_response` tool is available, call it with your complete JSON \
-as `json_response` — the exact schema is described in `task_spec`. Otherwise \
-return the JSON directly as plain text with no preamble.\
-"""
-
-
-def _build_wti_analyst_instruction() -> str:
-    """Build the WTI analyst instruction, embedding the output schema from the class.
-
-    Using a function instead of a static string ensures the ``## Output schema``
-    block is always in sync with ``ContinuousAgentForecastOutput`` —
-    no manual JSON to maintain.
-    """
-    schema = ContinuousAgentForecastOutput.prompt_schema_json()
-    return (
-        "## Role\n\n"
-        "You are an expert WTI crude oil market analyst. You produce calibrated "
-        "probabilistic price forecasts for WTI crude oil futures, grounded in "
-        "supply/demand fundamentals, geopolitical risk, and historical price dynamics.\n\n"
-        "## Forecasting contract\n\n"
-        "You will receive a JSON payload containing:\n"
-        "- `task`: the task identifier\n"
-        "- `as_of`: the forecast origin date in YYYY-MM-DD format\n"
-        "- `horizons`: a list of integer horizon steps (business days ahead)\n"
-        "- `standard_quantiles`: the exact quantile levels you must produce\n"
-        "- `target_summary`: last close price, 52-week range, and observation count\n"
-        "- `target_history_csv`: WTI daily close history (recent 6 months daily, "
-        "older history as weekly averages)\n\n"
-        "Rules:\n"
-        "1. Produce one forecast for each horizon listed in `horizons`.\n"
-        "2. Use exactly the quantile levels from `standard_quantiles` — no additions, no omissions.\n"
-        "3. `point_forecast` must exactly equal the 0.50 quantile value.\n"
-        "4. Quantile values must be strictly non-decreasing as quantile levels increase.\n"
-        "5. Document your reasoning in the `rationale` fields.\n"
-        "6. When tools are enabled, conclude with `set_model_response` to return the structured forecast.\n\n"
-        "## Output schema\n\n"
-        "Call `set_model_response` with a `json_response` string matching **exactly**:\n\n"
-        "```json\n" + schema + "\n```\n\n"
-        'Critical: use `"horizon"` (integer, not `"horizon_days"`). '
-        '`"quantiles"` is a **list** of `{"quantile": <level>, "value": <price>}` '
-        "objects — not a dict. Omit any field not shown above.\n\n"
-        "## Analysis discipline\n\n"
-        "When context retrieval is available, call ``search_web`` to gather market "
-        "intelligence BEFORE producing forecasts.\n\n"
-        "Call ``search_web`` with ``query`` and ``cutoff_date`` (set to the ``as_of`` "
-        "date from the payload). The ``cutoff_date`` MUST always equal ``as_of`` — "
-        "this is the temporal fence that prevents post-origin information from "
-        "contaminating historical backtests.\n\n"
-        "If ``search_web`` returns a result beginning with "
-        "``[SEARCH_VERIFICATION_FAILED]``, treat it as no verified news context for "
-        "that query. Do not use your own background knowledge to fill the gap or "
-        "speculate about what the news might have said — proceed with price-history "
-        "and other available signals only, and note the gap in your rationale.\n\n"
-        "Recommended queries (call ``search_web`` once per topic):\n"
-        '- ``search_web(query="WTI crude oil price trend and OPEC+ supply decisions", cutoff_date=<as_of>)``\n'
-        '- ``search_web(query="Persian Gulf geopolitical risk shipping lane disruptions", cutoff_date=<as_of>)``\n'
-        '- ``search_web(query="US Strategic Petroleum Reserve policy and global demand outlook", cutoff_date=<as_of>)``\n\n'
-        "Document your key assumptions (OPEC+ policy, shipping lane risk, inventory "
-        "levels, macro demand) in the `rationale` fields of your forecast output."
-    )
-
-
-_WTI_ANALYST_INSTRUCTION = _build_wti_analyst_instruction()
-
-# ---------------------------------------------------------------------------
-# Context retrieval instruction (sub-agent)
-# ---------------------------------------------------------------------------
-
-_WTI_CONTEXT_RETRIEVAL_INSTRUCTION = """\
-You are an oil market intelligence specialist with access to web search.
-
-Search for information relevant to the query and return a concise structured \
-markdown summary (3-5 paragraphs) covering relevant aspects of:
-- WTI/Brent crude price level and recent trend
-- OPEC+ production decisions and supply outlook
-- Geopolitical risks in the Persian Gulf, Middle East, key shipping lanes
-- US Strategic Petroleum Reserve and energy policy signals
-- Notable tanker/shipping incidents or supply disruption signals
-- Published analyst forecasts or unusual price-target revisions
-
-Ground your summary in the search results you actually retrieve. \
-When a cutoff date is specified, do not report or speculate about events \
-that occurred after that date.
-
-Before finalizing your summary, reason step by step: (1) for each candidate \
-fact, judge its actual recency from the substance of the result itself, \
-never from a source's claimed publish date or byline timestamp — those are \
-frequently stale or updated after original publication; (2) discard \
-anything you cannot confidently place before the cutoff date; (3) only then \
-write your summary. Do not supplement the search results with your own \
-background/training knowledge — if the results are insufficient, say so \
-explicitly rather than filling gaps from memory.\
-"""
+_WTI_ANALYST_INSTRUCTION = render_analyst_instruction(OIL_DOMAIN)
+_WTI_MULTITASK_ANALYST_INSTRUCTION = render_multitask_analyst_instruction(OIL_DOMAIN)
+_WTI_CONTEXT_RETRIEVAL_INSTRUCTION = OIL_DOMAIN.context_retrieval_instruction
 
 # ---------------------------------------------------------------------------
 # Skills supplement (appended to instruction when skills are attached)
@@ -239,45 +141,13 @@ _SKILLS_ROOT = Path(__file__).parent / "skills"
 
 
 # ---------------------------------------------------------------------------
-# History compression
+# History compression — re-exported from the shared library for backward compat
 # ---------------------------------------------------------------------------
 
-
-def compress_history(df: pd.DataFrame) -> str:
-    """Compress WTI daily history to stay within context limits.
-
-    Returns daily bars for the most recent 6 months and weekly averages for
-    older history.  The CSV header is ``date,close``.
-
-    Parameters
-    ----------
-    df : pd.DataFrame
-        DataFrame with columns ``timestamp`` and ``value``.
-
-    Returns
-    -------
-    str
-        CSV string with header ``date,close``.
-    """
-    df = df.copy()
-    df["timestamp"] = pd.to_datetime(df["timestamp"])
-    cutoff = df["timestamp"].max() - pd.DateOffset(months=6)
-
-    recent = df[df["timestamp"] >= cutoff].copy()
-    old = df[df["timestamp"] < cutoff].copy()
-
-    rows: list[str] = ["date,close"]
-
-    if not old.empty:
-        old_indexed = old.set_index("timestamp")["value"]
-        weekly: pd.Series = old_indexed.resample("W").mean().dropna()
-        for date, val in weekly.items():
-            rows.append(f"{date.date()},{val:.2f}")
-
-    for _, row in recent.iterrows():
-        rows.append(f"{row['timestamp'].date()},{row['value']:.2f}")
-
-    return "\n".join(rows)
+# ``compress_history`` now lives in
+# :mod:`aieng.forecasting.methods.agentic.history`; it is imported above and
+# re-exported here so existing ``from ...analyst_agent import compress_history``
+# call sites keep resolving.
 
 
 # ---------------------------------------------------------------------------
@@ -363,10 +233,11 @@ def build_wti_basic_config(model: str = LITE_MODEL) -> AgentConfig:
     -------
     AgentConfig
     """
-    return AgentConfig(
-        name="wti_analyst_basic",
-        model=model,
+    return build_analyst_config(
+        OIL_DOMAIN,
+        name_suffix="basic",
         instruction=_WTI_ANALYST_INSTRUCTION,
+        model=model,
     )
 
 
@@ -401,10 +272,11 @@ def build_wti_multitask_news_config(
     verifier_confidence_threshold : int
         Minimum verifier confidence (1-10) required to accept a result.
     """
-    return AgentConfig(
-        name="wti_analyst_multitask",
-        model=model,
+    return build_analyst_config(
+        OIL_DOMAIN,
+        name_suffix="multitask",
         instruction=_WTI_MULTITASK_ANALYST_INSTRUCTION,
+        model=model,
         context_retrieval=ContextRetrievalConfig(
             enabled=True,
             instruction=_WTI_CONTEXT_RETRIEVAL_INSTRUCTION,
@@ -454,10 +326,11 @@ def build_wti_news_config(
     -------
     AgentConfig
     """
-    return AgentConfig(
-        name="wti_analyst_news",
-        model=model,
+    return build_analyst_config(
+        OIL_DOMAIN,
+        name_suffix="news",
         instruction=_WTI_ANALYST_INSTRUCTION,
+        model=model,
         context_retrieval=ContextRetrievalConfig(
             enabled=True,
             instruction=_WTI_CONTEXT_RETRIEVAL_INSTRUCTION,
@@ -515,10 +388,11 @@ def build_wti_code_exec_config(
     -------
     AgentConfig
     """
-    return AgentConfig(
-        name="wti_analyst_code",
-        model=model,
+    return build_analyst_config(
+        OIL_DOMAIN,
+        name_suffix="code",
         instruction=_WTI_ANALYST_INSTRUCTION + _CODE_EXEC_SKILLS_SUPPLEMENT,
+        model=model,
         max_output_tokens=max_output_tokens,
         context_retrieval=ContextRetrievalConfig(
             enabled=True,
@@ -590,10 +464,11 @@ def build_wti_tool_config(
     service = data_service if data_service is not None else build_wti_service()
     forecast_tool = ForecastTool(service, predictor=DartsAutoARIMAPredictor(num_samples=num_samples))
 
-    return AgentConfig(
-        name="wti_analyst_tool",
-        model=model,
+    return build_analyst_config(
+        OIL_DOMAIN,
+        name_suffix="tool",
         instruction=_WTI_ANALYST_INSTRUCTION + _FORECAST_TOOL_SUPPLEMENT,
+        model=model,
         context_retrieval=ContextRetrievalConfig(
             enabled=True,
             instruction=_WTI_CONTEXT_RETRIEVAL_INSTRUCTION,
