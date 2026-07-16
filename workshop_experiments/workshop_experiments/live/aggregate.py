@@ -261,6 +261,11 @@ def aggregate_step(log_dir: Path, out_dir: Path, *, validate: bool = True) -> di
         return {}
     resolutions = iter_resolution_records(log_dir)
     gaps = iter_gap_entries(log_dir)
+    # Strategy-mutation events (twins only; empty until the twins deploy). Imported
+    # lazily so the aggregate step never pulls the gate package at module load.
+    from workshop_experiments.adaptive.gates.events import iter_mutation_events  # noqa: PLC0415
+
+    mutations = iter_mutation_events(log_dir)
     horizons = sorted({int(hf["horizon"]) for p in predictions for hf in p["horizons"]})
     generated_at = _generated_at(predictions, resolutions)
 
@@ -276,7 +281,7 @@ def aggregate_step(log_dir: Path, out_dir: Path, *, validate: bool = True) -> di
         "schema_version": SCHEMA_VERSION,
         "generated_by": "harness",
         "generated_at": generated_at,
-        "mutations": [],
+        "mutations": mutations,
     }
 
     if validate:
@@ -284,6 +289,8 @@ def aggregate_step(log_dir: Path, out_dir: Path, *, validate: bool = True) -> di
         check("leaderboard", leaderboard)
         for gap in gaps:
             check("gap_log", gap)
+        for event in mutations:
+            check("mutation_event", event)
 
     written: dict[str, Path] = {}
     _dump_json(out_dir / "manifest.json", manifest)
