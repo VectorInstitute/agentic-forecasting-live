@@ -83,7 +83,7 @@ class DomainConfig(BaseModel):
         description="Verbatim code block showing a cutoff-respecting data fetch, embedded in the adaptive prompt."
     )
     code_exec_preinstalled: str = Field(
-        default="numpy, pandas, sklearn, yfinance, statsmodels, properscoring",
+        default="numpy, pandas, scipy, sklearn, statsmodels, statsforecast, darts, lightgbm, yfinance, properscoring",
         description="Comma-separated list of libraries pre-installed in the code sandbox.",
     )
     multitask_origin_price_field: str = Field(
@@ -377,7 +377,15 @@ def render_code_exec_supplement(domain: DomainConfig) -> str:
         "**Print compact numeric summaries** — the specific statistics, quantiles, or "
         "regime labels you will reason from. Never dump raw or near-raw data frames: long "
         "outputs re-enter your context and slow every subsequent step. What you choose to "
-        "compute is still up to you — keep it lean."
+        "compute is still up to you — keep it lean.\n\n"
+        "**Every execution starts a fresh interpreter.** Each `run_code` call spins up a "
+        "brand-new Python process — no variables, imports, or files survive from a previous "
+        "call, so a `df` you built earlier is simply gone. Write every script fully "
+        "self-contained: imports, data preparation, computation, and the compact printed "
+        "summary in ONE script. This is exactly why batching pays off — splitting work "
+        "across calls throws away all state and forces you to rebuild it every time.\n\n"
+        f"**Available packages:** {domain.code_exec_preinstalled}. Other packages are NOT "
+        "installed — do not import them; work with what is listed."
     )
 
 

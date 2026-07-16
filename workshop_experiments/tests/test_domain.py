@@ -83,6 +83,12 @@ def test_code_config_instruction_carries_workstyle_guidance() -> None:
     assert "short, focused bursts" in text
     assert "4–6" in text  # batching target
     assert "compact numeric summaries" in text.lower()
+    # Fresh-interpreter and preinstalled-package guidance (instruction hardening).
+    assert "fresh interpreter" in text.lower()
+    assert "self-contained" in text.lower()
+    assert "Available packages:" in text
+    assert "statsforecast" in text  # a listed package the model should reach for
+    assert "Other packages are NOT" in text
 
 
 def test_workstyle_guidance_is_code_config_only() -> None:
