@@ -125,9 +125,25 @@ def _run_real(config: LiveConfig, log_dir: Path, out_dir: Path) -> tuple[int, in
     surfaced so the commit subject can carry it (see
     :func:`~workshop_experiments.live.gitops.commit_message`).
     """
-    from workshop_experiments.data import SP500_COVARIATE_PANEL, build_workshop_service  # noqa: PLC0415
+    # Select the data service + covariate panel from the deployed target family so
+    # the live harness serves the Canada-focused TSX experiment (and the S&P 500
+    # machinery remains available by flipping `target_family` back to sp500).
+    if config.target_family == "tsx":
+        from workshop_experiments.data_tsx import (  # noqa: PLC0415
+            TSX_COVARIATE_PANEL as _PANEL,
+        )
+        from workshop_experiments.data_tsx import (  # noqa: PLC0415
+            build_tsx_workshop_service as _build_service,
+        )
+    else:
+        from workshop_experiments.data import (  # noqa: PLC0415
+            SP500_COVARIATE_PANEL as _PANEL,
+        )
+        from workshop_experiments.data import (  # noqa: PLC0415
+            build_workshop_service as _build_service,
+        )
 
-    data_service = build_workshop_service(include_covariates=True)
+    data_service = _build_service(include_covariates=True)
     target_series = config.task_id_for_horizon(config.horizons[0])
     latest_close = _latest_close_date(data_service, target_series)
     today = _today_eastern()
@@ -136,7 +152,7 @@ def _run_real(config: LiveConfig, log_dir: Path, out_dir: Path) -> tuple[int, in
         return None
 
     registered = set(data_service.series_ids)  # type: ignore[attr-defined]
-    covariate_panel = [c for c in SP500_COVARIATE_PANEL if c in registered]
+    covariate_panel = [c for c in _PANEL if c in registered]
     submitted_at = utc_now_z()
     source = RealPredictionSource(
         config=config, data_service=data_service, origin=latest_close, covariate_panel=covariate_panel
