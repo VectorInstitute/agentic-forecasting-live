@@ -1,0 +1,34 @@
+# Local-only workspace member (not published). Hosts the workshop-paper +
+# live-evaluation S&P 500 experiments. Depends on the shared forecasting library
+# (all extras) and the sp500_forecasting reference implementation for the
+# leak-safe covariate panel and pure-frame leaderboard/analysis helpers.
+[project]
+name = "workshop-experiments"
+version = "0.1.0"
+description = "Workshop-paper and live-evaluation S&P 500 forecasting experiments"
+authors = [{name = "Vector AI Engineering", email = "ai_engineering@vectorinstitute.ai"}]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "aieng-forecasting[numerical,llm,agentic,documents]",
+    "agentic-forecasting-implementations",
+    "pyyaml>=6.0",
+]
+
+[project.scripts]
+ws-run-backtest = "workshop_experiments.run_backtest:main"
+ws-score = "workshop_experiments.score:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.sdist]
+include = ["workshop_experiments/"]
+
+[tool.hatch.build.targets.wheel]
+include = ["workshop_experiments/"]
+
+[tool.uv.sources]
+aieng-forecasting = { workspace = true }
+agentic-forecasting-implementations = { workspace = true }

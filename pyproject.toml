@@ -41,11 +41,13 @@ default-groups = ["dev"]
 members = [
   "aieng-forecasting",
   "implementations",
+  "workshop_experiments",
 ]
 
 [tool.uv.sources]
 agentic-forecasting-implementations = { workspace = true }
 aieng-forecasting = { workspace = true }
+workshop-experiments = { workspace = true }
 
 [tool.mypy]
 ignore_missing_imports = true

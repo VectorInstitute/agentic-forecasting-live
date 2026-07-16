@@ -25,6 +25,7 @@ members = [
     "agentic-forecasting-bootcamp",
     "agentic-forecasting-implementations",
     "aieng-forecasting",
+    "workshop-experiments",
 ]
 
 [[package]]
@@ -5847,6 +5848,23 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/bd/f4/c67440c7fb409a71b7404b7aefcd7569a9c0d6bd071299bf4198ae7a5d95/widgetsnbextension-4.0.15.tar.gz", hash = "sha256:de8610639996f1567952d763a5a41af8af37f2575a41f9852a38f947eb82a3b9", size = 1097402, upload-time = "2025-11-01T21:15:55.178Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/3f/0e/fa3b193432cfc60c93b42f3be03365f5f909d2b3ea410295cf36df739e31/widgetsnbextension-4.0.15-py3-none-any.whl", hash = "sha256:8156704e4346a571d9ce73b84bee86a29906c9abfd7223b7228a28899ccf3366", size = 2196503, upload-time = "2025-11-01T21:15:53.565Z" },
+]
+
+[[package]]
+name = "workshop-experiments"
+version = "0.1.0"
+source = { editable = "workshop_experiments" }
+dependencies = [
+    { name = "agentic-forecasting-implementations" },
+    { name = "aieng-forecasting", extra = ["agentic", "documents", "llm", "numerical"] },
+    { name = "pyyaml" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "agentic-forecasting-implementations", editable = "implementations" },
+    { name = "aieng-forecasting", extras = ["numerical", "llm", "agentic", "documents"], editable = "aieng-forecasting" },
+    { name = "pyyaml", specifier = ">=6.0" },
 ]
 
 [[package]]
