@@ -1,0 +1,85 @@
+as_of: '2025-11-10T00:00:00'
+wall_time_s: 1248.5697979999823
+predictions:
+- predictor_id: agent_predictor_tsx_analyst_code_claude-sonnet-4-6_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-16T15:06:15.792215'
+  as_of: '2025-11-10T00:00:00'
+  forecast_date: '2025-11-11T00:00:00'
+  payload:
+    point_forecast: -0.000571
+    quantiles:
+      '0.05': -0.0111
+      '0.1': -0.008344
+      '0.2': -0.005454
+      '0.3': -0.003554
+      '0.4': -0.001999
+      '0.5': -0.000571
+      '0.6': 0.000856
+      '0.7': 0.002412
+      '0.8': 0.004311
+      '0.9': 0.007201
+      '0.95': 0.009957
+  metadata:
+    rationale: 'Overall methodology: blended t-distribution (df=4, 70% weight) and
+      Normal (30% weight) scaled to trailing 63-day realised volatility of 0.6798%/day.
+      Drift adjusted modestly negative post a large +1.34% up-day on Nov 10 via a
+      weak mean-reversion term. Macro backdrop (BoC hold, commodity exposure, US trade
+      spillovers) supports a slight positive long-run drift but short-run mean reversion
+      from the outsized prior session dominates the 1-day median.'
+    horizon_rationale: "1-day ahead (horizon=1) forecast for Nov 11, 2025. Key inputs:\
+      \ (1) Volatility regime: trailing 63-day std = 0.6798%/day, consistent with\
+      \ the recent daily observations (~0.667% empirical). (2) Drift: Base drift set\
+      \ to +0.01%/day reflecting BoC's supportive hold at 2.25% (paused after Oct\
+      \ 29 cut), TSX up ~20% YTD with strong sector momentum in materials (gold miners),\
+      \ financials, and energy. (3) Mean-reversion adjustment: Nov 10 produced a large\
+      \ +1.34% return; a mild negative autocorrelation adjustment of -0.067% (\u2212\
+      5% \xD7 last return) pulls the median slightly negative to \u22120.057%, reflecting\
+      \ the tendency for outsized single-day moves to partially revert. (4) Fat-tail\
+      \ treatment: 70% weight on t(df=4) + 30% Normal to capture daily equity return\
+      \ leptokurtosis; tails extend to \xB11.1% at the 5th/95th percentiles. (5) Macro\
+      \ context: BoC on hold at 2.25%, US-Canada trade tensions persist but markets\
+      \ have largely priced known tariff risks; gold near-term peak after October\
+      \ rally; BoC GDP growth 2.6% annualised in Q3. No major scheduled data releases\
+      \ on Nov 11 (Remembrance Day \u2014 TSX closed in Canada), so the effective\
+      \ next trading session may face slightly lower-than-normal volume. Distribution\
+      \ is approximately symmetric around a near-zero median, consistent with efficient-market\
+      \ daily returns at this horizon."
+    tool_calls:
+    - tool: search_web
+      title: Bank of Canada policy rate decision and forward guidance for Canadian
+        equities
+    - tool: search_web
+      title: oil and gold commodity price outlook impact on TSX energy and materials
+        sectors
+    - tool: search_web
+      title: US Federal Reserve policy and tariff trade spillovers into Canadian stocks
+        November 2025
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python (191 lines)
+    - tool: run_code
+      title: python (68 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: c69fee95296d4a2a2e09a45243bda5b0
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/c69fee95296d4a2a2e09a45243bda5b0

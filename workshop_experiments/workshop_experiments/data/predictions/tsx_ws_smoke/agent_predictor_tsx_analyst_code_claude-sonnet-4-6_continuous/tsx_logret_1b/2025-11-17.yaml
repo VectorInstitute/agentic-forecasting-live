@@ -1,0 +1,82 @@
+as_of: '2025-11-17T00:00:00'
+wall_time_s: 871.9323906670325
+predictions:
+- predictor_id: agent_predictor_tsx_analyst_code_claude-sonnet-4-6_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-16T15:20:47.721974'
+  as_of: '2025-11-17T00:00:00'
+  forecast_date: '2025-11-18T00:00:00'
+  payload:
+    point_forecast: 0.00131
+    quantiles:
+      '0.05': -0.015182
+      '0.1': -0.010769
+      '0.2': -0.006216
+      '0.3': -0.003269
+      '0.4': -0.000877
+      '0.5': 0.00131
+      '0.6': 0.003497
+      '0.7': 0.005889
+      '0.8': 0.008836
+      '0.9': 0.013389
+      '0.95': 0.017802
+  metadata:
+    rationale: "Key assumptions: (a) Bank of Canada at 2.25% pause \u2014 neutral/slightly\
+      \ supportive for equities. (b) Canadian inflation broadly on target, labour\
+      \ market stable. (c) Oil prices under modest pressure (oversupply), gold consolidating\
+      \ after October highs \u2014 modest headwind for energy/materials. (d) USD/CAD\
+      \ and GoC yields stable. (e) US Fed may ease further in December \u2014 supports\
+      \ risk appetite globally. (f) TSX Composite near record high in November with\
+      \ positive earnings backdrop, but daily volatility has picked up. (g) After\
+      \ a \u22120.83% close on 2025-11-17, short-term mean-reversion (AC = \u2212\
+      0.147) provides a slight positive tilt to the next-day distribution. Final model:\
+      \ student-t(df=5) with \u03BC = +0.131% and \u03C3 = 0.818%."
+    horizon_rationale: "1-day ahead (2025-11-18) S&P/TSX Composite log-return forecast\
+      \ anchored on four signal layers: (1) Volatility: trailing 63-day \u03C3 = 0.00749\
+      \ (annualised ~11.9%), but the most recent 20-day \u03C3 = 0.00980 shows a pick-up\
+      \ in realised vol (late-Oct/Nov choppiness: -2%, +1%, -1%, +1%, +1%, -2% days).\
+      \ Blended \u03C3 = 0.70\xD70.00749 + 0.30\xD70.00980 = 0.00818. (2) Short-term\
+      \ dynamics: lag-1 daily autocorrelation = \u22120.147, implying modest mean-reversion.\
+      \ After yesterday's \u22120.83% (about \u22121.1\u03C3) close, the statistical\
+      \ reversal contribution is +0.121%. (3) Distributional shape: student-t with\
+      \ df=5 to account for fat tails observed in equity daily returns. (4) Macro\
+      \ context: Bank of Canada paused at 2.25% (lower bound of neutral range) after\
+      \ its October cut; no near-term hike signal. TSX reached record highs in November\
+      \ on positive earnings and non-US diversification demand. Headwinds: US tariffs\
+      \ on Canadian goods, oil prices trending lower on global oversupply, gold easing\
+      \ from October highs, and potential Fed divergence. Net macro effect: a very\
+      \ small positive bias (+0.013%). Combined \u03BC \u2248 +0.131%. The distribution\
+      \ is centred slightly positive (mean-reversion from negative prior day dominates\
+      \ over neutral macro), with fat tails capturing event risk. Q0.05 = \u22121.52%\
+      \ and Q0.95 = +1.78% reflect realistic 1-day extremes at elevated current vol."
+    tool_calls:
+    - tool: search_web
+      title: Bank of Canada policy rate decision and forward guidance for Canadian
+        equities
+    - tool: search_web
+      title: oil and gold commodity price outlook impact on the TSX energy and materials
+        sectors
+    - tool: search_web
+      title: US Federal Reserve policy and tariff trade spillovers into Canadian stocks
+        November 2025
+    - tool: run_code
+      title: python
+    - tool: search_web
+      title: USD/CAD Canadian dollar Government of Canada 10-year bond yield moves
+        November 2025
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python (685 lines)
+    - tool: run_code
+      title: python (190 lines)
+    - tool: run_code
+      title: python (52 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: cd5f275320c2452d3591216faba8d4ad
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/cd5f275320c2452d3591216faba8d4ad
