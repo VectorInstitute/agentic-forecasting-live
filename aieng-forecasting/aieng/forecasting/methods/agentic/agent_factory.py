@@ -552,6 +552,18 @@ class AgentConfig(BaseModel):
         tools) without coupling the shared factory to implementation code.
         Each callable is appended to the tool list after skills are loaded
         and will be wrapped by ADK as a ``FunctionTool``.
+    max_tool_iterations : int or None, default=None
+        Defensive, graceful cap on how many tool cycles (model generations that
+        call tools) the agent may run in one prediction before the runner stops
+        the loop and gives it a single final turn to submit its forecast with
+        what it already has.  ``None`` (default) disables the cap. This is a
+        runtime bound consumed by
+        :class:`~aieng.forecasting.methods.agentic.adk_runner.AdkTextRunner`
+        (threaded via ``AgentPredictor``),
+        not something ``build_adk_agent`` wires into the agent itself — a capped
+        run still yields a valid structured forecast rather than a hard mid-loop
+        kill. Use a generous value (e.g. 12) to bound pathological analysis loops
+        without perturbing well-behaved runs.
     """
 
     model_config = {"extra": "forbid", "arbitrary_types_allowed": True}
@@ -584,6 +596,10 @@ class AgentConfig(BaseModel):
     context_retrieval: ContextRetrievalConfig = Field(default_factory=ContextRetrievalConfig)
     disable_automatic_function_calling: bool | None = None
     extra_tools: Sequence[Callable[..., Any]] = ()
+
+    # Runtime bound (consumed by AdkTextRunner via AgentPredictor, not by
+    # build_adk_agent). None disables the cap.
+    max_tool_iterations: int | None = Field(default=None, ge=1)
 
     @field_validator("skills_dirs")
     @classmethod

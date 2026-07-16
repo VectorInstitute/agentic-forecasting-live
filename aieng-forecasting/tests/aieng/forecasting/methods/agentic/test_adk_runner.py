@@ -11,10 +11,12 @@ import pytest
 from aieng.forecasting.methods.agentic.adk_runner import (
     _MAX_TOOL_CALLS,
     _TOOL_TITLE_MAX_CHARS,
+    DEFAULT_FINAL_TURN_INSTRUCTION,
     AdkTextRunner,
     AdkTextRunnerConfig,
 )
 from aieng.forecasting.methods.agentic.agent_factory import SMR_STATE_KEY
+from google.adk.agents.invocation_context import LlmCallsLimitExceededError
 from google.genai import types as genai_types
 
 
@@ -63,6 +65,13 @@ def _tool_call_event(*calls: tuple[str, dict]) -> MagicMock:
 async def _stream(*events):
     for e in events:
         yield e
+
+
+async def _stream_then_raise(*events, exc: BaseException):
+    """Yield *events*, then raise *exc* — mimics ADK's mid-loop cap enforcement."""
+    for e in events:
+        yield e
+    raise exc
 
 
 # ---------------------------------------------------------------------------
@@ -644,3 +653,105 @@ class TestLifecycle:
             async with AdkTextRunner(mock_agent, config=AdkTextRunnerConfig(app_name="app")):
                 raise ValueError("deliberate")
         patch_runner_cls.close.assert_called_once()
+
+
+# ---------------------------------------------------------------------------
+# Graceful tool-iteration cap
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.asyncio
+class TestGracefulToolIterationCap:
+    """A capped run ends with a final submit turn, not a hard mid-loop kill.
+
+    ADK raises ``LlmCallsLimitExceededError`` when the per-run ``max_llm_calls``
+    budget is exhausted. AdkTextRunner catches it and issues one final, uncapped
+    turn instructing the agent to submit with what it has, so the run still
+    resolves to a valid structured output.
+    """
+
+    async def test_cap_triggers_graceful_final_turn_and_resolves_smr(self, patch_runner_cls, mock_agent) -> None:
+        """On cap, a second turn is issued and its SMR output is returned."""
+        smr_payload = '{"forecasts": [{"horizon": 1, "point_forecast": 42.0}]}'
+        smr_session = MagicMock()
+        smr_session.state = {SMR_STATE_KEY: smr_payload}
+        patch_runner_cls.session_service.get_session = AsyncMock(return_value=smr_session)
+
+        # First turn loops on tools then hits the cap; second (final) turn submits.
+        patch_runner_cls.run_async.side_effect = [
+            _stream_then_raise(
+                _tool_call_event(("run_code", {"code": "print(1)"})),
+                exc=LlmCallsLimitExceededError("cap"),
+            ),
+            _stream(_final_event("Task complete.")),
+        ]
+
+        runner = AdkTextRunner(
+            mock_agent,
+            config=AdkTextRunnerConfig(app_name="app", max_tool_iterations=3),
+        )
+        result = await runner.run_text_async("forecast", user_id="alice")
+
+        assert result == smr_payload
+        # Exactly two turns: the capped main loop and one graceful final turn.
+        assert patch_runner_cls.run_async.call_count == 2
+
+    async def test_final_turn_uses_configured_instruction(self, patch_runner_cls, mock_agent) -> None:
+        """The graceful final turn sends the configured submit-now instruction."""
+        patch_runner_cls.session_service.get_session = AsyncMock(return_value=None)
+        patch_runner_cls.run_async.side_effect = [
+            _stream_then_raise(exc=LlmCallsLimitExceededError("cap")),
+            _stream(_final_event("submitted")),
+        ]
+
+        runner = AdkTextRunner(
+            mock_agent,
+            config=AdkTextRunnerConfig(app_name="app", max_tool_iterations=2),
+        )
+        await runner.run_text_async("forecast")
+
+        final_call = patch_runner_cls.run_async.call_args_list[1]
+        sent_text = final_call.kwargs["new_message"].parts[0].text
+        assert sent_text == DEFAULT_FINAL_TURN_INSTRUCTION
+
+    async def test_capped_main_turn_bounds_max_llm_calls(self, patch_runner_cls, mock_agent) -> None:
+        """The main turn runs under a RunConfig whose max_llm_calls equals the cap."""
+        patch_runner_cls.session_service.get_session = AsyncMock(return_value=None)
+        patch_runner_cls.run_async.return_value = _stream(_final_event("done"))
+
+        runner = AdkTextRunner(
+            mock_agent,
+            config=AdkTextRunnerConfig(app_name="app", max_tool_iterations=7),
+        )
+        await runner.run_text_async("forecast")
+
+        run_config = patch_runner_cls.run_async.call_args.kwargs["run_config"]
+        assert run_config is not None
+        assert run_config.max_llm_calls == 7
+
+    async def test_no_final_turn_when_agent_finishes_before_cap(self, patch_runner_cls, mock_agent) -> None:
+        """A run that completes normally under the cap issues exactly one turn."""
+        patch_runner_cls.session_service.get_session = AsyncMock(return_value=None)
+        patch_runner_cls.run_async.return_value = _stream(
+            _tool_call_event(("run_code", {"code": "print(1)"})),
+            _final_event("done"),
+        )
+
+        runner = AdkTextRunner(
+            mock_agent,
+            config=AdkTextRunnerConfig(app_name="app", max_tool_iterations=12),
+        )
+        result = await runner.run_text_async("forecast")
+
+        assert result == "done"
+        assert patch_runner_cls.run_async.call_count == 1
+
+    async def test_uncapped_run_passes_no_run_config(self, patch_runner_cls, mock_agent) -> None:
+        """Without a cap, the main turn runs with run_config=None (current path)."""
+        patch_runner_cls.session_service.get_session = AsyncMock(return_value=None)
+        patch_runner_cls.run_async.return_value = _stream(_final_event("done"))
+
+        runner = AdkTextRunner(mock_agent, config=AdkTextRunnerConfig(app_name="app"))
+        await runner.run_text_async("forecast")
+
+        assert patch_runner_cls.run_async.call_args.kwargs["run_config"] is None
