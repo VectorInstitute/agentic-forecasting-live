@@ -77,6 +77,6 @@ def test_simulate_manifest_is_harness_and_fresh(tmp_path: Path) -> None:
     )
     manifest = json.load((tmp_path / "data" / "manifest.json").open())
     assert manifest["generated_by"] == "harness"
-    assert manifest["latest_origin"] == "2025-10-20"
+    assert manifest["latest_origin"] == "2025-11-17"
     assert manifest["origin_count"] == 3
-    assert {o["origin_date"] for o in manifest["origins"]} == {"2025-10-06", "2025-10-13", "2025-10-20"}
+    assert {o["origin_date"] for o in manifest["origins"]} == {"2025-11-03", "2025-11-10", "2025-11-17"}

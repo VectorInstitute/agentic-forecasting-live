@@ -46,8 +46,8 @@ def test_twins_expand_to_two_rungs(tmp_path: Path) -> None:
     learning = config.twin("adaptive_learning")
     assert frozen.schema_method == "adaptive_frozen"
     assert learning.schema_method == "adaptive_learning"
-    assert frozen.predictor_id == "sp500_adaptive_frozen__gemini-3.5-flash"
-    assert learning.predictor_id == "sp500_adaptive_learning__gemini-3.5-flash"
+    assert frozen.predictor_id == "tsx_adaptive_frozen__gemini-3.5-flash"
+    assert learning.predictor_id == "tsx_adaptive_learning__gemini-3.5-flash"
     assert frozen.group == learning.group == "twins"
     assert frozen.model_label == learning.model_label == "gemini-3.5-flash"
     # Twins stay OUT of the main ladder so the stateless-record counts hold.

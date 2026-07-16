@@ -31,6 +31,7 @@ def _mini_config(tmp_path: Path) -> LiveConfig:
     return LiveConfig(
         schema_version="1.1.0",
         target_ticker="^GSPC",
+        target_family="sp500",
         horizons=(1,),
         submission_time_local="17:30",
         timezone="America/Toronto",
