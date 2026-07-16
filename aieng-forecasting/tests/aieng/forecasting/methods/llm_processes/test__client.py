@@ -7,14 +7,22 @@ stripping.  All LLM I/O is mocked so tests run without network access.
 
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 from aieng.forecasting.methods.llm_processes._client import (
     _one_completion_async,
     make_json_schema_response_format,
+    run_async,
+    sample_n_async,
     strip_markdown_fence,
 )
+from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import SimpleSpanProcessor
+from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
+from pydantic import BaseModel
 
 
 # ---------------------------------------------------------------------------
@@ -257,3 +265,141 @@ async def test_non_proxy_path_sends_reasoning_effort_at_top_level() -> None:
     assert kw["reasoning_effort"] == "low"
     assert "extra_body" not in kw or "reasoning_effort" not in kw.get("extra_body", {})
     assert kw.get("drop_params") is True
+
+
+# ---------------------------------------------------------------------------
+# OTEL parent-span linking — generations nest under the @observe predict span
+# ---------------------------------------------------------------------------
+#
+# Regression coverage for the Langfuse tracing defect: LLMP generations were
+# emitted as orphan root spans (traceName: null) instead of nesting under the
+# named predict span. Root cause: LiteLLM runs its OTEL success handler on a
+# ThreadPoolExecutor worker whose contextvars context has no active span, so
+# ambient-context parent resolution fails. The seam now passes the predict span
+# explicitly via metadata["litellm_parent_otel_span"] (LiteLLM priority 1).
+
+
+def _in_memory_tracer() -> tuple[trace.Tracer, InMemorySpanExporter]:
+    """Build a standalone OTEL tracer + in-memory exporter (no global provider)."""
+    exporter = InMemorySpanExporter()
+    provider = TracerProvider()
+    provider.add_span_processor(SimpleSpanProcessor(exporter))
+    return provider.get_tracer("test"), exporter
+
+
+class _Tiny(BaseModel):
+    ok: int
+
+
+@pytest.mark.asyncio
+async def test_one_completion_attaches_active_span_as_litellm_parent() -> None:
+    """The active OTEL span is passed to litellm as ``litellm_parent_otel_span``."""
+    tracer, _ = _in_memory_tracer()
+    captured: list[dict] = []
+
+    async def fake_acompletion(**kwargs):  # type: ignore[override]
+        captured.append(kwargs)
+        return _mock_litellm_response("{}")
+
+    with (
+        patch("litellm.acompletion", new=AsyncMock(side_effect=fake_acompletion)),
+        tracer.start_as_current_span("predict") as predict_span,
+    ):
+        await _one_completion_async(
+            model="gemini-3-flash-preview",
+            messages=_DUMMY_MESSAGES,
+            response_format=_DUMMY_FORMAT,
+            temperature=1.0,
+            max_tokens=512,
+            timeout_s=30.0,
+            reasoning_effort=None,
+        )
+
+    assert captured[0]["metadata"]["litellm_parent_otel_span"] is predict_span
+
+
+@pytest.mark.asyncio
+async def test_one_completion_omits_parent_metadata_when_no_span_active() -> None:
+    """With no active span, no ``litellm_parent_otel_span`` metadata is attached."""
+    captured: list[dict] = []
+
+    async def fake_acompletion(**kwargs):  # type: ignore[override]
+        captured.append(kwargs)
+        return _mock_litellm_response("{}")
+
+    with patch("litellm.acompletion", new=AsyncMock(side_effect=fake_acompletion)):
+        await _one_completion_async(
+            model="gemini-3-flash-preview",
+            messages=_DUMMY_MESSAGES,
+            response_format=_DUMMY_FORMAT,
+            temperature=1.0,
+            max_tokens=512,
+            timeout_s=30.0,
+            reasoning_effort=None,
+        )
+
+    assert "litellm_parent_otel_span" not in captured[0].get("metadata", {})
+
+
+def test_generation_nests_under_predict_span_across_executor_boundary() -> None:
+    """End-to-end seam: the generation nests under predict despite the thread hop.
+
+    Drives the real seam (``run_async`` -> ``sample_n_async`` -> the async
+    single-completion path) inside an ``@observe``-style span, and simulates how
+    LiteLLM's ``langfuse_otel`` callback fires: on a ``ThreadPoolExecutor``
+    worker. The fake callback records the *ambient* span it sees on that worker
+    (the fresh, span-less context that caused orphaning) and builds the
+    generation span from the explicit ``litellm_parent_otel_span`` metadata
+    (LiteLLM priority 1). We assert the ambient context is indeed empty on the
+    worker, yet the generation still lands in the predict trace as its child.
+    """
+    tracer, exporter = _in_memory_tracer()
+    ambient_valid_on_worker: list[bool] = []
+
+    def _fake_litellm_otel_success(metadata: dict) -> None:
+        # Priority 3 (ambient) — what LiteLLM would fall back to on this worker.
+        ambient = trace.get_current_span()
+        ambient_valid_on_worker.append(ambient.get_span_context().is_valid)
+        # Priority 1 (explicit parent from metadata) — the fix.
+        parent = metadata.get("litellm_parent_otel_span")
+        ctx = trace.set_span_in_context(parent) if parent is not None else None
+        tracer.start_span("litellm-generation", context=ctx).end()
+
+    async def fake_acompletion(**kwargs):  # type: ignore[override]
+        metadata = kwargs.get("metadata", {})
+        # LiteLLM emits its OTEL span from a threadpool worker (fresh context).
+        with ThreadPoolExecutor(max_workers=1) as pool:
+            pool.submit(_fake_litellm_otel_success, metadata).result()
+        return _mock_litellm_response('{"ok": 1}')
+
+    with (
+        patch("litellm.acompletion", new=AsyncMock(side_effect=fake_acompletion)),
+        tracer.start_as_current_span("predict") as predict_span,
+    ):
+        predict_trace_id = predict_span.get_span_context().trace_id
+        predict_span_id = predict_span.get_span_context().span_id
+        parsed, *_ = run_async(
+            sample_n_async(
+                schema_cls=_Tiny,
+                model="gemini-3-flash-preview",
+                base_messages=_DUMMY_MESSAGES,
+                response_format=_DUMMY_FORMAT,
+                n_samples=1,
+                temperature=1.0,
+                max_tokens=512,
+                timeout_s=30.0,
+                reasoning_effort=None,
+            )
+        )
+
+    assert parsed == [_Tiny(ok=1)]
+    # The worker thread's ambient OTEL context is span-less — the exact
+    # condition that orphaned generations before the fix.
+    assert ambient_valid_on_worker == [False]
+    # Yet the generation nests under the predict span in the same trace.
+    gen_spans = [s for s in exporter.get_finished_spans() if s.name == "litellm-generation"]
+    assert len(gen_spans) == 1
+    gen = gen_spans[0]
+    assert gen.context.trace_id == predict_trace_id
+    assert gen.parent is not None
+    assert gen.parent.span_id == predict_span_id

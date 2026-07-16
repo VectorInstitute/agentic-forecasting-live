@@ -119,6 +119,45 @@ def trace_url_for(trace_id: str) -> str | None:
         return None
 
 
+def current_otel_span() -> Any | None:
+    """Return the active OpenTelemetry span, or ``None`` when none is recording.
+
+    The ``@observe``-decorated ``predict`` method is the active span while the
+    completion seam runs. We pass this span to LiteLLM as
+    ``metadata["litellm_parent_otel_span"]`` (see :func:`_one_completion_async`)
+    so every generation nests under the named predict span in the same trace.
+
+    Why this is necessary — and not redundant with the ambient OTEL context:
+    LiteLLM's ``langfuse_otel`` callback resolves a generation's parent in
+    priority order — (1) an explicit ``litellm_parent_otel_span`` in request
+    ``metadata``, (2) an inbound W3C ``traceparent`` header, (3) the *ambient*
+    ``trace.get_current_span()`` (and if none, a new root span). LiteLLM does not
+    emit the generation span inline; it defers the OTEL success handler to a
+    detached logging worker (see :func:`_drain_litellm_logging`) whose
+    ``contextvars`` context does not carry the ``@observe`` span. Relying on
+    priority (3) there yields no active span, so the generation is emitted as its
+    own root span — orphaned from the predict trace (the ``traceName: null``
+    orphan pattern). Handing LiteLLM the parent span explicitly via metadata
+    takes priority (1) and nests correctly regardless of which thread or event
+    loop the callback ultimately fires on.
+
+    No-op (returns ``None``) when OpenTelemetry is unavailable or no valid span
+    is active, so non-traced runs pass no ``litellm_parent_otel_span`` metadata.
+    """
+    try:
+        from opentelemetry import trace  # noqa: PLC0415
+    except Exception:
+        return None
+    try:
+        span = trace.get_current_span()
+        span_context = span.get_span_context()
+        if span_context is not None and span_context.is_valid:
+            return span
+    except Exception:  # pragma: no cover
+        logger.debug("could not read current OTEL span for litellm parent linking")
+    return None
+
+
 def set_current_trace_name(name: str) -> None:
     """Name the active Langfuse trace, if any, so it is identifiable in the UI.
 
@@ -320,6 +359,16 @@ async def _one_completion_async(
         # models that don't support them (e.g. temperature on some o-series).
         kwargs["drop_params"] = True
 
+    # Nest the litellm generation under the @observe-wrapped predict span.
+    # Pass the active OTEL span explicitly (LiteLLM parent-resolution priority 1)
+    # rather than relying on ambient OTEL context: LiteLLM runs its OTEL success
+    # handler on a ThreadPoolExecutor worker with a fresh contextvars context, so
+    # ambient-context nesting silently orphans the generation. See
+    # :func:`current_otel_span` for the full mechanism.
+    parent_span = current_otel_span()
+    if parent_span is not None:
+        kwargs.setdefault("metadata", {})["litellm_parent_otel_span"] = parent_span
+
     resp = await litellm.acompletion(**kwargs)
     cost = float(getattr(resp, "_hidden_params", {}).get("response_cost") or 0.0)
     usage = getattr(resp, "usage", None)
@@ -431,6 +480,39 @@ async def _sample_one_with_retry(
     return None, cost, in_tok, out_tok, failures
 
 
+async def _drain_litellm_logging() -> None:
+    """Flush LiteLLM's async logging worker while the seam's event loop is alive.
+
+    ``run_async`` runs each predict's sampling on a fresh ``asyncio.run`` event
+    loop that is torn down as soon as sampling returns. LiteLLM does not emit its
+    ``langfuse_otel`` generation span inline; it enqueues the success handler on
+    a *process-global* logging worker bound to whichever loop was running when
+    the completion finished — here, the ephemeral ``asyncio.run`` loop. When that
+    loop closes, the worker task is cancelled (``LoggingWorker cancelled during
+    shutdown``) before it runs the handler, so the generation span is never
+    created and the predict trace shows no child (0 tokens).
+
+    Draining the worker here — after the completions resolve but before the loop
+    unwinds — forces those enqueued success handlers to run, creating the
+    generation spans under the predict span (see :func:`current_otel_span` for
+    the parent link). The spans are exported by LiteLLM's span processor on its
+    normal schedule / at process exit.
+
+    Best-effort and version-tolerant: if the worker is absent or its API differs,
+    this is a no-op and sampling behaviour is unchanged.
+    """
+    try:
+        from litellm.litellm_core_utils.logging_worker import (  # noqa: PLC0415
+            GLOBAL_LOGGING_WORKER,
+        )
+    except Exception:
+        return
+    try:
+        await GLOBAL_LOGGING_WORKER.flush()
+    except Exception:  # pragma: no cover
+        logger.debug("litellm logging-worker flush failed; generation spans may lag")
+
+
 async def sample_n_async(
     *,
     schema_cls: type[T],
@@ -468,6 +550,11 @@ async def sample_n_async(
         for i in range(n_samples)
     ]
     results = await asyncio.gather(*coros)
+
+    # Emit LiteLLM's generation spans before ``run_async`` tears down this loop;
+    # otherwise the langfuse_otel success handlers are cancelled unrun and the
+    # predict trace has no generation child. See :func:`_drain_litellm_logging`.
+    await _drain_litellm_logging()
 
     parsed: list[T] = []
     total_cost = 0.0
