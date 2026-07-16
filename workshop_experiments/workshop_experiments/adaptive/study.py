@@ -182,13 +182,30 @@ def _append_transcript(run_dir: Path, entry: dict[str, Any]) -> None:
         handle.write(json.dumps(entry, sort_keys=True) + "\n")
 
 
-def _prompt_for_turn(turn_number: int, checkpoint_every: int) -> tuple[str, str]:
+@dataclass(frozen=True)
+class StudyHallPrompts:
+    """The three Study Hall turn prompts (domain-specific text).
+
+    Defaults are the S&P 500 prompts; the TSX bootcamp study supplies its own via
+    :data:`workshop_experiments.adaptive.domain_tsx` so the single-session driver
+    reuses the exact scheduling / checkpoint / accounting machinery.
+    """
+
+    study_hall: str = STUDY_HALL_PROMPT
+    cont: str = CONTINUE_PROMPT
+    distill: str = DISTILL_PROMPT
+
+
+def _prompt_for_turn(
+    turn_number: int, checkpoint_every: int, prompts: StudyHallPrompts | None = None
+) -> tuple[str, str]:
     """Return ``(kind, prompt)`` for a 1-indexed Study Hall *turn_number*."""
+    prompts = prompts or StudyHallPrompts()
     if turn_number == 1:
-        return "study_hall", STUDY_HALL_PROMPT
+        return "study_hall", prompts.study_hall
     if checkpoint_every > 0 and turn_number % checkpoint_every == 0:
-        return "distill", DISTILL_PROMPT
-    return "continue", CONTINUE_PROMPT
+        return "distill", prompts.distill
+    return "continue", prompts.cont
 
 
 def run_study_hall(
@@ -197,20 +214,25 @@ def run_study_hall(
     *,
     turn_budget: int = 50,
     checkpoint_every: int = 10,
+    prompts: StudyHallPrompts | None = None,
 ) -> StudyResult:
     """Drive Phase A over *session*, persisting after every turn (resumable).
 
     Resume: if ``run_dir`` already holds state, the driver continues from the
     next scheduled turn. The trained strategy on disk already carries every
     mutation the agent made before the interruption (the mutation tools persist).
+
+    ``prompts`` overrides the three turn prompts (S&P 500 by default). The TSX
+    bootcamp single-session study passes its own :class:`StudyHallPrompts`.
     """
+    prompts = prompts or StudyHallPrompts()
     state = _load_state(run_dir)
     acc = StudyAccounting(**state.get("accounting", {}))
     turns_completed = int(state.get("turns_completed", 0))
     checkpoints = list(state.get("checkpoints", []))
 
     for turn_number in range(turns_completed + 1, turn_budget + 1):
-        kind, prompt = _prompt_for_turn(turn_number, checkpoint_every)
+        kind, prompt = _prompt_for_turn(turn_number, checkpoint_every, prompts)
         result = session.run_turn(prompt)
         acc.add(
             input_tokens=result.input_tokens,
@@ -336,6 +358,7 @@ __all__ = [
     "STUDY_HALL_PROMPT",
     "Postmortem",
     "StudyAccounting",
+    "StudyHallPrompts",
     "StudyResult",
     "build_postmortem_prompt",
     "run_residency",
