@@ -132,6 +132,9 @@ def _make_llmp_qgrid(model: str, covariate_panel: list[str]) -> Predictor:
     return QuantileGridLLMPredictor(
         QuantileGridLLMPredictorConfig(
             model=model,
+            # Daily log-returns have sigma ~ 0.01; the default precision=2 quantizes
+            # the serialized history (and covariate return series) to +/-0.01 noise.
+            precision=5,
             history_window=_LLMP_HISTORY_WINDOW,
             series_description=_LLMP_SERIES_DESCRIPTION,
             user_prompt_suffix=_LLMP_USER_PROMPT_SUFFIX,
@@ -148,6 +151,9 @@ def _make_llmp_qgrid_cov(model: str, covariate_panel: list[str]) -> Predictor:
     return QuantileGridLLMPredictor(
         QuantileGridLLMPredictorConfig(
             model=model,
+            # Daily log-returns have sigma ~ 0.01; the default precision=2 quantizes
+            # the serialized history (and covariate return series) to +/-0.01 noise.
+            precision=5,
             history_window=_LLMP_HISTORY_WINDOW,
             series_description=_LLMP_SERIES_DESCRIPTION,
             user_prompt_suffix=_LLMP_USER_PROMPT_SUFFIX,
@@ -233,6 +239,9 @@ def _make_tsx_llmp_qgrid(model: str, covariate_panel: list[str]) -> Predictor:
     return QuantileGridLLMPredictor(
         QuantileGridLLMPredictorConfig(
             model=model,
+            # Daily log-returns have sigma ~ 0.01; the default precision=2 quantizes
+            # the serialized history (and covariate return series) to +/-0.01 noise.
+            precision=5,
             history_window=_LLMP_HISTORY_WINDOW,
             series_description=_TSX_LLMP_SERIES_DESCRIPTION,
             user_prompt_suffix=_TSX_LLMP_USER_PROMPT_SUFFIX,
@@ -249,6 +258,9 @@ def _make_tsx_llmp_qgrid_cov(model: str, covariate_panel: list[str]) -> Predicto
     return QuantileGridLLMPredictor(
         QuantileGridLLMPredictorConfig(
             model=model,
+            # Daily log-returns have sigma ~ 0.01; the default precision=2 quantizes
+            # the serialized history (and covariate return series) to +/-0.01 noise.
+            precision=5,
             history_window=_LLMP_HISTORY_WINDOW,
             series_description=_TSX_LLMP_SERIES_DESCRIPTION,
             user_prompt_suffix=_TSX_LLMP_USER_PROMPT_SUFFIX,
