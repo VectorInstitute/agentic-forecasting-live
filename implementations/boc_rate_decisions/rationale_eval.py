@@ -175,7 +175,7 @@ def judge_rationale_alignment(
             ),
         },
     ]
-    response_format = make_json_schema_response_format("RationaleAlignment", _ALIGNMENT_JSON_SCHEMA)
+    response_format = make_json_schema_response_format("RationaleAlignment", _ALIGNMENT_JSON_SCHEMA, model=model)
     parsed, _cost, _in, _out, _fails = run_async(
         sample_n_async(
             schema_cls=AlignmentVerdict,

@@ -248,7 +248,9 @@ def _sample_quantile_grid(
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_prompt},
     ]
-    response_format = make_json_schema_response_format("QuantileTrajectory", _QUANTILE_TRAJECTORY_JSON_SCHEMA)
+    response_format = make_json_schema_response_format(
+        "QuantileTrajectory", _QUANTILE_TRAJECTORY_JSON_SCHEMA, model=cfg.model
+    )
 
     parsed, cost_usd, in_tokens, out_tokens, parse_failures = run_async(
         sample_n_async(

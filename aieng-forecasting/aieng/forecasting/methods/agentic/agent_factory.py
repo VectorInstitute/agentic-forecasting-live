@@ -324,7 +324,9 @@ async def _verify_no_leakage(
                 "content": f"Original query: {query}\nCutoff date: {cutoff_date}\n\nSearch result to verify:\n{text}",
             },
         ],
-        response_format=make_json_schema_response_format("LeakageVerification", _build_leakage_verification_schema()),
+        response_format=make_json_schema_response_format(
+            "LeakageVerification", _build_leakage_verification_schema(), model=model
+        ),
         temperature=0.0,
         max_tokens=2048,
         timeout=60.0,

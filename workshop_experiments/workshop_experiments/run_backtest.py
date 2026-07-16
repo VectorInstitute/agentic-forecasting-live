@@ -29,7 +29,7 @@ from pathlib import Path
 from aieng.forecasting.evaluation.predictor import Predictor
 from aieng.forecasting.models import LITE_MODEL
 
-from workshop_experiments.data import build_workshop_service
+from workshop_experiments.data import SP500_COVARIATE_PANEL, build_workshop_service
 from workshop_experiments.registry import (
     CONVENTIONAL_METHODS,
     build_predictor,
@@ -69,14 +69,14 @@ def _build_arg_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def _build_predictor_list(methods: list[str], models: list[str]) -> list[Predictor]:
+def _build_predictor_list(methods: list[str], models: list[str], covariate_panel: list[str]) -> list[Predictor]:
     """Instantiate predictors: conventional once; model-parameterised once per model."""
     predictors: list[Predictor] = []
     seen_ids: set[str] = set()
     for method in methods:
         method_models = [models[0]] if method in CONVENTIONAL_METHODS else models
         for model in method_models:
-            predictor = build_predictor(method, model=model)
+            predictor = build_predictor(method, model=model, covariate_panel=covariate_panel)
             if predictor.predictor_id in seen_ids:
                 continue
             seen_ids.add(predictor.predictor_id)
@@ -97,12 +97,21 @@ def main(argv: list[str] | None = None) -> int:
     n_origins = origin_count(spec)
     print(f"Spec {spec.spec_id}: {len(spec.tasks)} tasks x {n_origins} candidate origins (stride={spec.stride}).")
 
-    predictors = _build_predictor_list(methods, args.models)
+    data_service = build_workshop_service(include_covariates=not args.no_covariates, end=args.end)
+
+    # Filter the covariate panel to series the service actually registered —
+    # some covariates (e.g. gold) can be unavailable upstream and are skipped
+    # at registration; predictors must not reference them.
+    registered = set(data_service.series_ids)
+    covariate_panel = [c for c in SP500_COVARIATE_PANEL if c in registered]
+    dropped = [c for c in SP500_COVARIATE_PANEL if c not in registered]
+    if dropped and not args.no_covariates:
+        print(f"Covariates unavailable and skipped: {', '.join(dropped)}")
+
+    predictors = _build_predictor_list(methods, args.models, covariate_panel)
     print("Predictors:")
     for predictor in predictors:
         print(f"  - {predictor.predictor_id}")
-
-    data_service = build_workshop_service(include_covariates=not args.no_covariates, end=args.end)
     accounting = run_spec(
         predictors,
         spec,

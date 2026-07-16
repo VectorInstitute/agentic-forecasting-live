@@ -157,17 +157,38 @@ def _strip_additional_properties(node: Any) -> Any:
     return node
 
 
-def make_json_schema_response_format(name: str, schema: dict[str, Any]) -> dict[str, Any]:
+#: Bare-model-name prefixes routed through OpenAI strict structured outputs,
+#: which REQUIRE ``additionalProperties: false`` on every object node.
+_OPENAI_STRICT_MODEL_PREFIXES: tuple[str, ...] = ("gpt-", "o1", "o3", "o4")
+
+
+def _is_openai_strict_model(model: str | None) -> bool:
+    """Return True when *model* routes through OpenAI strict structured outputs."""
+    if model is None:
+        return False
+    bare = model.split("/")[-1].lower()
+    return bare.startswith(_OPENAI_STRICT_MODEL_PREFIXES)
+
+
+def make_json_schema_response_format(name: str, schema: dict[str, Any], model: str | None = None) -> dict[str, Any]:
     """Build the explicit ``json_schema`` ``response_format`` dict.
 
     Always pass this dict form to ``litellm.completion`` rather than a Pydantic
     class — the class-to-schema conversion path has known regressions on
-    Anthropic providers. ``additionalProperties`` is stripped from the schema
-    for proxy/Gemini compatibility (see :func:`_strip_additional_properties`).
+    Anthropic providers.
+
+    Provider tension around ``additionalProperties``: the Vector proxy's
+    Gemini ``response_schema`` route REJECTS it, while OpenAI strict mode
+    REQUIRES it to be present and false. Pass *model* so the right form is
+    chosen: OpenAI-family models keep the schema verbatim (callers declare
+    ``additionalProperties: false`` on every object node); everything else has
+    the key stripped (see :func:`_strip_additional_properties`). With *model*
+    omitted the legacy strip-everything behaviour applies.
     """
+    payload = schema if _is_openai_strict_model(model) else _strip_additional_properties(schema)
     return {
         "type": "json_schema",
-        "json_schema": {"name": name, "schema": _strip_additional_properties(schema), "strict": True},
+        "json_schema": {"name": name, "schema": payload, "strict": True},
     }
 
 

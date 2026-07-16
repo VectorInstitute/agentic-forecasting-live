@@ -289,7 +289,7 @@ def _sample_distribution(
         {"role": "user", "content": user_prompt},
     ]
     response_format = make_json_schema_response_format(
-        "CategoricalDistribution", _build_categorical_distribution_schema(cfg.elicit_reasoning)
+        "CategoricalDistribution", _build_categorical_distribution_schema(cfg.elicit_reasoning), model=cfg.model
     )
 
     parsed, cost_usd, in_tokens, out_tokens, parse_failures = run_async(
