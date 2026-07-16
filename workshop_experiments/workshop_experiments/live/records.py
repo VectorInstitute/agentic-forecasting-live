@@ -9,6 +9,13 @@ matured horizons. Enforces the three non-schema writer invariants from
 1. the ``quantiles`` set equals the standard 11-point grid exactly;
 2. values are non-decreasing across the grid;
 3. ``point_estimate`` equals the 0.50 quantile value.
+
+Known limitation (accepted): ``curated_trace_summary`` is populated *when
+available* — the writer curates whatever structured ``tool_calls`` list the
+agent path surfaces in prediction metadata, but the current agent runtime does
+not yet emit one, so agent records legitimately carry an empty ``tool_calls``
+list until that upstream wiring lands. An empty list means "no structured tool
+calls captured", not "no tools used".
 """
 
 from __future__ import annotations

@@ -28,7 +28,7 @@ def _prediction_record(origin: str, predictor_id: str, method: str, model: str |
             }
         )
     return {
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "origin_date": origin,
         "origin_timestamp": f"{origin}T20:00:00Z",
         "submission_timestamp": f"{origin}T21:30:00Z",
@@ -46,7 +46,7 @@ def _resolution_record(
 ) -> dict:
     """Build a schema-shaped resolution record at h=5."""
     return {
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "origin_date": origin,
         "method": method,
         "model": model,

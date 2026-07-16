@@ -46,20 +46,61 @@ def test_leaderboard_cell_keys_are_unique() -> None:
 
 
 def test_schema_methods_are_valid_enum_values() -> None:
-    """Every rung maps to a data-contract method enum value."""
-    valid = {"naive", "classical", "lightgbm", "llm_process", "analyst_agent", "code_agent"}
+    """Every rung maps to a per-rung 1.1.0 data-contract method enum value."""
+    valid = {
+        "naive",
+        "ets",
+        "kalman",
+        "autoarima",
+        "lightgbm",
+        "lightgbm_cov",
+        "llm_process",
+        "llm_process_cov",
+        "agent_news",
+        "agent_code",
+        "adaptive_frozen",
+        "adaptive_learning",
+    }
     config = load_config()
     assert {p.schema_method for p in config.predictors} <= valid
 
 
+def test_conventional_rungs_carry_null_model() -> None:
+    """Conventional rungs never overload the model field (always None)."""
+    config = load_config()
+    assert all(p.model_label is None for p in config.by_group("conventional"))
+    assert {p.schema_method for p in config.by_group("conventional")} == {
+        "naive",
+        "ets",
+        "kalman",
+        "autoarima",
+        "lightgbm",
+        "lightgbm_cov",
+    }
+
+
 def test_covariate_llmp_variant_is_distinct_cell() -> None:
-    """The _cov LLMP variant is a separate leaderboard cell from its base."""
+    """The _cov variant is a distinct method; both carry the plain model id."""
     config = load_config()
     base = next(p for p in config.predictors if p.predictor_id == "sp500_llm_process__gemini-3.5-flash")
     cov = next(p for p in config.predictors if p.predictor_id == "sp500_llm_process_cov__gemini-3.5-flash")
-    assert base.schema_method == cov.schema_method == "llm_process"
-    assert base.model_label != cov.model_label
-    assert cov.model_label.endswith("+cov")
+    assert base.schema_method == "llm_process"
+    assert cov.schema_method == "llm_process_cov"
+    assert base.model_label == cov.model_label == "gemini-3.5-flash"
+
+
+def test_agent_rungs_use_per_rung_methods() -> None:
+    """Agent rungs write agent_news / agent_code with the plain model id."""
+    config = load_config()
+    agents = config.by_group("agent")
+    assert {p.schema_method for p in agents} == {"agent_news", "agent_code"}
+    assert all(p.model_label == p.model for p in agents)
+    assert {p.predictor_id for p in agents} == {
+        "sp500_agent_news__gemini-3.5-flash",
+        "sp500_agent_news__claude-sonnet-4-6",
+        "sp500_agent_code__gemini-3.5-flash",
+        "sp500_agent_code__claude-sonnet-4-6",
+    }
 
 
 def test_duplicate_predictor_id_raises() -> None:

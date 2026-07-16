@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "generated_by": "mock",
   "generated_at": "2026-07-15T02:30:00Z",
   "title": "S&P 500 live forecasting experiment",
@@ -23,11 +23,15 @@
   ],
   "methods": [
     "naive",
-    "classical",
+    "ets",
+    "kalman",
+    "autoarima",
     "lightgbm",
+    "lightgbm_cov",
     "llm_process",
-    "analyst_agent",
-    "code_agent"
+    "llm_process_cov",
+    "agent_news",
+    "agent_code"
   ],
   "models": [
     "gemini-3.1-flash-lite-preview",

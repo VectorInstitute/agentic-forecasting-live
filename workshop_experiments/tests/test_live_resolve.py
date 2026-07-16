@@ -50,7 +50,7 @@ def _prediction_record(origin: str, predictor_id: str, horizon: int, grid_values
         )
     ]
     return {
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "origin_date": origin,
         "origin_timestamp": f"{origin}T20:00:00Z",
         "submission_timestamp": f"{origin}T21:30:00Z",

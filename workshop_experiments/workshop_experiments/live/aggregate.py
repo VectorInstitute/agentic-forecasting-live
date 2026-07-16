@@ -33,13 +33,17 @@ from workshop_experiments.live.schema_validation import check
 #: Canonical method-enum order the monitor renders rows in.
 _METHOD_ORDER = [
     "naive",
-    "classical",
+    "ets",
+    "kalman",
+    "autoarima",
     "lightgbm",
+    "lightgbm_cov",
     "llm_process",
-    "analyst_agent",
-    "code_agent",
-    "twin_frozen",
-    "twin_learning",
+    "llm_process_cov",
+    "agent_news",
+    "agent_code",
+    "adaptive_frozen",
+    "adaptive_learning",
 ]
 
 

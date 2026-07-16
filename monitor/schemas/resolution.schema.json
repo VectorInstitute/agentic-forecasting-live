@@ -29,15 +29,20 @@
     },
     "method": {
       "type": "string",
+      "description": "Per-rung method identifier (schema 1.1.0: one enum value per deployed rung; adaptive_* are forward declarations for the stage-2c twins).",
       "enum": [
         "naive",
-        "classical",
+        "ets",
+        "kalman",
+        "autoarima",
         "lightgbm",
+        "lightgbm_cov",
         "llm_process",
-        "analyst_agent",
-        "code_agent",
-        "twin_frozen",
-        "twin_learning"
+        "llm_process_cov",
+        "agent_news",
+        "agent_code",
+        "adaptive_frozen",
+        "adaptive_learning"
       ]
     },
     "model": { "type": ["string", "null"] },

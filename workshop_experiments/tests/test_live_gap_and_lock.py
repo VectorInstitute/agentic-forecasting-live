@@ -27,9 +27,9 @@ def _grid() -> dict[float, float]:
 def _mini_config(tmp_path: Path) -> LiveConfig:
     """Build a two-rung config: one rung that succeeds, one that always fails."""
     good = LivePredictor("naive", None, "naive", None, "sp500_naive", "conventional")
-    bad = LivePredictor("ets", None, "classical", "ets", "sp500_ets", "conventional")
+    bad = LivePredictor("ets", None, "ets", None, "sp500_ets", "conventional")
     return LiveConfig(
-        schema_version="1.0.0",
+        schema_version="1.1.0",
         target_ticker="^GSPC",
         horizons=(1,),
         submission_time_local="17:30",

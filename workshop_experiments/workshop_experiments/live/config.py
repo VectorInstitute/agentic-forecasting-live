@@ -32,53 +32,21 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 #: Default config shipped with the package.
 DEFAULT_CONFIG_PATH = Path(__file__).resolve().parent / "live_config.yaml"
 
-#: Registry method name -> data-contract ``method`` enum value.
+#: Registry method name -> data-contract ``method`` enum value (schema 1.1.0:
+#: one enum value per deployed rung, so ``(method, model, horizon)`` uniquely
+#: keys every leaderboard cell and ``model`` is never overloaded as a variant
+#: label).
 SCHEMA_METHOD: dict[str, str] = {
     "naive": "naive",
-    "ets": "classical",
-    "kalman": "classical",
-    "autoarima": "classical",
-    "lightgbm": "lightgbm",
-    "lightgbm_cov": "lightgbm",
-    "llmp_qgrid": "llm_process",
-    "llmp_qgrid_cov": "llm_process",
-    "agent_news": "analyst_agent",
-    "agent_code": "code_agent",
-}
-
-#: Display label for conventional rungs. Several conventional methods share one
-#: schema ``method`` value (ets/kalman/autoarima -> ``classical``; lightgbm and
-#: lightgbm_cov -> ``lightgbm``), so a distinct ``model`` label is required to
-#: keep each a separate leaderboard cell. ``None`` is used only where the schema
-#: method is already unique to one rung.
-_CONVENTIONAL_MODEL_LABEL: dict[str, str | None] = {
-    "naive": None,
     "ets": "ets",
     "kalman": "kalman",
     "autoarima": "autoarima",
-    "lightgbm": None,
-    "lightgbm_cov": "cov",
-}
-
-#: Stable ``predictor_id`` for conventional rungs (matches ``sp500_<method>``).
-_CONVENTIONAL_PREDICTOR_ID: dict[str, str] = {
-    "naive": "sp500_naive",
-    "ets": "sp500_ets",
-    "kalman": "sp500_kalman",
-    "autoarima": "sp500_autoarima",
-    "lightgbm": "sp500_lightgbm",
-    "lightgbm_cov": "sp500_lightgbm_cov",
-}
-
-#: ``registry method -> (predictor_id stem, model-label suffix)`` for the API
-#: rungs. The live ``predictor_id`` is ``sp500_<stem>__<model>``; the model
-#: label is ``<model><suffix>`` (the ``+cov`` suffix keeps covariate LLMP
-#: variants distinct from their base variant in the leaderboard).
-_API_PREDICTOR_STEM: dict[str, tuple[str, str]] = {
-    "llmp_qgrid": ("llm_process", ""),
-    "llmp_qgrid_cov": ("llm_process_cov", "+cov"),
-    "agent_news": ("analyst_agent", ""),
-    "agent_code": ("code_agent", ""),
+    "lightgbm": "lightgbm",
+    "lightgbm_cov": "lightgbm_cov",
+    "llmp_qgrid": "llm_process",
+    "llmp_qgrid_cov": "llm_process_cov",
+    "agent_news": "agent_news",
+    "agent_code": "agent_code",
 }
 
 
@@ -146,17 +114,22 @@ class LiveConfig:
 
 
 def _expand_conventional(entries: list[dict[str, Any]]) -> list[LivePredictor]:
-    """Expand the conventional block into :class:`LivePredictor` rungs."""
+    """Expand the conventional block into :class:`LivePredictor` rungs.
+
+    Conventional rungs carry ``model = None`` (they consume no model) and the
+    contract's ``sp500_<method>`` predictor-id convention.
+    """
     out: list[LivePredictor] = []
     for entry in entries:
         method = entry["method"]
+        schema_method = SCHEMA_METHOD[method]
         out.append(
             LivePredictor(
                 registry_method=method,
                 model=None,
-                schema_method=SCHEMA_METHOD[method],
-                model_label=_CONVENTIONAL_MODEL_LABEL[method],
-                predictor_id=_CONVENTIONAL_PREDICTOR_ID[method],
+                schema_method=schema_method,
+                model_label=None,
+                predictor_id=f"sp500_{schema_method}",
                 group="conventional",
             )
         )
@@ -164,20 +137,25 @@ def _expand_conventional(entries: list[dict[str, Any]]) -> list[LivePredictor]:
 
 
 def _expand_api(block: dict[str, Any], group: str) -> list[LivePredictor]:
-    """Expand an API (llmp/agent) method x model matrix into rungs."""
+    """Expand an API (llmp/agent) method x model matrix into rungs.
+
+    API rungs carry the plain backing-model id as their public ``model`` label
+    (no variant suffixes — the covariate variant is expressed by the method)
+    and the contract's ``sp500_<method>__<model>`` predictor-id convention.
+    """
     out: list[LivePredictor] = []
     methods = list(block.get("methods", []))
     models = list(block.get("models", []))
     for method in methods:
-        stem, suffix = _API_PREDICTOR_STEM[method]
+        schema_method = SCHEMA_METHOD[method]
         for model in models:
             out.append(
                 LivePredictor(
                     registry_method=method,
                     model=model,
-                    schema_method=SCHEMA_METHOD[method],
-                    model_label=f"{model}{suffix}",
-                    predictor_id=f"sp500_{stem}__{model}",
+                    schema_method=schema_method,
+                    model_label=model,
+                    predictor_id=f"sp500_{schema_method}__{model}",
                     group=group,
                 )
             )

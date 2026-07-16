@@ -25,6 +25,6 @@ from __future__ import annotations
 
 
 #: Data-contract schema version every written record + aggregate carries.
-SCHEMA_VERSION = "1.0.0"
+SCHEMA_VERSION = "1.1.0"
 
 __all__ = ["SCHEMA_VERSION"]
