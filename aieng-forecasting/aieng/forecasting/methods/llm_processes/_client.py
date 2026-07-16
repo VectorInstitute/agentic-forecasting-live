@@ -369,6 +369,13 @@ async def _one_completion_async(
     if parent_span is not None:
         kwargs.setdefault("metadata", {})["litellm_parent_otel_span"] = parent_span
 
+    # Transient-error resilience: providers intermittently return 429/5xx/529
+    # ("overloaded") through the proxy. LiteLLM retries those retryable error
+    # classes with exponential backoff when num_retries is set; a burst of
+    # 529s then costs seconds of backoff instead of skipped predictions that
+    # a later resume pass must re-roll.
+    kwargs.setdefault("num_retries", 4)
+
     resp = await litellm.acompletion(**kwargs)
     cost = float(getattr(resp, "_hidden_params", {}).get("response_cost") or 0.0)
     usage = getattr(resp, "usage", None)
