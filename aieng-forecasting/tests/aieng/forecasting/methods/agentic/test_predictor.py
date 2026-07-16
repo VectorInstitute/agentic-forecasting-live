@@ -357,3 +357,86 @@ class TestAsyncBridge:
         predictions = asyncio.run(call_from_loop())
 
         assert len(predictions) == 1
+
+
+class _FakeBadRequestError(Exception):
+    """BadRequestError-shaped exception with a 400 status code."""
+
+    def __init__(self, message: str) -> None:
+        super().__init__(message)
+        self.status_code = 400
+
+
+class _ScriptedRunner(_StubRunner):
+    """Runner whose ``run_text_async`` raises a scripted exception on early calls."""
+
+    def __init__(self, response: str, *, raises: list[BaseException | None]) -> None:
+        super().__init__(response)
+        self._raises = list(raises)
+
+    async def run_text_async(self, prompt: str, **kwargs: Any) -> str:
+        """Raise the next scripted exception (if any) before returning the response."""
+        self.run_text_async_calls.append({"prompt": prompt, **kwargs})
+        if self._raises:
+            exc = self._raises.pop(0)
+            if exc is not None:
+                raise exc
+        return self._response
+
+
+class TestFunctionResponseNameRetry:
+    """``predict()`` retries once on the proxy function_response.name 400 only."""
+
+    def _predictor(self, runner: _ScriptedRunner) -> AgentPredictor:
+        return AgentPredictor(
+            _config(),
+            _prompt_builder(),
+            output_schema=ContinuousAgentForecastOutput,
+            runner=runner,  # type: ignore[arg-type]
+        )
+
+    def test_retries_once_and_succeeds_on_translation_400(self, caplog: pytest.LogCaptureFixture) -> None:
+        """A function_response.name 400 triggers exactly one fresh-session retry."""
+        runner = _ScriptedRunner(
+            _output_json([1]),
+            raises=[_FakeBadRequestError("proxy error: function_response.name missing"), None],
+        )
+        predictor = self._predictor(runner)
+
+        with caplog.at_level(logging.WARNING):
+            predictions = predictor.predict(_task([1]), _context())
+
+        assert len(predictions) == 1
+        assert len(runner.run_text_async_calls) == 2  # original + one retry
+        assert any("function_response.name" in r.message for r in caplog.records)
+
+    def test_retry_happens_at_most_once(self) -> None:
+        """Two consecutive translation 400s are not swallowed — the retry re-raises."""
+        err = _FakeBadRequestError("function_response.name missing")
+        runner = _ScriptedRunner(_output_json([1]), raises=[err, err])
+        predictor = self._predictor(runner)
+
+        with pytest.raises(_FakeBadRequestError):
+            predictor.predict(_task([1]), _context())
+        assert len(runner.run_text_async_calls) == 2  # original + single retry, then propagate
+
+    def test_unrelated_bad_request_is_not_retried(self) -> None:
+        """A 400 without the function_response.name marker propagates immediately."""
+        runner = _ScriptedRunner(_output_json([1]), raises=[_FakeBadRequestError("some other 400")])
+        predictor = self._predictor(runner)
+
+        with pytest.raises(_FakeBadRequestError):
+            predictor.predict(_task([1]), _context())
+        assert len(runner.run_text_async_calls) == 1  # no retry
+
+    def test_marker_error_without_400_status_is_not_retried(self) -> None:
+        """The marker alone (no bad-request signal) is not enough to retry."""
+        runner = _ScriptedRunner(
+            _output_json([1]),
+            raises=[ValueError("function_response.name in an unrelated ValueError")],
+        )
+        predictor = self._predictor(runner)
+
+        with pytest.raises(ValueError):
+            predictor.predict(_task([1]), _context())
+        assert len(runner.run_text_async_calls) == 1  # no retry

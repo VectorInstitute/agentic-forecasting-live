@@ -185,6 +185,77 @@ class TestBuildAdkAgent:
         assert len(agent.tools) == 1
 
 
+class TestGeminiSerialToolCallWorkaround:
+    """Gemini-family tool-bearing agents are steered to serialise tool calls.
+
+    Interim mitigation for the Vector-proxy bug that drops
+    ``function_response.name`` on Gemini *parallel* tool-call batches (a
+    blocking 400). Claude parallel batches translate fine, and a tool-free
+    agent can never emit a parallel batch, so both are left untouched.
+    """
+
+    _MARKER = "Call tools **one at a time**"
+
+    def _tool(self) -> object:
+        def my_tool(x: str) -> str:
+            """Echo the input. Args: x: anything. Returns: the same string."""
+            return x
+
+        return my_tool
+
+    def test_gemini_with_tools_gets_serial_instruction(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """A Gemini-family agent with tools has the serial-call line appended."""
+        monkeypatch.delenv("OPENAI_BASE_URL", raising=False)
+        agent = build_adk_agent(
+            AgentConfig(
+                instruction="Forecast the supplied series.",
+                model="gemini-3.5-flash",
+                function_tools=[self._tool()],
+                openai_base_url=None,
+            )
+        )
+        assert self._MARKER in agent.instruction
+
+    def test_gemini_without_tools_is_untouched(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """No tools means no parallel batch is possible; instruction is unchanged."""
+        monkeypatch.delenv("OPENAI_BASE_URL", raising=False)
+        agent = build_adk_agent(
+            AgentConfig(
+                instruction="You are a helpful analyst.",
+                model="gemini-3.5-flash",
+                openai_base_url=None,
+            )
+        )
+        assert self._MARKER not in agent.instruction
+
+    def test_claude_with_tools_is_untouched(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """Claude parallel batches work through the proxy — no workaround applied."""
+        monkeypatch.delenv("OPENAI_BASE_URL", raising=False)
+        agent = build_adk_agent(
+            AgentConfig(
+                instruction="Forecast the supplied series.",
+                model="claude-sonnet-4-5",
+                function_tools=[self._tool()],
+                openai_base_url=None,
+            )
+        )
+        assert self._MARKER not in agent.instruction
+
+    def test_workaround_applies_on_the_proxy_wrapped_path(self) -> None:
+        """Detection works when the model is wrapped in LiteLlm for the proxy."""
+        agent = build_adk_agent(
+            AgentConfig(
+                instruction="Forecast the supplied series.",
+                model="gemini-3.5-flash",
+                function_tools=[self._tool()],
+                openai_base_url="https://proxy.example.com/v1",
+                openai_api_key="test-key",
+            )
+        )
+        assert isinstance(agent.model, LiteLlm)
+        assert self._MARKER in agent.instruction
+
+
 class TestSmrShimRegistration:
     """build_adk_agent registers the set_model_response shim on the proxy path.
 

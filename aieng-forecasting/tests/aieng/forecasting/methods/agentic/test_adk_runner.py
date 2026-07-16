@@ -5,6 +5,7 @@ extraction, Langfuse propagation kwargs, agent exposure, and lifecycle cleanup.
 They intentionally avoid testing ADK's runner/session internals.
 """
 
+import logging
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -695,6 +696,33 @@ class TestGracefulToolIterationCap:
         assert result == smr_payload
         # Exactly two turns: the capped main loop and one graceful final turn.
         assert patch_runner_cls.run_async.call_count == 2
+
+    async def test_cap_recovery_logs_once_at_warning_not_error(self, patch_runner_cls, mock_agent, caplog) -> None:
+        """A recovered capped run logs one WARNING (with the cap) and no ERROR.
+
+        A healthy run that recovers from the cap must not read as a failure in
+        our own logs; the residual ADK/OTEL ERROR spans are documented but not
+        emitted by this runner.
+        """
+        patch_runner_cls.session_service.get_session = AsyncMock(return_value=None)
+        patch_runner_cls.run_async.side_effect = [
+            _stream_then_raise(exc=LlmCallsLimitExceededError("cap")),
+            _stream(_final_event("submitted")),
+        ]
+
+        runner = AdkTextRunner(
+            mock_agent,
+            config=AdkTextRunnerConfig(app_name="app", max_tool_iterations=5),
+        )
+        with caplog.at_level(logging.DEBUG, logger="aieng.forecasting.methods.agentic.adk_runner"):
+            await runner.run_text_async("forecast")
+
+        runner_records = [r for r in caplog.records if r.name == "aieng.forecasting.methods.agentic.adk_runner"]
+        warnings = [r for r in runner_records if r.levelno == logging.WARNING]
+        assert len(warnings) == 1
+        assert "5" in warnings[0].getMessage()  # the cap is surfaced
+        # The runner itself never logs the recovery at ERROR.
+        assert not [r for r in runner_records if r.levelno >= logging.ERROR]
 
     async def test_final_turn_uses_configured_instruction(self, patch_runner_cls, mock_agent) -> None:
         """The graceful final turn sends the configured submit-now instruction."""

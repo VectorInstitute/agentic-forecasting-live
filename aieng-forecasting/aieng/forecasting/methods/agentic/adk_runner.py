@@ -246,6 +246,22 @@ class AdkTextRunner:
     config : AdkTextRunnerConfig
         The configuration for the runner.
 
+    Notes
+    -----
+    **Graceful tool-iteration cap — residual span noise.** When
+    ``config.max_tool_iterations`` is set and the agent exhausts the budget,
+    ADK raises ``LlmCallsLimitExceededError`` *inside* ``run_async``. We catch
+    it and recover with one final submit turn (see :meth:`run_text_async`), and
+    log the recovery once at WARNING — a recovered run is *not* a failure. The
+    residual noise we cannot suppress from here: ADK's own ``run_async`` span
+    (and the OpenInference ADK instrumentation) records that exception and marks
+    the affected span(s) ERROR before the exception ever reaches our ``except``.
+    That status is stamped inside the closed ADK span, so overriding it would
+    mean reaching into ADK/OTEL internals rather than our own code. Treat those
+    ERROR-level spans as expected on a run that recovered — the single WARNING
+    above is the authoritative signal, and the run still returns a valid
+    structured forecast.
+
     Examples
     --------
     Build a runner from an :class:`AgentConfig` and send one prompt:
@@ -468,8 +484,13 @@ class AdkTextRunner:
             except LlmCallsLimitExceededError:
                 # Cap reached: give the agent one final, uncapped turn to submit
                 # with what it has, rather than failing the prediction outright.
-                logger.info(
-                    "Tool-iteration cap (%s) reached; issuing graceful final submit turn.",
+                # This is an expected, recoverable event on a healthy run — log it
+                # ONCE at WARNING (not ERROR) so a recovered run does not read as a
+                # failure. See the class docstring for the residual ADK/OTEL
+                # ERROR-level span noise we cannot suppress from here.
+                logger.warning(
+                    "Tool-iteration cap (max_llm_calls=%s) reached; issuing one graceful "
+                    "final submit turn. This is expected recovery, not a run failure.",
                     cap,
                 )
                 final_message = genai_types.Content(

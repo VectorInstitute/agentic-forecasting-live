@@ -39,6 +39,26 @@ from pydantic import ValidationError
 logger: logging.Logger = logging.getLogger(__name__)
 T = TypeVar("T")
 
+#: Substring identifying the Vector-proxy OpenAI<->Gemini translation bug that
+#: drops ``function_response.name`` on Gemini *parallel* tool-call batches,
+#: surfacing as a blocking 400. See the Gemini serial-tool-call workaround in
+#: ``agent_factory.build_adk_agent`` (which reduces how often this fires) and
+#: planning-docs/workshop-paper/proxy-bug-report-function-response-name.md.
+_FUNCTION_RESPONSE_NAME_MARKER = "function_response.name"
+
+
+def _is_function_response_name_translation_error(exc: BaseException) -> bool:
+    """Return ``True`` for the proxy's ``function_response.name`` 400 only.
+
+    Deliberately narrow: matches the highly specific proxy-bug message *and* a
+    bad-request signal (HTTP 400 status code, or a ``BadRequestError``-shaped
+    class name), so unrelated failures are never retried.
+    """
+    if _FUNCTION_RESPONSE_NAME_MARKER not in str(exc):
+        return False
+    status = getattr(exc, "status_code", None)
+    return status == 400 or "BadRequest" in type(exc).__name__
+
 
 def _run_coroutine_sync(coro: Coroutine[Any, Any, T]) -> T:
     """Run an async coroutine from the sync ``Predictor`` interface.
@@ -285,7 +305,23 @@ class AgentPredictor(Predictor):
         # so search_web can enforce it via ToolContext.state regardless of
         # whether the LLM remembers to pass a matching cutoff_date argument.
         initial_state = {AS_OF_STATE_KEY: str(context.as_of)[:10]}
-        output_str = _run_coroutine_sync(self._runner.run_text_async(prompt, initial_state=initial_state))
+        try:
+            output_str = _run_coroutine_sync(self._runner.run_text_async(prompt, initial_state=initial_state))
+        except Exception as exc:
+            # Defense in depth for the Vector-proxy translation bug that drops
+            # function_response.name on Gemini parallel tool-call batches (a
+            # blocking 400). The agent-factory workaround steers Gemini agents
+            # away from parallel batches, but if one still slips through, retry
+            # the whole predict once rather than losing the prediction. The
+            # runner's fresh_session_per_message default means this rerun starts
+            # from a clean session. Kept strictly to that one error signature.
+            if not _is_function_response_name_translation_error(exc):
+                raise
+            logger.warning(
+                "Predict hit the proxy function_response.name translation bug (400); "
+                "retrying once with a fresh session."
+            )
+            output_str = _run_coroutine_sync(self._runner.run_text_async(prompt, initial_state=initial_state))
 
         # Normalise: strip markdown fences before validation so any model can
         # be swapped in without breaking the parse layer.
