@@ -11,7 +11,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from workshop_experiments.live.config import load_config
+from workshop_experiments.live.config import load_config, registry_predictor_id
 from workshop_experiments.live.schema_validation import validate
 from workshop_experiments.live.simulate import run_simulation, smoke_origins
 
@@ -32,11 +32,25 @@ def test_simulate_end_to_end(tmp_path: Path) -> None:
         resolved_at="2025-10-27T21:30:00Z",
     )
 
-    # 15 smoke-backed rungs x 3 origins written; 7 unbacked rungs x 3 gapped.
-    assert result.n_predictions_written == 45
-    assert result.n_gapped == 21
-    # h=5 resolves at origins 2025-10-06 and 2025-10-13 for all 15 rungs.
-    assert result.n_resolutions == 30
+    # Expectations derive from the committed smoke store, so growing the store
+    # (new smoke-backed rungs, or filling a previously failed origin) never
+    # breaks this test. A (rung, origin) pair is backed when the fixture for
+    # EVERY horizon task exists — simulate gaps the pair otherwise.
+    def backed(rung: object, origin: object) -> bool:
+        rid = registry_predictor_id(rung.registry_method, rung.model)  # type: ignore[attr-defined]
+        return all(
+            (config.smoke_store / rid / config.task_id_for_horizon(h) / f"{origin}.yaml").is_file()
+            for h in config.horizons
+        )
+
+    backed_pairs = [(r, o) for r in config.predictors for o in origins if backed(r, o)]
+    n_pairs = len(config.predictors) * len(origins)
+    assert backed_pairs
+    assert result.n_predictions_written == len(backed_pairs)
+    assert result.n_gapped == n_pairs - len(backed_pairs)
+    # h=5 resolves only at the first two of the three smoke origins (the third
+    # origin's h=5 target is beyond the smoke window).
+    assert result.n_resolutions == sum(1 for _, o in backed_pairs if o in origins[:2])
 
     # Every produced aggregate conforms to its schema.
     assert validate("manifest", json.load((out_dir / "manifest.json").open())) == []
