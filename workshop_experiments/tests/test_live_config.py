@@ -19,15 +19,15 @@ def test_default_config_loads() -> None:
     assert config.timezone == "America/Toronto"
     assert config.retry.max_attempts == 3
     assert config.retry.hard_stop_local == "21:00"
-    assert len(config.predictors) == 22  # 6 conventional + 12 llmp + 4 agent
+    assert len(config.predictors) == 26  # 6 conventional + 14 llmp + 6 agent
 
 
 def test_ladder_groups_have_expected_counts() -> None:
     """Each scope group expands to the configured number of rungs."""
     config = load_config()
     assert len(config.by_group("conventional")) == 6
-    assert len(config.by_group("llmp")) == 12
-    assert len(config.by_group("agent")) == 4
+    assert len(config.by_group("llmp")) == 14
+    assert len(config.by_group("agent")) == 6
 
 
 def test_predictor_ids_are_unique() -> None:
@@ -99,8 +99,10 @@ def test_agent_rungs_use_per_rung_methods() -> None:
     assert {p.predictor_id for p in agents} == {
         "tsx_agent_news__gemini-3.5-flash",
         "tsx_agent_news__claude-sonnet-4-6",
+        "tsx_agent_news__claude-sonnet-5",
         "tsx_agent_code__gemini-3.5-flash",
         "tsx_agent_code__claude-sonnet-4-6",
+        "tsx_agent_code__claude-sonnet-5",
     }
 
 

@@ -11,7 +11,7 @@ def test_dry_run_simulate_makes_no_writes(capsys) -> None:  # type: ignore[no-un
     assert code == 0
     out = capsys.readouterr().out
     assert "ws-live-run plan (simulate)" in out
-    assert "configured rungs : 22" in out
+    assert "configured rungs : 26" in out
 
 
 def test_origin_requires_simulate() -> None:

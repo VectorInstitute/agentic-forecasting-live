@@ -33,7 +33,7 @@ def test_default_config_has_no_twins_but_carries_gate_params() -> None:
     config = load_config()
     # Twins are off by default (deploy later); the stateless ladder is unchanged.
     assert config.twins == ()
-    assert len(config.predictors) == 22
+    assert len(config.predictors) == 26
     assert config.gate_params["confirmation_threshold"] == 3
     assert config.gate_params["shadow_window_days"] == 10
 
@@ -51,7 +51,7 @@ def test_twins_expand_to_two_rungs(tmp_path: Path) -> None:
     assert frozen.group == learning.group == "twins"
     assert frozen.model_label == learning.model_label == "gemini-3.5-flash"
     # Twins stay OUT of the main ladder so the stateless-record counts hold.
-    assert len(config.predictors) == 22
+    assert len(config.predictors) == 26
 
 
 def test_disabled_twins_expand_to_nothing(tmp_path: Path) -> None:
