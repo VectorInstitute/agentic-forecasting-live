@@ -631,4 +631,108 @@ class CategoricalAgentForecastOutput(AgentForecastOutput):
                 metadata=prediction_metadata,
             )
         ]
+
+
+class ScenarioCard(BaseModel):
+    """One probability-weighted scenario narrative from scenario-analysis output.
+
+    Carries the qualitative story only.  Domain implementations subclass this to
+    add numeric range / point-estimate fields under the field names their
+    downstream caches and displays expect (see
+    :meth:`ScenarioAgentForecastOutput.prompt_schema_json`).
+    """
+
+    model_config = {"extra": "ignore"}
+
+    name: str
+    description: str
+    probability: float = Field(ge=0.0, le=1.0)
+    key_drivers: list[str] = Field(default_factory=list)
+
+
+class ScenarioAgentForecastOutput(AgentForecastOutput):
+    """Scenario-analysis output: a set of probability-weighted narratives.
+
+    The scenario cards carry the qualitative stories the market is debating; the
+    aggregate probability mass across cards is surfaced as a single
+    :class:`~aieng.forecasting.evaluation.prediction.BinaryForecast` for scoring,
+    while the full card set rides along in prediction metadata for display.
+
+    Domain subclasses override :attr:`scenario_card_template_extra` (and narrow
+    the :attr:`scenarios` element type) to advertise the numeric scenario fields
+    their target series uses — e.g. a price range and point estimate at a named
+    horizon.
+    """
+
+    modality: ClassVar[Literal["continuous", "discrete", "categorical"]] = "discrete"
+
+    model_config = {"extra": "ignore"}
+
+    scenarios: list[ScenarioCard]
+    base_case: str
+    reasoning: str = ""
+
+    #: Extra template fields injected into each scenario card in
+    #: :meth:`prompt_schema_json`, positioned between ``probability`` and
+    #: ``key_drivers``.  Empty on the generic base; override in a subclass to
+    #: advertise domain-specific numeric fields.
+    scenario_card_template_extra: ClassVar[dict[str, object]] = {}
+
+    @classmethod
+    def prompt_schema_json(cls) -> str:
+        """Return a JSON template for use in agent instruction strings.
+
+        Returns
+        -------
+        str
+            Indented JSON string showing the exact structure the agent must
+            pass to ``set_model_response``.
+        """
+        card: dict[str, object] = {
+            "name": "<string>",
+            "description": "<string>",
+            "probability": "<float in [0, 1]>",
+        }
+        card.update(cls.scenario_card_template_extra)
+        card["key_drivers"] = ["<driver 1>", "<driver 2>"]
+        template: dict[str, object] = {
+            "scenarios": [card],
+            "base_case": "<scenario name>",
+            "reasoning": "<paragraph>",
+        }
+        return json.dumps(template, indent=2)
+
+    def to_predictions(
+        self,
+        *,
+        task: ForecastingTask,
+        context: ForecastContext,
+        predictor_id: str,
+        metadata: dict[str, Any] | None = None,
+    ) -> list[Prediction]:
+        """Convert scenario output to a metadata-rich prediction."""
+        if len(task.horizons) != 1:
+            raise ValueError("Scenario agent output expects exactly one task horizon.")
+
+        horizon = task.horizons[0]
+        issued_at = datetime.utcnow()
+        offset = pd.tseries.frequencies.to_offset(task.frequency)
+        base_prob = float(sum(s.probability for s in self.scenarios))
+        prediction_metadata: dict[str, Any] = dict(metadata) if metadata is not None else {}
+        prediction_metadata["scenarios"] = [s.model_dump() for s in self.scenarios]
+        prediction_metadata["base_case"] = self.base_case
+        if self.reasoning.strip():
+            prediction_metadata["rationale"] = self.reasoning
+
+        return [
+            Prediction(
+                predictor_id=predictor_id,
+                task_id=task.task_id,
+                issued_at=issued_at,
+                as_of=context.as_of,
+                forecast_date=(pd.Timestamp(context.as_of) + offset * horizon).to_pydatetime(),
+                payload=BinaryForecast(probability=min(base_prob, 1.0)),
+                metadata=prediction_metadata,
+            )
+        ]
 ```

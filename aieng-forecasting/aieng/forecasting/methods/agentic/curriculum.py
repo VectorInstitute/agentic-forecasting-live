@@ -64,12 +64,17 @@ logger = logging.getLogger(__name__)
 # Vol-regime helper
 # ---------------------------------------------------------------------------
 
-_VOL_REGIMES = [
+#: Default (upper-threshold, label) bands for annualised-vol regime
+#: classification, in ascending order.  Any value at or above the last band's
+#: threshold is classified as :data:`_EXTREME_LABEL`.  Override per domain via
+#: the ``bands`` parameter of :func:`_vol_regime` (see
+#: :attr:`~aieng.forecasting.methods.agentic.domain.DomainConfig.vol_regime_bands`).
+DEFAULT_VOL_REGIME_BANDS: tuple[tuple[float, str], ...] = (
     (15.0, "low"),
     (30.0, "medium"),
     (50.0, "elevated"),
-    (math.inf, "extreme"),
-]
+)
+_EXTREME_LABEL = "extreme"
 
 
 _MIN_VOL_WINDOW = 5
@@ -81,10 +86,20 @@ _MAE_TREND_THRESHOLD = 1.1
 _MIN_HORIZONS_FOR_NARRATIVE = 2
 
 
-def _vol_regime(price_series: pd.DataFrame, as_of: datetime, lookback: int = 21) -> str:
+def _vol_regime(
+    price_series: pd.DataFrame,
+    as_of: datetime,
+    lookback: int = 21,
+    *,
+    bands: tuple[tuple[float, str], ...] = DEFAULT_VOL_REGIME_BANDS,
+    extreme_label: str = _EXTREME_LABEL,
+) -> str:
     """Classify the vol regime at *as_of*.
 
-    Uses *lookback* trading days of log returns.
+    Uses *lookback* trading days of log returns.  *bands* is a sequence of
+    ``(upper_threshold, label)`` pairs in ascending order; annualised vol at or
+    above the last threshold is classified as *extreme_label*.  Defaults reproduce
+    the historical 15 / 30 / 50 thresholds.
     """
     import pandas as pd  # noqa: PLC0415 — conditional import for optional dep
 
@@ -95,10 +110,10 @@ def _vol_regime(price_series: pd.DataFrame, as_of: datetime, lookback: int = 21)
         return "unknown"
     log_returns = np.diff(np.log(window.astype(float)))
     annualized_vol = float(np.std(log_returns) * np.sqrt(252) * 100)
-    for threshold, label in _VOL_REGIMES:
+    for threshold, label in bands:
         if annualized_vol < threshold:
             return label
-    return "extreme"
+    return extreme_label
 
 
 # ---------------------------------------------------------------------------

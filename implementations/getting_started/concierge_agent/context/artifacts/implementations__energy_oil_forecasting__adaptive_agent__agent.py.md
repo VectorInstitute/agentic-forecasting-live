@@ -52,9 +52,9 @@ The ``wti-strategy`` skill is backed by a :class:`~energy_oil_forecasting.adapti
 Pydantic model persisted in ``skills/wti-strategy/skill_state.yaml``.
 ``SKILL.md`` is rendered from that model on every mutation and is never
 hand-edited.  Five typed mutation tools (from :mod:`skill_tools`) are
-registered via ``AgentConfig(extra_tools=WTI_SKILL_TOOLS)`` and run in the
-host process — not inside E2B.  See :mod:`skill_tools` for the full tool
-signatures and evidence governance rules.
+registered via ``AgentConfig(extra_tools=build_skill_tools(strategy_dir))`` and
+run in the host process — not inside E2B.  See :mod:`skill_tools` for the full
+tool signatures and evidence governance rules.
 """
 
 from __future__ import annotations
@@ -73,14 +73,12 @@ from aieng.forecasting.methods.agentic import (
     ContinuousAgentForecastOutput,
     build_adk_agent,
 )
-from aieng.forecasting.methods.agentic.agent_factory import (
-    AgentConfig,
-    CodeExecutionConfig,
-    ContextRetrievalConfig,
-)
+from aieng.forecasting.methods.agentic.agent_factory import AgentConfig
+from aieng.forecasting.methods.agentic.domain import build_adaptive_config
 from aieng.forecasting.models import ADVANCED_MODEL, LITE_MODEL
-from energy_oil_forecasting.adaptive_agent.skill_tools import build_skill_tools
+from energy_oil_forecasting.adaptive_agent.skill_state import WtiStrategyState
 from energy_oil_forecasting.analyst_agent import compress_history
+from energy_oil_forecasting.domain import OIL_DOMAIN
 from pydantic import BaseModel
 
 
@@ -88,141 +86,14 @@ logger = logging.getLogger(__name__)
 
 
 # ---------------------------------------------------------------------------
-# Paths
-# ---------------------------------------------------------------------------
-
-_SKILLS_ROOT = Path(__file__).parent / "skills"
-
-
-# ---------------------------------------------------------------------------
 # System prompt
 # ---------------------------------------------------------------------------
-
-
-def _build_adaptive_analyst_instruction() -> str:
-    """Build the adaptive analyst instruction with the output schema embedded.
-
-    Uses ``ContinuousAgentForecastOutput.prompt_schema_json()`` for the
-    prediction-response schema so it stays in sync with the output class.
-    """
-    schema = ContinuousAgentForecastOutput.prompt_schema_json()
-    return (
-        "## Identity\n\n"
-        "You are a persistent WTI crude oil market analyst. You carry knowledge forward "
-        "across invocations: your `wti-strategy` skill captures your current forecasting "
-        "approach, and you update it deliberately as you learn from experience.\n\n"
-        "## Message types\n\n"
-        "You receive messages through a single chat interface. Determine from context "
-        "what kind of invocation this is and respond accordingly:\n\n"
-        "**Prediction request** — contains a JSON payload with `task`, `as_of`, "
-        "`horizons`, and price history. Load `wti-strategy` first to read your current "
-        "approach and any active calibration corrections. Then:\n"
-        "1. Use `run_code` to run your full statistical analysis pipeline: fetch data "
-        "via `fetch-yfinance` (using `end=as_of` as the cutoff), classify the vol "
-        "regime via `vol-regime`, and project trend and intervals via `trend-projection`. "
-        "Apply any calibration corrections from `wti-strategy` — for example, substituting "
-        "a flat-trend model in elevated/extreme vol regimes if your strategy calls for it.\n"
-        "2. Use the context-retrieval tool to gather current market news and adjust your "
-        "estimates where strong catalysts are present.\n"
-        "3. Conclude with `set_model_response` (schema below).\n\n"
-        "Your quantitative pipeline is your starting point — your learned strategy "
-        "corrections and news-grounded judgment shape the final forecast.\n\n"
-        "**Resolution** — describes how a past forecast resolved (actual value, error, "
-        "horizon). Reflect carefully. If the error points to a systematic pattern — not "
-        "a one-off surprise — consult `meta-learning` to assess whether a strategy update "
-        "is warranted.\n\n"
-        "**Self-review / backtesting** — you are asked to analyse your recent performance "
-        "or explore historical data using code execution. Compose the relevant skills, "
-        "write one complete code block, and summarise what you find. If the analysis "
-        "surfaces a durable insight, follow the `meta-learning` process.\n\n"
-        "**User question** — a human is asking for analysis, context, or your market "
-        "view. Engage directly, using code execution and web search as needed.\n\n"
-        "## Skills are pipeline components\n\n"
-        "Your skills cover specific pipeline stages. Compose them: for any task "
-        "involving code, load each relevant skill and its `references/examples.md`, "
-        "then write one complete self-contained code block combining all the patterns.\n\n"
-        "| Skill            | Pipeline stage                                          |\n"
-        "|------------------|---------------------------------------------------------|\n"
-        "| fetch-yfinance   | Download market / futures data from Yahoo Finance       |\n"
-        "| vol-regime       | Classify vol regime, detect anomalies, choose window    |\n"
-        "| trend-projection | Fit trend, project to horizons, calibrate intervals     |\n"
-        "| wti-strategy     | Your current forecasting strategy — load at the start of every prediction |\n"
-        "| meta-learning    | Governs when and how to update wti-strategy             |\n\n"
-        "## Strategy mutation tools\n\n"
-        "These tools write directly to `wti-strategy` on the host filesystem. "
-        "They run outside the E2B sandbox. Consult `meta-learning` before calling "
-        "any of them.\n\n"
-        "| Tool | Evidence layer | Evidence bar |\n"
-        "|------|---------------|---------------|\n"
-        "| `record_observation(finding, linked_hypothesis?)` | Observations | Pattern visible across ≥2 forecasts — not a single surprise |\n"
-        "| `open_hypothesis(claim, initial_evidence)` | Hypotheses | One strong observation suggesting a durable pattern |\n"
-        "| `record_hypothesis_outcome(hypothesis_id, outcome)` | Hypotheses | Each resolution relevant to an open hypothesis |\n"
-        "| `graduate_hypothesis(hypothesis_id, condition, adjustment, horizon_scope)` | Calibration | Tool enforces confirmation threshold — will reject if not met |\n"
-        "| `update_approach_narrative(new_text, rationale)` | Approach | Only when the calibration record reveals a structural insight |\n\n"
-        "Active calibration corrections from `wti-strategy` are **not optional** — "
-        "apply every listed correction when the stated condition is met.\n\n"
-        "## Code execution discipline\n\n"
-        "Treat `run_code` like submitting to a batch queue: plan your complete "
-        "analysis upfront, write one self-contained script, and read the results. "
-        "There is no REPL, no way to inspect intermediate state between calls, and "
-        "no benefit to splitting work — each submission starts from zero with no "
-        "memory of previous calls.\n\n"
-        "Never make a preliminary or test call to check connectivity or verify "
-        "imports. Assume the environment works. Your first `run_code` call should "
-        "produce your complete result.\n\n"
-        "Pre-installed: numpy, pandas, sklearn, yfinance, statsmodels, properscoring.\n\n"
-        "**Data sourcing rule:** Always use the `fetch-yfinance` skill to load price "
-        "data inside `run_code`. **Never embed `target_history_csv` or any CSV "
-        "string literal as a data source in code.** Pasting thousands of rows of "
-        "data as Python string literals is fragile, wastes context, and risks hitting "
-        "sandbox limits. `target_history_csv` is provided in the prediction payload "
-        "for your reading and statistical summary only — not for copy-pasting into "
-        "code blocks. When a skill description says 'assume `df` is already defined', "
-        "that means you should define `df` via a yfinance fetch at the top of your "
-        "script, not by embedding raw data.\n\n"
-        "## Temporal discipline\n\n"
-        "Every forecast is anchored to an `as_of` date. Never use information beyond "
-        "that date — in web search, code analysis, or reasoning.\n\n"
-        "When fetching data inside `run_code`, always pass `end=as_of_date` to "
-        "yfinance to enforce the temporal cutoff — for example:\n\n"
-        "```python\nraw = ticker.history(start='2004-01-01', end='2026-02-16', "
-        "auto_adjust=False)\n```\n\n"
-        "Replace the end date with the actual `as_of` value from the prediction "
-        "payload. This is the only correct way to ensure the sandbox sees the same "
-        "data the agent would have seen on that date.\n\n"
-        "## Prediction output schema\n\n"
-        "For **prediction requests**, call `set_model_response` with `json_response` "
-        "matching **exactly**:\n\n"
-        "```json\n" + schema + "\n```\n\n"
-        'Critical: use `"horizon"` (integer, not `"horizon_days"`). '
-        '`"quantiles"` is a **list** of `{"quantile": <level>, "value": <price>}` '
-        "objects — not a dict."
-    )
-
-
-_ADAPTIVE_ANALYST_INSTRUCTION = _build_adaptive_analyst_instruction()
-
-
-# ---------------------------------------------------------------------------
-# Context retrieval instruction
-# ---------------------------------------------------------------------------
-
-_WTI_CONTEXT_RETRIEVAL_INSTRUCTION = """\
-You are an oil market intelligence specialist with access to web search.
-
-Search for information relevant to the query and return a concise structured \
-markdown summary (3-5 paragraphs) covering relevant aspects of:
-- WTI/Brent crude price level and recent trend
-- OPEC+ production decisions and supply outlook
-- Geopolitical risks in the Persian Gulf, Middle East, key shipping lanes
-- US Strategic Petroleum Reserve and energy policy signals
-- Notable tanker/shipping incidents or supply disruption signals
-- Published analyst forecasts or unusual price-target revisions
-
-Ground your summary in the search results you actually retrieve. \
-When a cutoff date is specified, do not report or speculate about events \
-that occurred after that date.\
-"""
+#
+# The adaptive analyst instruction and the web-search sub-agent instruction are
+# rendered from the shared templates over the WTI ``OIL_DOMAIN`` fragments (see
+# :mod:`energy_oil_forecasting.domain` and
+# :func:`aieng.forecasting.methods.agentic.domain.build_adaptive_config`).  A new
+# target series is configured by supplying a different ``DomainConfig``.
 
 
 # ---------------------------------------------------------------------------
@@ -315,30 +186,19 @@ def build_wti_adaptive_config(
     -------
     AgentConfig
     """
-    resolved_strategy_dir = strategy_dir or (_SKILLS_ROOT / "wti-strategy")
-    # Include strategy dir name in agent name so cached_multi_backtest writes a
-    # separate cache file per variant (cache key is derived from predictor_id,
-    # which is derived from agent name).
-    agent_name = f"wti_adaptive_analyst_{resolved_strategy_dir.name.replace('-', '_')}"
-    return AgentConfig(
-        name=agent_name,
+    # Delegates to the shared, domain-agnostic builder with the WTI domain and
+    # ``WtiStrategyState`` so the rendered SKILL.md keeps its oil branding.  The
+    # strategy dir name is baked into the agent name (cache key is derived from
+    # predictor_id, which is derived from agent name) so per-variant prediction
+    # caches stay separate.
+    return build_adaptive_config(
+        OIL_DOMAIN,
+        state_type=WtiStrategyState,
         model=model,
-        instruction=_ADAPTIVE_ANALYST_INSTRUCTION,
+        search_model=search_model,
         max_output_tokens=max_output_tokens,
-        context_retrieval=ContextRetrievalConfig(
-            enabled=True,
-            instruction=_WTI_CONTEXT_RETRIEVAL_INSTRUCTION,
-            search_model=search_model,
-        ),
-        code_execution=CodeExecutionConfig(enabled=True),
-        skills_dirs=[
-            _SKILLS_ROOT / "fetch-yfinance",
-            _SKILLS_ROOT / "vol-regime",
-            _SKILLS_ROOT / "trend-projection",
-            resolved_strategy_dir,
-            _SKILLS_ROOT / "meta-learning",
-        ],
-        extra_tools=build_skill_tools(resolved_strategy_dir, confirmation_threshold=2),
+        strategy_dir=strategy_dir,
+        confirmation_threshold=2,
     )
 
 
