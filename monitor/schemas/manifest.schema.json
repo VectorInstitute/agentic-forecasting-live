@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/VectorInstitute/agentic-forecasting-live/main/monitor/schemas/manifest.schema.json",
+  "title": "Site manifest",
+  "description": "The index the static site fetches first: freshness, provenance (mock/harness), the method/model/horizon universe, and the list of origins available for drill-down (the site cannot glob a directory, so the manifest enumerates them).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "generated_by",
+    "generated_at",
+    "horizons",
+    "quantiles",
+    "methods",
+    "models",
+    "latest_origin",
+    "origin_count",
+    "origins"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "generated_by": {
+      "type": "string",
+      "enum": ["mock", "harness"],
+      "description": "Provenance flag. 'mock' triggers the site's MOCK DATA banner."
+    },
+    "generated_at": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "title": { "type": "string" },
+    "horizons": { "type": "array", "items": { "type": "integer", "minimum": 1 }, "minItems": 1 },
+    "quantiles": { "type": "array", "items": { "type": "number" }, "minItems": 1 },
+    "methods": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "models": { "type": "array", "items": { "type": "string" } },
+    "latest_origin": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+    "origin_count": { "type": "integer", "minimum": 0 },
+    "gap_count": { "type": "integer", "minimum": 0 },
+    "origins": {
+      "type": "array",
+      "description": "Origins with a committed forecast bundle at forecasts/<origin_date>.json.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["origin_date", "resolved_horizons"],
+        "properties": {
+          "origin_date": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+          "resolved_horizons": {
+            "type": "array",
+            "items": { "type": "integer", "minimum": 1 },
+            "description": "Horizons already resolved for this origin (drives freshness badges)."
+          }
+        }
+      }
+    }
+  }
+}

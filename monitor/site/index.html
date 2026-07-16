@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>S&amp;P 500 live forecasting experiment — monitor</title>
+    <meta
+      name="description"
+      content="Live, publicly auditable scoreboard for a continuously running S&P 500 probabilistic forecasting experiment."
+    />
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <header class="site">
+      <div class="wrap">
+        <div class="title-row">
+          <div>
+            <h1>S&amp;P 500 live forecasting experiment</h1>
+            <p class="subtitle">
+              Daily multi-horizon probabilistic forecasts, committed publicly, scored by CRPS as outcomes resolve.
+            </p>
+          </div>
+          <span class="freshness" id="freshness"></span>
+        </div>
+
+        <div class="mock-banner" id="mock-banner">
+          <span class="tag">MOCK DATA</span>
+          <span>These fixtures are synthetic (<code>generated_by: mock</code>) and exist to develop the site before the live harness writes real artifacts. No number here is a real forecast.</span>
+        </div>
+
+        <nav class="tabs" role="tablist" aria-label="Views">
+          <button data-view="overview" role="tab" aria-selected="true">Overview</button>
+          <button data-view="drilldown" role="tab" aria-selected="false">Single forecast</button>
+          <button data-view="twins" role="tab" aria-selected="false">Twins</button>
+          <button data-view="calibration" role="tab" aria-selected="false">Calibration</button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <div class="view" id="view-overview"></div>
+      <div class="view" id="view-drilldown" hidden></div>
+      <div class="view" id="view-twins" hidden></div>
+      <div class="view" id="view-calibration" hidden></div>
+
+      <p class="footer-note">
+        Static prototype · no backend · the committed log is the database. Data loads from
+        <code>./data/</code> via <code>fetch</code>. Source and data contract under <code>monitor/</code>.
+      </p>
+    </main>
+
+    <script type="module" src="./js/app.js"></script>
+  </body>
+</html>
