@@ -87,6 +87,42 @@ SMR_STATE_KEY = "__smr_output__"
 AS_OF_STATE_KEY = "__as_of__"
 
 
+# ---------------------------------------------------------------------------
+# Interim workaround: Gemini parallel tool-call batches trip a Vector-proxy bug
+# ---------------------------------------------------------------------------
+# The Vector proxy's OpenAI<->Gemini translation drops ``function_response.name``
+# on Gemini *parallel* tool-call batches, producing a blocking 400. Until the
+# proxy is fixed (bug report:
+# planning-docs/workshop-paper/proxy-bug-report-function-response-name.md, on the
+# content branch), steer Gemini-family models to emit one tool call per turn so
+# no parallel batch is ever produced. Claude parallel batches translate fine and
+# are left untouched.
+#
+# We use an instruction line rather than LiteLLM's ``parallel_tool_calls=False``
+# knob: whether the proxy honours that OpenAI param is unverified (it silently
+# drops others, e.g. ``reasoning_effort`` — see planning-docs/vector-llm-proxy.md),
+# so the deterministic, offline-testable lever is the prompt.
+_GEMINI_SERIAL_TOOL_CALL_WORKAROUND = (
+    "\n\n## Tool-call batching (required)\n\n"
+    "Call tools **one at a time**: issue a single tool call, wait for its result, "
+    "then decide the next call. Do not request two or more tool calls in the same "
+    "turn — parallel tool-call batches are not supported here and will fail the turn."
+)
+
+
+def _is_gemini_family_model(model: str | BaseLlm) -> bool:
+    """Return ``True`` when *model* routes to a Gemini-family model.
+
+    Accepts either a bare/proxy-prefixed model string (e.g. ``"gemini-3.5-flash"``
+    or ``"openai/gemini-3.5-flash"``) or a wrapped :class:`BaseLlm` whose nested
+    ``.model`` carries the name. Detection is a simple substring match so it
+    covers current and future Gemini variants without an explicit allowlist;
+    Claude and other families return ``False``.
+    """
+    name = model if isinstance(model, str) else getattr(model, "model", "")
+    return "gemini" in str(name).lower()
+
+
 def _build_set_model_response_tool() -> FunctionTool:
     """Return a proxy-compatible ``set_model_response`` shim.
 
@@ -769,6 +805,14 @@ def build_adk_agent(
     # Conventional function tools (e.g. ForecastTool) attach directly.
     tools.extend(config.function_tools)
 
+    # Interim workaround for the Vector-proxy parallel-tool-call translation bug
+    # (drops function_response.name on Gemini parallel batches -> 400). Steer
+    # Gemini-family agents that actually have tools to serialise their calls;
+    # Claude and tool-free agents are unaffected. Remove once the proxy is fixed.
+    instruction = config.instruction
+    if tools and _is_gemini_family_model(config.model):
+        instruction += _GEMINI_SERIAL_TOOL_CALL_WORKAROUND
+
     thinking_config = (
         ThinkingConfig(
             include_thoughts=True,
@@ -789,7 +833,7 @@ def build_adk_agent(
         name=config.name,
         description=config.description,
         model=model,
-        instruction=config.instruction,
+        instruction=instruction,
         tools=tools,
         output_schema=effective_output_schema,
         generate_content_config=GenerateContentConfig(
