@@ -217,9 +217,7 @@ def _build_arg_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--model", default=LITE_MODEL, help="Scenario agent model.")
     parser.add_argument("--search-model", default=LITE_MODEL, help="search_web sub-agent model.")
-    parser.add_argument(
-        "--store-dir", default=str(DEFAULT_SCENARIO_STORE_DIR), help="Scenario write-up store root."
-    )
+    parser.add_argument("--store-dir", default=str(DEFAULT_SCENARIO_STORE_DIR), help="Scenario write-up store root.")
     parser.add_argument("--run", action="store_true", help="Actually run the agent (makes model + web-search calls).")
     parser.add_argument("--force", action="store_true", help="Re-run and overwrite an already-persisted origin.")
     return parser

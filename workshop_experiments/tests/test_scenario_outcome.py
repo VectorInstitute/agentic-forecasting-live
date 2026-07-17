@@ -59,7 +59,9 @@ def test_realized_outcome_direction_labels() -> None:
     # Origin past the window-5 warmup (index 10) so "5th session after origin"
     # in the filtered series really is origin's own +5 business days.
     origin = up_price["timestamp"].iloc[10].date()
-    up_outcome = realized_outcome_for_horizon(build_cumulative_log_return_frame(up_price, window=5), origin=origin, horizon=5)
+    up_outcome = realized_outcome_for_horizon(
+        build_cumulative_log_return_frame(up_price, window=5), origin=origin, horizon=5
+    )
     down_outcome = realized_outcome_for_horizon(
         build_cumulative_log_return_frame(down_price, window=5), origin=origin, horizon=5
     )
