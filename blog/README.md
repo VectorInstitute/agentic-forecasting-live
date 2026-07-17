@@ -1,0 +1,92 @@
+# Blog rendering pipeline
+
+Renders `blog/part-N/post.md` (a markdown post + `assets/*.png` figures) into
+publication-ready HTML. Every figure is click-to-expand (a small dependency-free
+lightbox), captions are styled distinctly from body text, and the typography is
+tuned for a comfortable reading measure on desktop and mobile.
+
+## Quick start
+
+```sh
+cd blog
+./render.sh                  # renders every part-*/post.md it finds
+./render.sh part-1           # renders just blog/part-1/post.md
+./render.sh --assets-linked  # also emits the linked-images variant (see below)
+```
+
+Output goes to `blog/dist/`. Requires [pandoc](https://pandoc.org/installing.html)
+(`brew install pandoc` / `apt install pandoc`) for markdown → HTML conversion; if
+pandoc isn't on `PATH`, `render.sh` falls back to Python's `markdown` package
+(`pip install markdown`) and prints a note to stderr. The fallback covers the
+markdown post.md actually uses (headings, paragraphs, emphasis, links, images)
+but pandoc is the better-tested path — install it if you can.
+
+## The two output modes
+
+1. **Self-contained (`dist/part-N.html`, default/canonical).** CSS and the
+   lightbox JS are inlined, and every figure is embedded as a base64 data URI.
+   The result is a single `.html` file with zero external dependencies — open
+   it straight from disk, attach it to an email, or drop it anywhere. Figures
+   are ~150KB–1.2MB PNGs, so the self-contained file runs a few MB; that's the
+   deliberate tradeoff for full portability.
+
+2. **Assets-linked (`dist/part-N.assets-linked.html`, via `--assets-linked`).**
+   Same markup, CSS, and JS, but `<img>` `src` stays a relative path into
+   `part-N/assets/` instead of a data URI. This is what to hand to a CMS that
+   wants to manage images itself — keep the file next to (or aware of) the
+   `part-N/` directory so the relative paths resolve, or have the CMS import
+   rewrite `src` to its own asset URLs.
+
+## What comms gets for CMS handoff
+
+Send the **assets-linked** file (`dist/part-1.assets-linked.html`) plus the
+`part-1/assets/*.png` files it references. The CMS's own theme CSS will likely
+override `blog.css`'s typography, which is expected — but keep the embedded
+`<style>`/`<script>` block if the CMS supports pasting raw HTML, since it's what
+drives the figure captions and the click-to-enlarge lightbox. If the CMS strips
+`<style>`/`<script>` tags, the images and captions still degrade gracefully to
+plain `<figure>`/`<figcaption>` markup.
+
+For anything that just needs to be *read* (review, email, archive), send the
+**self-contained** file — nothing else to attach.
+
+## Files
+
+- `render.sh` — the renderer (shell + a small Python post-processing pass).
+- `_render.py` — merges each `<img>` + its following italic caption paragraph
+  into a `<figure>`/`<figcaption>`, and does the base64/relative-path image
+  handling. Invoked by `render.sh`; not meant to be run by hand.
+- `assets/blog.css` — typography, figure/caption styling, lightbox CSS, print
+  styles. Inlined into every rendered page.
+- `assets/lightbox.js` — the click-to-enlarge lightbox (~50 lines, no
+  dependencies, no CDN). Inlined into every rendered page.
+- `dist/` — rendered output (committed for `part-1`; regenerate with
+  `./render.sh` after editing a `post.md`).
+
+## The caption convention
+
+Every figure in `post.md` is a markdown image alone on its own line,
+immediately followed by an italicized paragraph:
+
+```markdown
+![Alt text for accessibility.](assets/fig1_example.png)
+
+*This italic paragraph becomes the visible caption.*
+```
+
+`_render.py` looks for exactly this pattern (an image-only paragraph followed
+by an em-only paragraph) and merges the pair into a `<figure class="fig">` with
+a real `<figcaption>`, wired into the lightbox. Anything not matching that
+pattern (bare inline images, images with no caption) is left as pandoc would
+otherwise render it.
+
+## Regenerating after edits
+
+```sh
+cd blog
+./render.sh --assets-linked
+```
+
+Then re-commit `dist/part-1.html` (and `dist/part-1.assets-linked.html` if you
+want it tracked too — `part-1.assets-linked.html` is small since it doesn't
+embed images).
