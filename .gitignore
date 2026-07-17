@@ -42,6 +42,11 @@ implementations/**/data/
 !implementations/energy_oil_forecasting/data/predictions/
 !implementations/energy_oil_forecasting/data/predictions/**
 
+# blog/dist/ is regenerable (`blog/render.sh`) but the canonical rendered
+# HTML is committed so it can be opened/emailed without a build step
+!blog/dist/
+!blog/dist/**
+
 # workspace-specific agents
 .github/agents/
 .github/prompts/

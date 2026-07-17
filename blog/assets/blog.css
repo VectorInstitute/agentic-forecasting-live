@@ -1,0 +1,295 @@
+/* ------------------------------------------------------------------------
+   Publication-grade stylesheet for the agentic-forecasting blog.
+   Light theme, print-friendly, readable measure (~70ch), figures that
+   break out wider than the text column, and a click-to-enlarge lightbox
+   for images (JS hooks live in the <script> block render.sh injects).
+   ------------------------------------------------------------------------ */
+
+:root {
+  color-scheme: light;
+  --text: #1c1d1f;
+  --text-muted: #5b5f66;
+  --text-faint: #82868f;
+  --bg: #fdfdfc;
+  --bg-inset: #f4f4f2;
+  --accent: #a3311f;
+  --link: #0b5cad;
+  --border: #e2e1dd;
+  --measure: 40rem;
+  --breakout: min(94vw, 68rem);
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 400 19px/1.65 Charter, "Iowan Old Style", "Palatino Linotype",
+        Palatino, Georgia, "Times New Roman", serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+article {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 4rem 1.25rem 6rem;
+}
+
+/* Headline block sits outside the strict measure for a touch more air */
+header.post-header {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 3.5rem 1.25rem 0;
+}
+
+h1, h2, h3, h4 {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto,
+               Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  color: #101113;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: clamp(1.9rem, 1.5rem + 1.6vw, 2.6rem);
+  letter-spacing: -0.01em;
+  margin: 0 0 0.9rem;
+}
+
+h2 {
+  font-size: 1.4rem;
+  margin: 3rem 0 1rem;
+  padding-top: 0.25rem;
+  border-top: 1px solid var(--border);
+}
+
+h3 {
+  font-size: 1.15rem;
+  margin: 2.25rem 0 0.6rem;
+}
+
+p { margin: 0 0 1.3rem; }
+
+.byline {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto,
+               Helvetica, Arial, sans-serif;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin: 0 0 0.35rem;
+}
+.byline strong { font-weight: 600; color: var(--text); }
+.byline.kicker { font-style: italic; margin-bottom: 1.75rem; }
+
+a { color: var(--link); text-decoration-thickness: from-font; }
+a:hover { text-decoration-thickness: 2px; }
+
+strong { font-weight: 700; }
+
+ul, ol { margin: 0 0 1.3rem; padding-left: 1.4rem; }
+li { margin-bottom: 0.4rem; }
+
+blockquote {
+  margin: 1.75rem 0;
+  padding: 0.2rem 1.25rem;
+  border-left: 3px solid var(--accent);
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 3rem 0;
+}
+
+pre {
+  background: var(--bg-inset);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+code {
+  font-family: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  font-size: 0.87em;
+}
+pre code { background: none; padding: 0; }
+:not(pre) > code {
+  background: var(--bg-inset);
+  padding: 0.12em 0.4em;
+  border-radius: 4px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.75rem 0;
+  font-size: 0.92rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto,
+               Helvetica, Arial, sans-serif;
+}
+th, td { border: 1px solid var(--border); padding: 0.55rem 0.75rem; text-align: left; vertical-align: top; }
+th { background: var(--bg-inset); font-weight: 600; }
+
+/* --------------------------- Figures --------------------------- */
+
+figure.fig {
+  width: var(--breakout);
+  max-width: var(--breakout);
+  margin: 2.5rem 50%;
+  margin-top: 2.5rem;
+  margin-bottom: 2.5rem;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+figure.fig .fig-frame {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(20, 20, 20, 0.06);
+}
+
+figure.fig img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0;
+  cursor: zoom-in;
+}
+
+/* Subtle "click to enlarge" affordance, revealed on hover/focus */
+figure.fig .fig-hint {
+  position: absolute;
+  right: 0.6rem;
+  bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(20, 20, 20, 0.72);
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto,
+               Helvetica, Arial, sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.01em;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  pointer-events: none;
+}
+figure.fig .fig-frame:hover .fig-hint,
+figure.fig .fig-frame:focus-within .fig-hint {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+figcaption {
+  max-width: var(--measure);
+  margin: 0.9rem auto 0;
+  padding: 0 1.25rem;
+  text-align: left;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+figcaption em { font-style: italic; }
+figcaption a { color: var(--text-muted); text-decoration: underline; }
+figcaption a:hover { color: var(--link); }
+
+/* --------------------------- Lightbox --------------------------- */
+
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: none;
+  overflow: auto;
+  padding: 3.5rem 2rem;
+  background: rgba(12, 12, 13, 0.94);
+  cursor: zoom-out;
+  -webkit-overflow-scrolling: touch;
+}
+.lightbox-overlay.open { display: flex; }
+.lightbox-overlay img {
+  display: block;
+  margin: auto;
+  max-width: none;
+  border-radius: 4px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  cursor: default;
+}
+.lightbox-close {
+  position: fixed;
+  top: 1rem;
+  right: 1.25rem;
+  z-index: 1001;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.lightbox-close:hover { background: rgba(255, 255, 255, 0.22); }
+.lightbox-hint {
+  position: fixed;
+  bottom: 1.1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1001;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto,
+               Helvetica, Arial, sans-serif;
+  font-size: 0.8rem;
+}
+
+/* --------------------------- Footer --------------------------- */
+
+footer.post-footer {
+  max-width: var(--measure);
+  margin: 3.5rem auto 0;
+  padding: 1.5rem 1.25rem 0;
+  border-top: 1px solid var(--border);
+  color: var(--text-faint);
+  font-size: 0.85rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto,
+               Helvetica, Arial, sans-serif;
+}
+
+/* --------------------------- Responsive --------------------------- */
+
+@media (max-width: 640px) {
+  article, header.post-header { padding-left: 1rem; padding-right: 1rem; }
+  body { font-size: 17px; }
+  figure.fig .fig-hint { opacity: 1; transform: none; } /* no hover on touch */
+  .lightbox-overlay { padding: 2.5rem 0.75rem; }
+}
+
+/* --------------------------- Print --------------------------- */
+
+@media print {
+  body { background: #fff; font-size: 12pt; }
+  .lightbox-overlay, .lightbox-close, .lightbox-hint, figure.fig .fig-hint {
+    display: none !important;
+  }
+  article, header.post-header, figcaption, footer.post-footer { max-width: 100%; }
+  figure.fig { width: 100%; margin: 1.5rem 0; transform: none; break-inside: avoid; }
+  figure.fig .fig-frame { box-shadow: none; }
+  a { color: var(--text); text-decoration: underline; }
+  h2 { break-after: avoid; }
+}
