@@ -112,6 +112,8 @@ def run_predictor_on_spec(
     *,
     store_dir: Path = DEFAULT_STORE_DIR,
     force_refresh: bool = False,
+    inter_prediction_delay_s: float = 0.0,
+    pace: bool = True,
 ) -> RunAccounting:
     """Run one predictor across every task/origin in *spec*, persisting per origin.
 
@@ -120,6 +122,26 @@ def run_predictor_on_spec(
     with fewer than ``spec.warmup`` cutoff-filtered target observations is
     skipped. Predict failures are logged and the origin is skipped (so a later
     resume retries it), never crashing the run.
+
+    Parameters
+    ----------
+    inter_prediction_delay_s : float, default=0.0
+        Seconds to sleep after each origin whose ``predict()`` actually ran
+        (success or failure) — never after a cache-hit resume-skip or a
+        warmup-skip, since no call was made in either case. This is politeness
+        on a shared proxy quota, not a correctness requirement: it exists
+        because the workshop runner otherwise fires predictions back-to-back,
+        which is impolite on a shared quota and can itself trigger the 429
+        bursts that :mod:`aieng.forecasting.methods.agentic.predictor` and the
+        LLMP seam retry around. A value of ``0.0`` (the default) disables
+        pacing entirely.
+    pace : bool, default=True
+        Whether this predictor is subject to ``inter_prediction_delay_s`` at
+        all. Set ``False`` for conventional/local predictors that make no API
+        call (see :data:`workshop_experiments.registry.CONVENTIONAL_METHODS`)
+        — there is nothing to be polite about when no request left the
+        process. :func:`run_spec` sets this from a predictor-id membership
+        check; callers invoking this function directly default to ``True``.
 
     Returns
     -------
@@ -136,6 +158,10 @@ def run_predictor_on_spec(
     single_specs: list[BacktestSpec] = spec.specs()
     if single_specs:
         acc.n_candidate_origins = len(single_specs[0].origins())
+
+    def _maybe_pace() -> None:
+        if pace and inter_prediction_delay_s > 0:
+            time.sleep(inter_prediction_delay_s)
 
     for single_spec in single_specs:
         task: ForecastingTask = single_spec.task
@@ -164,6 +190,7 @@ def run_predictor_on_spec(
                     exc,
                 )
                 acc.n_failed += 1
+                _maybe_pace()
                 continue
             wall = time.perf_counter() - start
 
@@ -175,6 +202,7 @@ def run_predictor_on_spec(
                     origin.date(),
                 )
                 acc.n_failed += 1
+                _maybe_pace()
                 continue
 
             save_origin_predictions(path, predictions, wall_time_s=wall, as_of=origin)
@@ -185,6 +213,7 @@ def run_predictor_on_spec(
             acc.cost_usd += cost
             acc.input_tokens += in_tok
             acc.output_tokens += out_tok
+            _maybe_pace()
 
     _write_accounting(store_dir, spec.spec_id, predictor.predictor_id, acc)
     return acc
@@ -205,10 +234,27 @@ def run_spec(
     *,
     store_dir: Path = DEFAULT_STORE_DIR,
     force_refresh: bool = False,
+    inter_prediction_delay_s: float = 0.0,
+    conventional_predictor_ids: frozenset[str] = frozenset(),
 ) -> dict[str, RunAccounting]:
     """Run every predictor in *predictors* across *spec*, resuming per origin.
 
-    Returns a mapping from ``predictor_id`` to its :class:`RunAccounting`.
+    Parameters
+    ----------
+    inter_prediction_delay_s : float, default=0.0
+        Politeness pacing on a shared proxy quota — forwarded to
+        :func:`run_predictor_on_spec`. See its docstring for the exact
+        skip conditions (cache-hit / warmup-skip origins are never paced).
+    conventional_predictor_ids : frozenset[str], default=frozenset()
+        ``predictor_id``s that make no API call (e.g. built from
+        :data:`workshop_experiments.registry.CONVENTIONAL_METHODS` /
+        ``TSX_CONVENTIONAL_METHODS``). These are exempt from
+        ``inter_prediction_delay_s`` regardless of its value.
+
+    Returns
+    -------
+    dict[str, RunAccounting]
+        Mapping from ``predictor_id`` to its :class:`RunAccounting`.
     """
     results: dict[str, RunAccounting] = {}
     for predictor in predictors:
@@ -219,6 +265,8 @@ def run_spec(
             data_service,
             store_dir=store_dir,
             force_refresh=force_refresh,
+            inter_prediction_delay_s=inter_prediction_delay_s,
+            pace=predictor.predictor_id not in conventional_predictor_ids,
         )
     return results
 

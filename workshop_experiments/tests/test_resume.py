@@ -22,6 +22,7 @@ from workshop_experiments.runner import (
     RunAccounting,
     load_origin_predictions,
     run_predictor_on_spec,
+    run_spec,
 )
 from workshop_experiments.scoring import score_spec
 
@@ -32,12 +33,13 @@ _TARGET = "toy_target"
 class _FakePredictor(Predictor):
     """Deterministic predictor: a tight symmetric grid around zero per horizon."""
 
-    def __init__(self) -> None:
+    def __init__(self, predictor_id: str = "fake_zero") -> None:
         self.calls = 0
+        self._predictor_id = predictor_id
 
     @property
     def predictor_id(self) -> str:
-        return "fake_zero"
+        return self._predictor_id
 
     def predict(self, task: ForecastingTask, context: ForecastContext) -> list[Prediction]:
         self.calls += 1
@@ -190,3 +192,89 @@ def test_toy_predictor_multi_horizon(horizon: int, tmp_path: Path) -> None:
     )
     acc = run_predictor_on_spec(_FakePredictor(), spec, _toy_service(), store_dir=tmp_path)
     assert acc.n_predicted > 0
+
+
+# ---------------------------------------------------------------------------
+# Politeness pacing (--pace): sleeps between API-calling predictions only.
+# ---------------------------------------------------------------------------
+
+
+def test_pacing_sleeps_after_each_api_prediction(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A positive delay sleeps once per successful predict() call."""
+    sleeps: list[float] = []
+    monkeypatch.setattr("workshop_experiments.runner.time.sleep", sleeps.append)
+
+    spec = _toy_spec()
+    predictor = _FakePredictor()
+    acc = run_predictor_on_spec(predictor, spec, _toy_service(), store_dir=tmp_path, inter_prediction_delay_s=2.5)
+
+    assert acc.n_predicted > 0
+    assert sleeps == [2.5] * acc.n_predicted
+
+
+def test_pacing_does_not_sleep_after_cached_skips(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A resumed run hitting only cached origins makes no API call and never sleeps."""
+    spec = _toy_spec()
+    # First (unpaced) run populates the cache.
+    run_predictor_on_spec(_FakePredictor(), spec, _toy_service(), store_dir=tmp_path)
+
+    sleeps: list[float] = []
+    monkeypatch.setattr("workshop_experiments.runner.time.sleep", sleeps.append)
+    second = run_predictor_on_spec(
+        _FakePredictor(), spec, _toy_service(), store_dir=tmp_path, inter_prediction_delay_s=5.0
+    )
+
+    assert second.n_predicted == 0
+    assert second.n_cached > 0
+    assert sleeps == []
+
+
+def test_pacing_disabled_by_default(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """The default inter_prediction_delay_s=0.0 never sleeps."""
+    sleeps: list[float] = []
+    monkeypatch.setattr("workshop_experiments.runner.time.sleep", sleeps.append)
+
+    spec = _toy_spec()
+    acc = run_predictor_on_spec(_FakePredictor(), spec, _toy_service(), store_dir=tmp_path)
+
+    assert acc.n_predicted > 0
+    assert sleeps == []
+
+
+def test_pacing_disabled_for_conventional_predictor(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """pace=False (conventional/local predictor) never sleeps, even with a delay set."""
+    sleeps: list[float] = []
+    monkeypatch.setattr("workshop_experiments.runner.time.sleep", sleeps.append)
+
+    spec = _toy_spec()
+    acc = run_predictor_on_spec(
+        _FakePredictor(), spec, _toy_service(), store_dir=tmp_path, inter_prediction_delay_s=5.0, pace=False
+    )
+
+    assert acc.n_predicted > 0
+    assert sleeps == []
+
+
+def test_run_spec_exempts_conventional_predictor_ids(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """run_spec paces predictors whose id is absent from conventional_predictor_ids."""
+    sleeps: list[float] = []
+    monkeypatch.setattr("workshop_experiments.runner.time.sleep", sleeps.append)
+
+    spec = _toy_spec()
+    service = _toy_service()
+    conventional = _FakePredictor(predictor_id="conventional_fake")
+    api_like = _FakePredictor(predictor_id="api_fake")
+
+    accounting = run_spec(
+        [conventional, api_like],
+        spec,
+        service,
+        store_dir=tmp_path,
+        inter_prediction_delay_s=3.0,
+        conventional_predictor_ids=frozenset({"conventional_fake"}),
+    )
+
+    assert accounting["conventional_fake"].n_predicted > 0
+    assert accounting["api_fake"].n_predicted > 0
+    # Only the non-conventional (API-like) predictor's origins were paced.
+    assert sleeps == [3.0] * accounting["api_fake"].n_predicted

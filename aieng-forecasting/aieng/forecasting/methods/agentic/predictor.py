@@ -20,6 +20,7 @@ import asyncio
 import json
 import logging
 import threading
+import time
 from collections.abc import Coroutine
 from typing import Any, Protocol, TypeVar, cast
 
@@ -58,6 +59,33 @@ def _is_function_response_name_translation_error(exc: BaseException) -> bool:
         return False
     status = getattr(exc, "status_code", None)
     return status == 400 or "BadRequest" in type(exc).__name__
+
+
+#: Rate-limit / overload signatures observed on the shared proxy quota. Checked
+#: against both the exception message and its class name so provider-specific
+#: classes (litellm's ``RateLimitError``, an ``overloaded_error`` from a direct
+#: Anthropic route, etc.) are caught even when the string form omits the code.
+_RATE_LIMIT_MARKERS = ("429", "RateLimit", "529", "overloaded")
+
+#: Seconds to wait before the single whole-run retry on a rate-limit/overload
+#: terminal error. The ADK agent path has no litellm-level backoff of its own
+#: (unlike the LLMP seam's per-call ``num_retries``), so a burst that survives
+#: LiteLlm's internal retries needs a longer, coarser cooldown before the
+#: fresh-session retry — long enough that a shared-quota burst has likely
+#: cleared, short enough not to stall a backtest loop.
+_RATE_LIMIT_RETRY_SLEEP_S = 45.0
+
+
+def _is_rate_limit_or_overload_error(exc: BaseException) -> bool:
+    """Return ``True`` when *exc* looks like a rate-limit or overload signal.
+
+    Broader than :func:`_is_function_response_name_translation_error` by
+    design — provider/proxy error shapes for 429/529 vary more than the one
+    specific translation bug, so this matches on either the stringified
+    exception or its class name containing any of :data:`_RATE_LIMIT_MARKERS`.
+    """
+    haystack = f"{exc} {type(exc).__name__}"
+    return any(marker in haystack for marker in _RATE_LIMIT_MARKERS)
 
 
 def _run_coroutine_sync(coro: Coroutine[Any, Any, T]) -> T:
@@ -305,23 +333,46 @@ class AgentPredictor(Predictor):
         # so search_web can enforce it via ToolContext.state regardless of
         # whether the LLM remembers to pass a matching cutoff_date argument.
         initial_state = {AS_OF_STATE_KEY: str(context.as_of)[:10]}
-        try:
-            output_str = _run_coroutine_sync(self._runner.run_text_async(prompt, initial_state=initial_state))
-        except Exception as exc:
-            # Defense in depth for the Vector-proxy translation bug that drops
-            # function_response.name on Gemini parallel tool-call batches (a
-            # blocking 400). The agent-factory workaround steers Gemini agents
-            # away from parallel batches, but if one still slips through, retry
-            # the whole predict once rather than losing the prediction. The
-            # runner's fresh_session_per_message default means this rerun starts
-            # from a clean session. Kept strictly to that one error signature.
-            if not _is_function_response_name_translation_error(exc):
+        # Two independent, narrowly-scoped whole-run retries — each capped at
+        # one attempt so a persistently failing run still surfaces its error
+        # rather than looping. The runner's fresh_session_per_message default
+        # means every retry here starts from a clean session.
+        retried_translation_bug = False
+        retried_rate_limit = False
+        while True:
+            try:
+                output_str = _run_coroutine_sync(self._runner.run_text_async(prompt, initial_state=initial_state))
+                break
+            except Exception as exc:
+                # Defense in depth for the Vector-proxy translation bug that drops
+                # function_response.name on Gemini parallel tool-call batches (a
+                # blocking 400). The agent-factory workaround steers Gemini agents
+                # away from parallel batches, but if one still slips through, retry
+                # the whole predict once rather than losing the prediction.
+                if _is_function_response_name_translation_error(exc) and not retried_translation_bug:
+                    retried_translation_bug = True
+                    logger.warning(
+                        "Predict hit the proxy function_response.name translation bug (400); "
+                        "retrying once with a fresh session."
+                    )
+                    continue
+                # Transient-error resilience for the agent path: LiteLlm's
+                # per-call num_retries (see agent_factory.build_adk_agent)
+                # already backs off within a single completion, but a run
+                # that exhausts those retries — or hits a rate limit outside
+                # a LiteLlm-wrapped call — still fails the whole prediction.
+                # Retry once, whole-run, after a longer cooldown so a shared-
+                # quota burst has time to clear.
+                if _is_rate_limit_or_overload_error(exc) and not retried_rate_limit:
+                    retried_rate_limit = True
+                    logger.warning(
+                        "Predict hit a rate-limit/overload error (%s); retrying once in %.0fs with a fresh session.",
+                        type(exc).__name__,
+                        _RATE_LIMIT_RETRY_SLEEP_S,
+                    )
+                    time.sleep(_RATE_LIMIT_RETRY_SLEEP_S)
+                    continue
                 raise
-            logger.warning(
-                "Predict hit the proxy function_response.name translation bug (400); "
-                "retrying once with a fresh session."
-            )
-            output_str = _run_coroutine_sync(self._runner.run_text_async(prompt, initial_state=initial_state))
 
         # Normalise: strip markdown fences before validation so any model can
         # be swapped in without breaking the parse layer.

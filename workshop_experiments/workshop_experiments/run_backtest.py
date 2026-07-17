@@ -68,11 +68,25 @@ def _build_arg_parser() -> argparse.ArgumentParser:
         help="Do not register the covariate panel (target-only; *_cov methods will then be unavailable).",
     )
     parser.add_argument("--force-refresh", action="store_true", help="Recompute even where a persisted file exists.")
+    parser.add_argument(
+        "--pace",
+        type=float,
+        default=0.0,
+        metavar="SECONDS",
+        help=(
+            "Sleep this many seconds after each API-calling prediction (LLMP/agent "
+            "methods) before starting the next. Politeness on a shared proxy quota, "
+            "not a correctness requirement — conventional methods and cached/resumed "
+            "origins are never paced. Default: 0 (no pacing)."
+        ),
+    )
     parser.add_argument("--verbose", "-v", action="store_true", help="Enable INFO logging.")
     return parser
 
 
-#: Registry method names that consume no model (one predictor regardless of --models).
+#: Registry method names that consume no model (one predictor regardless of --models)
+#: and make no API call. Doubles as the ``--pace`` exemption set: conventional
+#: methods have nothing to be polite about since no request leaves the process.
 _MODEL_FREE_METHODS: frozenset[str] = frozenset(CONVENTIONAL_METHODS + TSX_CONVENTIONAL_METHODS)
 
 
@@ -81,10 +95,21 @@ def _spec_is_tsx(spec: MultiTargetBacktestSpec) -> bool:
     return any(task.target_series_id.startswith("tsx_") for task in spec.tasks)
 
 
-def _build_predictor_list(methods: list[str], models: list[str], covariate_panel: list[str]) -> list[Predictor]:
-    """Instantiate predictors: conventional once; model-parameterised once per model."""
+def _build_predictor_list(
+    methods: list[str], models: list[str], covariate_panel: list[str]
+) -> tuple[list[Predictor], frozenset[str]]:
+    """Instantiate predictors: conventional once; model-parameterised once per model.
+
+    Returns
+    -------
+    tuple[list[Predictor], frozenset[str]]
+        The predictor list, and the subset of their ``predictor_id``s built
+        from a conventional (no-API) method — used to exempt those runs from
+        ``--pace``.
+    """
     predictors: list[Predictor] = []
     seen_ids: set[str] = set()
+    conventional_ids: set[str] = set()
     for method in methods:
         method_models = [models[0]] if method in _MODEL_FREE_METHODS else models
         for model in method_models:
@@ -93,7 +118,9 @@ def _build_predictor_list(methods: list[str], models: list[str], covariate_panel
                 continue
             seen_ids.add(predictor.predictor_id)
             predictors.append(predictor)
-    return predictors
+            if method in _MODEL_FREE_METHODS:
+                conventional_ids.add(predictor.predictor_id)
+    return predictors, frozenset(conventional_ids)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -128,7 +155,7 @@ def main(argv: list[str] | None = None) -> int:
     if dropped and not args.no_covariates:
         print(f"Covariates unavailable and skipped: {', '.join(dropped)}")
 
-    predictors = _build_predictor_list(methods, args.models, covariate_panel)
+    predictors, conventional_predictor_ids = _build_predictor_list(methods, args.models, covariate_panel)
     print("Predictors:")
     for predictor in predictors:
         print(f"  - {predictor.predictor_id}")
@@ -138,6 +165,8 @@ def main(argv: list[str] | None = None) -> int:
         data_service,
         store_dir=Path(args.store_dir),
         force_refresh=args.force_refresh,
+        inter_prediction_delay_s=args.pace,
+        conventional_predictor_ids=conventional_predictor_ids,
     )
 
     print("\nRun accounting:")
