@@ -440,3 +440,92 @@ class TestFunctionResponseNameRetry:
         with pytest.raises(ValueError):
             predictor.predict(_task([1]), _context())
         assert len(runner.run_text_async_calls) == 1  # no retry
+
+
+class _FakeRateLimitError(Exception):
+    """RateLimitError-shaped exception carrying a 429 status code."""
+
+    def __init__(self, message: str = "rate limit exceeded (429)") -> None:
+        super().__init__(message)
+        self.status_code = 429
+
+
+class TestRateLimitRetry:
+    """``predict()`` retries once, after a cooldown, on a rate-limit/overload error."""
+
+    def _predictor(self, runner: _ScriptedRunner) -> AgentPredictor:
+        return AgentPredictor(
+            _config(),
+            _prompt_builder(),
+            output_schema=ContinuousAgentForecastOutput,
+            runner=runner,  # type: ignore[arg-type]
+        )
+
+    def test_retries_once_and_succeeds_on_rate_limit(
+        self, monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
+    ) -> None:
+        """A 429-shaped error triggers exactly one fresh-session retry after a sleep."""
+        sleeps: list[float] = []
+        monkeypatch.setattr("aieng.forecasting.methods.agentic.predictor.time.sleep", sleeps.append)
+
+        runner = _ScriptedRunner(_output_json([1]), raises=[_FakeRateLimitError(), None])
+        predictor = self._predictor(runner)
+
+        with caplog.at_level(logging.WARNING):
+            predictions = predictor.predict(_task([1]), _context())
+
+        assert len(predictions) == 1
+        assert len(runner.run_text_async_calls) == 2  # original + one retry
+        assert sleeps == [45.0]
+        assert any("rate-limit/overload" in r.message for r in caplog.records)
+
+    def test_retry_happens_at_most_once(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """Two consecutive rate-limit errors are not swallowed — the retry re-raises."""
+        monkeypatch.setattr("aieng.forecasting.methods.agentic.predictor.time.sleep", lambda _s: None)
+        err = _FakeRateLimitError()
+        runner = _ScriptedRunner(_output_json([1]), raises=[err, err])
+        predictor = self._predictor(runner)
+
+        with pytest.raises(_FakeRateLimitError):
+            predictor.predict(_task([1]), _context())
+        assert len(runner.run_text_async_calls) == 2  # original + single retry, then propagate
+
+    def test_unrelated_error_is_not_retried(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """An error without a rate-limit/overload marker propagates immediately."""
+        monkeypatch.setattr("aieng.forecasting.methods.agentic.predictor.time.sleep", lambda _s: None)
+        runner = _ScriptedRunner(_output_json([1]), raises=[ValueError("some unrelated failure")])
+        predictor = self._predictor(runner)
+
+        with pytest.raises(ValueError):
+            predictor.predict(_task([1]), _context())
+        assert len(runner.run_text_async_calls) == 1  # no retry
+
+    def test_overloaded_and_529_markers_are_also_retried(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """Both the ``overloaded`` and ``529`` signatures are recognised."""
+        monkeypatch.setattr("aieng.forecasting.methods.agentic.predictor.time.sleep", lambda _s: None)
+        for message in ("upstream 529 overloaded_error", "the model is overloaded"):
+            runner = _ScriptedRunner(_output_json([1]), raises=[RuntimeError(message), None])
+            predictor = self._predictor(runner)
+
+            predictions = predictor.predict(_task([1]), _context())
+
+            assert len(predictions) == 1
+            assert len(runner.run_text_async_calls) == 2
+
+    def test_translation_bug_and_rate_limit_retries_are_independent(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """Both retry reasons can fire in the same predict() call, each once."""
+        monkeypatch.setattr("aieng.forecasting.methods.agentic.predictor.time.sleep", lambda _s: None)
+        runner = _ScriptedRunner(
+            _output_json([1]),
+            raises=[
+                _FakeBadRequestError("function_response.name missing"),
+                _FakeRateLimitError(),
+                None,
+            ],
+        )
+        predictor = self._predictor(runner)
+
+        predictions = predictor.predict(_task([1]), _context())
+
+        assert len(predictions) == 1
+        assert len(runner.run_text_async_calls) == 3  # original + one retry per reason

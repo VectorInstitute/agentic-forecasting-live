@@ -731,6 +731,14 @@ def build_adk_agent(
             model=litellm_model,
             api_base=config.openai_base_url,
             api_key=config.openai_api_key,
+            # Transient-error resilience: LiteLlm forwards unknown kwargs
+            # (via its _additional_args passthrough) straight to
+            # litellm.acompletion, which retries retryable error classes
+            # (429/5xx/529 "overloaded") with exponential backoff when
+            # num_retries is set. Mirrors the LLMP seam's num_retries=4 in
+            # llm_processes/_client.py so a burst of proxy rate-limits costs
+            # seconds of backoff instead of an entire failed agent run.
+            num_retries=4,
         )
 
     # Configure tools

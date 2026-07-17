@@ -112,6 +112,12 @@ class TestBuildAdkAgent:
         # OpenAI-compatible proxy path; the prefix is stripped before the
         # proxy sees the model name.
         assert agent.model.model == "openai/gemini-3.1-flash-lite-preview"
+        # num_retries is an unrecognized-by-pydantic kwarg that LiteLlm stashes
+        # in _additional_args and forwards straight through to
+        # litellm.acompletion (see google.adk.models.lite_llm.LiteLlm.__init__
+        # and generate_content_async's completion_args.update(_additional_args)),
+        # mirroring the LLMP seam's per-call backoff for 429/5xx/529 bursts.
+        assert agent.model._additional_args["num_retries"] == 4
 
     def test_string_model_kept_as_string_without_proxy(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """Without a proxy URL the model is passed as a plain string to LlmAgent."""
