@@ -1,0 +1,35 @@
+as_of: '2025-06-11T00:00:00'
+wall_time_s: 31.274306250037625
+predictions:
+- predictor_id: darts_lightgbm_cov
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-17T12:56:15.101864'
+  as_of: '2025-06-11T00:00:00'
+  forecast_date: '2025-06-18T00:00:00'
+  payload:
+    point_forecast: 0.0030434630272614532
+    quantiles:
+      '0.05': -0.02736618913804804
+      '0.1': -0.01344806984156823
+      '0.2': -0.00806034979650342
+      '0.3': -0.0034340614576001366
+      '0.4': 0.0010242345408411377
+      '0.5': 0.0030434630272614532
+      '0.6': 0.004687768032588686
+      '0.7': 0.007587551870774938
+      '0.8': 0.012340594418364305
+      '0.9': 0.01728552619896559
+      '0.95': 0.021393534359579792
+  metadata:
+    covariates:
+    - tsx_vix_level_l1b
+    - tsx_vix_log_ret_1b_l1b
+    - tsx_wti_oil_log_ret_1b_l1b
+    - tsx_gold_log_ret_1b_l1b
+    - tsx_usdcad_log_ret_1b_l1b
+    - tsx_sp500_log_ret_1b_l1b
+    - tsx_us10y_level_l1b
+    - tsx_boc_policy_rate_l1b
+    - tsx_goc10y_level_l1b
+    - tsx_ca_cpi_mom_logdiff_l1b
+    - tsx_ca_unemployment_l1b
