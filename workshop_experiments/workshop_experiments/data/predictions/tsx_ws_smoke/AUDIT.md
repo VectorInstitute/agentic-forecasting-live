@@ -19,6 +19,13 @@ tool-call capture path (merged; verified in live runs as they accumulate).
 Pre-fix LLMP smoke artifacts (quantized precision-2 inputs) were force-refreshed on
 2026-07-16; every committed LLMP prediction in this store is precision-5.
 
+**Stage-2 (retrospective weekly LLMP) reads, 2026-07-17:**
+
+| Method | Model | Trace id | What was verified | Date |
+|---|---|---|---|---|
+| llmp_qgrid | claude-sonnet-5 | `a0fe96b8aafba13018f77d4163b7c95a` | 5-decimal history; thinking-heavy completion (usage 2002/14463); late-Mar-2026 war-drawdown origin, coherent rebound-shaped quantiles; nesting correct | 2026-07-17 |
+| llmp_qgrid_cov | gpt-5.4 | `96a580199319ef70b1d970fbf4483165` | Covariate block rendered (VIX et al.); 5-decimal history; usage 10978/1736; nesting correct | 2026-07-17 |
+
 Outstanding per-method reads to append as their stages run: llmp_qgrid on the
 remaining matrix models (incl. sonnet-5, opus-4-8 spot reads), agent_code
 (sonnet-4-6), adaptive study transcript + one pre/post eval trace.
