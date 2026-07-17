@@ -27,6 +27,7 @@ unmodified: only the *instruction* text differs (no JSON schema block, no
 from __future__ import annotations
 
 import json
+import os
 from typing import Any
 
 import pandas as pd
@@ -168,7 +169,7 @@ def build_scenario_prompt(*, as_of: str, context: ForecastContext) -> str:
 def build_tsx_scenario_config(
     model: str = LITE_MODEL,
     search_model: str = LITE_MODEL,
-    verifier_model: str = ADVANCED_MODEL,
+    verifier_model: str | None = None,  # None -> WS_VERIFIER_MODEL env or ADVANCED_MODEL
     verifier_max_attempts: int = 3,
     verifier_confidence_threshold: int = 8,
 ) -> AgentConfig:
@@ -196,7 +197,7 @@ def build_tsx_scenario_config(
             enabled=True,
             instruction=TSX_DOMAIN.context_retrieval_instruction,
             search_model=search_model,
-            verifier_model=verifier_model,
+            verifier_model=verifier_model or os.environ.get("WS_VERIFIER_MODEL", ADVANCED_MODEL),
             verifier_max_attempts=verifier_max_attempts,
             verifier_confidence_threshold=verifier_confidence_threshold,
         ),
