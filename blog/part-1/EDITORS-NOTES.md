@@ -85,3 +85,12 @@ all landmark % moves and the two didactic CRPS values are from `assets/CAPTIONS.
    the market on our doorstep — but it is also a genuinely useful stress test."
    (Charming, not load-bearing; the energy/materials sentence carries the real
    justification.)
+
+
+## Orchestrator pass (2026-07-17)
+- Sonnet-5 aside re-sourced: token/wall multiples computed from run accounting
+  (weekly eval: sonnet-5 target-only 399,507 out-tokens / 72 preds ≈ 5.5k/pred vs
+  flash-lite ≈ 1.3k/pred; wall ≈ 92s vs ≈ 4s) — no longer an unsourced number.
+- fig0_forecastbench added to the hook with attribution (source: learn-days asset,
+  per the original capture; caption credits forecastbench.org/explore).
+- [REPO] resolved to the public bootcamp repo per plan §6 (bootcamp CTAs → original repo).

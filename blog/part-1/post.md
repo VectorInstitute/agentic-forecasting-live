@@ -19,8 +19,15 @@ can't be memorized. A model can regurgitate a benchmark it saw in training, but
 it cannot have seen next week's close. Score a forecast against what actually
 happened and you get a number no amount of pretraining can fake.
 
+![LLM forecasting skill on ForecastBench climbing toward the human-superforecaster line.](assets/fig0_forecastbench.png)
+
+*The trend that motivates this series: each point is a model scored on
+ForecastBench's live questions about unresolved future events; the frontier has
+climbed steadily toward the human-superforecaster reference line. Source:
+[ForecastBench](https://www.forecastbench.org/explore/).*
+
 This two-part series accompanies Vector's Agentic Forecasting bootcamp; the full
-code, data pipeline, and evaluation harness are open at [REPO]. In Part 1 we
+code, data pipeline, and evaluation harness are open at [github.com/VectorInstitute/agentic-forecasting](https://github.com/VectorInstitute/agentic-forecasting). In Part 1 we
 build the scoreboard for one concrete series and run the numbers-only methods —
 from a naive baseline to gradient-boosted trees to a frozen LLM — up to their
 ceiling. Part 2 brings in agents that read.
