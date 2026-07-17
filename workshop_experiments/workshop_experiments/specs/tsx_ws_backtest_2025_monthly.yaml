@@ -1,0 +1,46 @@
+# Canonical comparison grid — monthly origins across 2025 (reduced code-agent grid) (post-cutoff backtest).
+#
+# 2025 is after the Gemini training cutoff (~Jan 2025), so conventional methods,
+# LLM-Process, and agents can all be compared fairly here. This is the workshop
+# paper's head-to-head grid for the Canada-focused S&P/TSX Composite target:
+# every method runs on the same weekly origins. Loaded as a MultiTargetBacktestSpec
+# (one single-horizon task per target), CRPS-scored at h = 1 / 5 / 21 business days.
+# Origins land on the pandas business-day grid; the DataService cutoff keys each
+# context to the S&P/TSX target's own release calendar.
+
+spec_id: tsx_ws_backtest_2025_monthly
+
+description: >-
+  Workshop canonical backtest: monthly origins across 2025 (reduced code-agent grid) (post-cutoff),
+  forecasting S&P/TSX Composite close-to-close cumulative log returns at
+  1 / 5 / 21 business days.
+
+tasks:
+  - task_id: tsx_logret_1b
+    target_series_id: tsx_logret_1b
+    horizons: [1]
+    frequency: B
+    description: >-
+      S&P/TSX Composite close-to-close cumulative log return, 1 business day ahead
+      (next-session return / direction).
+
+  - task_id: tsx_logret_5b
+    target_series_id: tsx_logret_5b
+    horizons: [5]
+    frequency: B
+    description: >-
+      S&P/TSX Composite close-to-close cumulative log return, 5 business days ahead
+      (forward 1-week return).
+
+  - task_id: tsx_logret_21b
+    target_series_id: tsx_logret_21b
+    horizons: [21]
+    frequency: B
+    description: >-
+      S&P/TSX Composite close-to-close cumulative log return, 21 business days ahead
+      (forward 1-month return).
+
+start: "2025-01-06"
+end: "2025-12-31"
+stride: 21           # monthly origins (~13) — reduced code-agent grid
+warmup: 250
