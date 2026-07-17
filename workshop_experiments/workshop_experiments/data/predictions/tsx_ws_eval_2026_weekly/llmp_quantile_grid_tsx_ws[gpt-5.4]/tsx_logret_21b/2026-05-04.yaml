@@ -1,0 +1,35 @@
+as_of: '2026-05-04T00:00:00'
+wall_time_s: 23.293873374990653
+predictions:
+- predictor_id: llmp_quantile_grid_tsx_ws[gpt-5.4]
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-17T05:39:45.798776'
+  as_of: '2026-05-04T00:00:00'
+  forecast_date: '2026-06-02T00:00:00'
+  payload:
+    point_forecast: 0.001
+    quantiles:
+      '0.05': -0.094
+      '0.1': -0.078
+      '0.2': -0.055
+      '0.3': -0.04
+      '0.4': -0.022
+      '0.5': 0.001
+      '0.6': 0.023
+      '0.7': 0.041
+      '0.8': 0.06
+      '0.9': 0.08
+      '0.95': 0.096
+  metadata:
+    model: gpt-5.4
+    n_report_docs: 0
+    temperature: 1.0
+    reasoning_effort: null
+    cost_usd: 0.02955
+    input_tokens: 1404
+    output_tokens: 1736
+    parse_failures: 0
+    variant_tag: tsx_ws
+    history_window: 64
+    langfuse_trace_id: 191637e53f55f4075a11b033302af406
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/191637e53f55f4075a11b033302af406

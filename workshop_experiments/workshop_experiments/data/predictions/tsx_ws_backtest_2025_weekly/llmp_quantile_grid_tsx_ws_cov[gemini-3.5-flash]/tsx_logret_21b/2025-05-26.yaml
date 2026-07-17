@@ -1,0 +1,47 @@
+as_of: '2025-05-26T00:00:00'
+wall_time_s: 12.788920500024687
+predictions:
+- predictor_id: llmp_quantile_grid_tsx_ws_cov[gemini-3.5-flash]
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-16T22:46:59.946315'
+  as_of: '2025-05-26T00:00:00'
+  forecast_date: '2025-06-24T00:00:00'
+  payload:
+    point_forecast: -0.00767
+    quantiles:
+      '0.05': -0.04897
+      '0.1': -0.03703
+      '0.2': -0.02674
+      '0.3': -0.0191
+      '0.4': -0.01323
+      '0.5': -0.00767
+      '0.6': -0.00211
+      '0.7': 0.00379
+      '0.8': 0.01149
+      '0.9': 0.02178
+      '0.95': 0.03283
+  metadata:
+    model: gemini-3.5-flash
+    n_report_docs: 0
+    covariate_series_ids:
+    - tsx_vix_level_l1b
+    - tsx_vix_log_ret_1b_l1b
+    - tsx_wti_oil_log_ret_1b_l1b
+    - tsx_gold_log_ret_1b_l1b
+    - tsx_usdcad_log_ret_1b_l1b
+    - tsx_sp500_log_ret_1b_l1b
+    - tsx_us10y_level_l1b
+    - tsx_boc_policy_rate_l1b
+    - tsx_goc10y_level_l1b
+    - tsx_ca_cpi_mom_logdiff_l1b
+    - tsx_ca_unemployment_l1b
+    temperature: 1.0
+    reasoning_effort: null
+    cost_usd: 0.0
+    input_tokens: 16362
+    output_tokens: 2890
+    parse_failures: 0
+    variant_tag: tsx_ws_cov
+    history_window: 64
+    langfuse_trace_id: 73ff3de419bc8501963aad2ac76bbb83
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/73ff3de419bc8501963aad2ac76bbb83
