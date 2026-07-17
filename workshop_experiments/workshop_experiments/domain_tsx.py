@@ -24,6 +24,7 @@ adaptive study is a later stage), exactly as :data:`SP500_DOMAIN` leaves them.
 from __future__ import annotations
 
 import json
+import os
 from typing import Any
 
 import pandas as pd
@@ -234,7 +235,7 @@ environment works and produce your complete result in the first call.\
 def build_tsx_news_config(
     model: str = LITE_MODEL,
     search_model: str = LITE_MODEL,
-    verifier_model: str = ADVANCED_MODEL,
+    verifier_model: str | None = None,  # None -> WS_VERIFIER_MODEL env or ADVANCED_MODEL
     verifier_max_attempts: int = 3,
     verifier_confidence_threshold: int = 8,
 ) -> AgentConfig:
@@ -253,7 +254,7 @@ def build_tsx_news_config(
             enabled=True,
             instruction=TSX_DOMAIN.context_retrieval_instruction,
             search_model=search_model,
-            verifier_model=verifier_model,
+            verifier_model=verifier_model or os.environ.get("WS_VERIFIER_MODEL", ADVANCED_MODEL),
             verifier_max_attempts=verifier_max_attempts,
             verifier_confidence_threshold=verifier_confidence_threshold,
         ),
@@ -269,7 +270,7 @@ def build_tsx_code_config(
     model: str = LITE_MODEL,
     search_model: str = LITE_MODEL,
     max_output_tokens: int = 16_384,
-    verifier_model: str = ADVANCED_MODEL,
+    verifier_model: str | None = None,  # None -> WS_VERIFIER_MODEL env or ADVANCED_MODEL
     verifier_max_attempts: int = 3,
     verifier_confidence_threshold: int = 8,
     max_tool_iterations: int | None = _CODE_AGENT_MAX_TOOL_ITERATIONS,
@@ -294,7 +295,7 @@ def build_tsx_code_config(
             enabled=True,
             instruction=TSX_DOMAIN.context_retrieval_instruction,
             search_model=search_model,
-            verifier_model=verifier_model,
+            verifier_model=verifier_model or os.environ.get("WS_VERIFIER_MODEL", ADVANCED_MODEL),
             verifier_max_attempts=verifier_max_attempts,
             verifier_confidence_threshold=verifier_confidence_threshold,
         ),
