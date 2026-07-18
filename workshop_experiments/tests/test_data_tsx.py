@@ -92,6 +92,30 @@ def test_daily_level_feature_ffills_holiday_gap() -> None:
     assert pd.Timestamp("2025-11-07") in ts
 
 
+def test_market_return_covariate_defined_on_cross_calendar_holidays() -> None:
+    """The lagged market-return covariate chain covers US holidays the TSX trades.
+
+    Mirrors the panel's composition for WTI/gold/USDCAD/SPX/VIX-change: a US
+    session gap (2025-07-04) must yield a zero return row, so a TSX origin on or
+    after the holiday never fails Darts' past-covariate alignment.
+    """
+    from aieng.forecasting.data.features import (  # noqa: PLC0415
+        apply_one_business_day_feature_lag,
+        business_daily_zero_fill,
+        to_log_return_feature,
+    )
+
+    ts = pd.to_datetime(["2025-07-01", "2025-07-02", "2025-07-03", "2025-07-07", "2025-07-08"])
+    prices = pd.DataFrame({"timestamp": ts, "value": [100.0, 101.0, 102.0, 103.0, 104.0], "released_at": ts})
+    feat = apply_one_business_day_feature_lag(business_daily_zero_fill(to_log_return_feature(prices)))
+    by_ts = feat.set_index("timestamp")["value"]
+    # The holiday itself carries the prior session's (lagged) return...
+    assert pd.Timestamp("2025-07-04") in by_ts.index
+    assert by_ts[pd.Timestamp("2025-07-04")] == pytest.approx(np.log(102.0 / 101.0))
+    # ...and the session after the holiday sees a zero return for the closed day.
+    assert by_ts[pd.Timestamp("2025-07-07")] == 0.0
+
+
 def test_monthly_mom_logdiff_is_release_lagged() -> None:
     """CPI MoM log-diff becomes visible only well after the reference month ends."""
     months = pd.to_datetime(["2025-01-01", "2025-02-01", "2025-03-01", "2025-04-01"])
