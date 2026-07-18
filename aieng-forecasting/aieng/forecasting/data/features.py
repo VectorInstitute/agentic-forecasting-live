@@ -155,6 +155,28 @@ def business_daily_ffill(df: pd.DataFrame) -> pd.DataFrame:
     return canonical_three_col(out)
 
 
+def business_daily_zero_fill(df: pd.DataFrame) -> pd.DataFrame:
+    """Reindex a daily *return* feature onto the business calendar, zero-filling gaps.
+
+    The return-series counterpart of :func:`business_daily_ffill`. When an
+    instrument's market is closed (e.g. a US holiday while the TSX trades), its
+    incremental return over that day is zero — the price cannot move without a
+    session. Forward-filling would instead repeat the previous session's return,
+    double-counting a move that happened once; zero-filling keeps the running sum
+    of daily returns equal to the cumulative price change. Leak-safe for the same
+    reason as forward-filling: inserted values encode no future information.
+    """
+    if df.empty:
+        return df
+    x = df.copy().sort_values("timestamp").reset_index(drop=True)
+    idx = pd.bdate_range(x["timestamp"].min(), x["timestamp"].max())
+    filled = x.set_index("timestamp")["value"].reindex(idx).fillna(0.0)
+    out = filled.reset_index()
+    out.columns = ["timestamp", "value"]
+    out["released_at"] = out["timestamp"]
+    return canonical_three_col(out)
+
+
 def log_ratio_level_feature(
     numerator_df: pd.DataFrame,
     denominator_df: pd.DataFrame,

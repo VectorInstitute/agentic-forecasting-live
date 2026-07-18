@@ -97,6 +97,7 @@ from aieng.forecasting.data.features import (
     apply_one_business_day_feature_lag,
     business_daily_expand_from_releases,
     business_daily_ffill,
+    business_daily_zero_fill,
     canonical_three_col,
     drop_weekend_timestamp_rows,
     to_level_feature_from_daily,
@@ -420,7 +421,9 @@ def build_tsx_multivariate_service(  # noqa: PLR0912, PLR0915
             if SERIES_ID_VIX_LEVEL in desired:
                 svc.register(
                     SERIES_ID_VIX_LEVEL,
-                    StaticFrameAdapter(apply_one_business_day_feature_lag(to_level_feature_from_daily(vix))),
+                    StaticFrameAdapter(
+                        apply_one_business_day_feature_lag(business_daily_ffill(to_level_feature_from_daily(vix)))
+                    ),
                     SeriesMetadata(
                         series_id=SERIES_ID_VIX_LEVEL,
                         description="CBOE VIX close level, lagged 1 business day",
@@ -433,7 +436,9 @@ def build_tsx_multivariate_service(  # noqa: PLR0912, PLR0915
             if SERIES_ID_VIX_CHANGE in desired:
                 svc.register(
                     SERIES_ID_VIX_CHANGE,
-                    StaticFrameAdapter(apply_one_business_day_feature_lag(to_log_return_feature(vix))),
+                    StaticFrameAdapter(
+                        apply_one_business_day_feature_lag(business_daily_zero_fill(to_log_return_feature(vix)))
+                    ),
                     SeriesMetadata(
                         series_id=SERIES_ID_VIX_CHANGE,
                         description="CBOE VIX close-to-close log return, lagged 1 business day",
@@ -460,7 +465,7 @@ def build_tsx_multivariate_service(  # noqa: PLR0912, PLR0915
         if series_id not in desired:
             continue
         try:
-            frame = apply_one_business_day_feature_lag(to_log_return_feature(_yahoo(ticker)))
+            frame = apply_one_business_day_feature_lag(business_daily_zero_fill(to_log_return_feature(_yahoo(ticker))))
             svc.register(
                 series_id,
                 StaticFrameAdapter(frame),
@@ -479,7 +484,9 @@ def build_tsx_multivariate_service(  # noqa: PLR0912, PLR0915
     # ── US 10Y Treasury yield level (Yahoo ^TNX, already in percent) ──────────
     if SERIES_ID_US10Y_YIELD in desired:
         try:
-            us10y = apply_one_business_day_feature_lag(to_level_feature_from_daily(_yahoo(US10Y_TICKER)))
+            us10y = apply_one_business_day_feature_lag(
+                business_daily_ffill(to_level_feature_from_daily(_yahoo(US10Y_TICKER)))
+            )
             svc.register(
                 SERIES_ID_US10Y_YIELD,
                 StaticFrameAdapter(us10y),
