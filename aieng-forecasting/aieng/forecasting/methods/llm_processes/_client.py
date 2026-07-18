@@ -190,10 +190,19 @@ def _strip_additional_properties(node: Any) -> Any:
     ever added, that path would need ``additionalProperties: false`` restored.)
     """
     if isinstance(node, dict):
-        return {k: _strip_additional_properties(v) for k, v in node.items() if k != "additionalProperties"}
+        return {k: _strip_additional_properties(v) for k, v in node.items() if k not in _STRIPPED_SCHEMA_KEYS}
     if isinstance(node, list):
         return [_strip_additional_properties(v) for v in node]
     return node
+
+
+#: Keys stripped from schemas on the non-OpenAI-strict path. additionalProperties:
+#: rejected by the proxy's Gemini response_schema route. minimum/maximum: rejected
+#: by Anthropic's structured-output validation on integer properties (observed
+#: 2026-07-18: "For 'integer' type, properties maximum, minimum are not
+#: supported"), silently tolerated by Gemini. Constraint enforcement lives in the
+#: prompt text and post-parse validation, not the wire schema.
+_STRIPPED_SCHEMA_KEYS: frozenset[str] = frozenset({"additionalProperties", "minimum", "maximum"})
 
 
 #: Bare-model-name prefixes routed through OpenAI strict structured outputs,
