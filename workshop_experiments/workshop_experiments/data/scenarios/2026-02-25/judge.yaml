@@ -1,0 +1,53 @@
+origin: '2026-02-25'
+judge_model: claude-sonnet-4-6
+judged_at: '2026-07-18T09:51:41.198419+00:00'
+realized_outcome:
+  summary_markdown: 'Realized S&P/TSX Composite cumulative log returns from 2026-02-25:
+
+    - 5 business days (through 2026-03-04): -0.54% (down)
+
+    - 21 business days (through 2026-03-26): -6.56% (down)
+
+    - 60 business days (through 2026-05-22): +1.01% (up)'
+  horizons:
+  - horizon: 5
+    forecast_date: '2026-03-04'
+    log_return: -0.005418018368074205
+    pct_return: -0.5403367378275403
+    direction: down
+  - horizon: 21
+    forecast_date: '2026-03-26'
+    log_return: -0.06788358992559448
+    pct_return: -6.563076276107305
+    direction: down
+  - horizon: 60
+    forecast_date: '2026-05-22'
+    log_return: 0.010032276010610276
+    pct_return: 1.0082768000188702
+    direction: up
+verdict:
+  drivers_score: 3
+  drivers_justification: The Trade-Shock Stall scenario's cited driver of U.S. trade
+    tariff uncertainty and negative spillover on cyclical sectors aligns well with
+    the sharp 21-day drawdown of -6.56%, suggesting trade tensions did materialize.
+    However, the base case Managed Soft Landing drivers (BoC hold, bond yield decline
+    as stabilizer) partially explain the eventual 60-day recovery to +1.01%, making
+    the overall driver narrative partially correct but mixed in timing.
+  calibration_score: 2
+  calibration_justification: The forecaster assigned 60% probability to the Managed
+    Soft Landing (moderate growth of +2% to +4%) and only 40% to the Trade-Shock Stall,
+    yet the realized returns were deeply negative at 5 and 21 business days (-0.54%
+    and -6.56%), squarely in the Trade-Shock Stall range. The 60-day recovery to +1.01%
+    is below even the lower bound of the base case's projected range, so the higher-probability
+    scenario was not well-calibrated to the realized outcome.
+  specificity_score: 3
+  specificity_justification: The write-up includes some specific details such as the
+    BoC rate of 2.25%, the 25,000 January 2026 job losses, GoC 10-year yield dynamics,
+    and a named catalyst (U.S. Supreme Court involvement in tariff disputes). However,
+    the causal mechanisms remain somewhat generic (flight-to-safety, wait-and-see),
+    and the numeric return ranges are broad enough to limit checkability.
+  overall_justification: The forecaster identified the right risk factors but assigned
+    them inverted probabilities relative to what materialized over the near term,
+    with the trade-shock scenario proving dominant through 21 days before a partial
+    recovery. The write-up shows moderate specificity but poor calibration given the
+    realized drawdown.

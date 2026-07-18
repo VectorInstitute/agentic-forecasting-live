@@ -29,3 +29,17 @@ Pre-fix LLMP smoke artifacts (quantized precision-2 inputs) were force-refreshed
 Outstanding per-method reads to append as their stages run: llmp_qgrid on the
 remaining matrix models (incl. sonnet-5, opus-4-8 spot reads), agent_code
 (sonnet-4-6), adaptive study transcript + one pre/post eval trace.
+
+**Track-2 scenario + judge reads, 2026-07-18:**
+
+| Artifact | Model | Trace id | What was verified | Date |
+|---|---|---|---|---|
+| scenario writeup 2026-03-31 (war low) | gemini-3.1-flash-lite-preview | `cc78e786ff43fc5b0129386abfb1b067` | Full read: 3 scenarios, probabilities sum to 1.0, ranged outlooks; base case (0.55, +3–5%) got direction right via the WRONG mechanism (persistent friction vs. actual ceasefire relief rally) — flagship right-direction/wrong-mechanism exhibit | 2026-07-18 |
+| scenario writeup 2025-04-01 (tariff eve) | gemini-3.1-flash-lite-preview | — (meta.yaml) | Full read: retrieved facts check out vs. timeline (25% non-CUSMA tariffs, Mar-12 BoC cut); under-reaction to the publicly scheduled Apr-2 escalation — bear case had right driver at 0.15/−5–8% vs. realized −12.8% window | 2026-07-18 |
+| judge verdicts, all 4 origins | claude-sonnet-4-6 | judge.yaml per origin | First post-PR#25 run: 4/4 verdicts written, integer 1–5 scores valid, justifications grounded in realized-return context; drivers never scored >3 (judge correctly withholds mechanism credit it cannot verify from returns alone — mechanism attribution requires the human timeline comparison) | 2026-07-18 |
+
+Judge design note: the judge's realized-outcome context is returns-only (5/21/60d),
+deliberately not a curated news summary — so calibration/specificity verdicts are
+fully automated while mechanism attribution (drivers) is conservative by
+construction. Right-direction/wrong-mechanism cases are caught by the human audit
+read, not the judge; this division of labor is a finding, not a gap.

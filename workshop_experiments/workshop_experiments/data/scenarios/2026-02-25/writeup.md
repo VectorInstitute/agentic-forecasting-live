@@ -1,0 +1,10 @@
+## Scenario: Managed Soft Landing (~0.60)
+**Key drivers:** The Bank of Canada (BoC) maintains a steady policy rate of 2.25%, effectively balancing the cooling labor market—evidenced by the 25,000 job losses in January 2026—with the goal of anchoring inflation near its 2% target. As GoC 10-year yields continue to decline due to flight-to-safety dynamics and softer economic signals, the S&P/TSX Composite benefits from a valuation re-rating, particularly in the defensive banking and consumer sectors. This scenario assumes that geopolitical risks and U.S. trade tariff frictions do not escalate beyond currently anticipated levels, allowing for a stable operating environment for Canadian companies.
+**~60-day outlook:** Moderate growth of approximately +2% to +4%, driven by valuation expansion in the interest-rate-sensitive segments of the index.
+
+## Scenario: Trade-Shock Stall (~0.40)
+**Key drivers:** Uncertainty surrounding the U.S. Supreme Court’s involvement in trade tariff disputes intensifies, leading to heightened anxiety among Canadian exporters and multinational firms. The resulting "wait-and-see" approach among investors is exacerbated by a further weakening in energy and materials demand as global economic growth expectations tilt lower. Even if the BoC signals a potential shift toward a more dovish stance, the negative spillover from U.S. trade policy and lower commodity prices weighs heavily on the TSX's cyclical heavyweights.
+**~60-day outlook:** A shallow drawdown or stagnation, with returns roughly between -3% and flat.
+
+## Base case
+The **Managed Soft Landing** is the base case. The Bank of Canada’s current "hold" policy is explicitly calibrated to address the observed economic cooling without overreacting to short-term volatility, and the decline in bond yields serves as a natural stabilizer for equity valuations. While U.S. trade policy remains a risk, the domestic data on moderation in both labor and inflation suggests the Canadian economy is navigating a transition rather than a crisis, providing a foundation for modest, non-recessionary equity market performance.

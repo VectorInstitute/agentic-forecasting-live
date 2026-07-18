@@ -1,0 +1,53 @@
+origin: '2025-04-08'
+judge_model: claude-sonnet-4-6
+judged_at: '2026-07-18T09:51:31.015135+00:00'
+realized_outcome:
+  summary_markdown: 'Realized S&P/TSX Composite cumulative log returns from 2025-04-08:
+
+    - 5 business days (through 2025-04-15): +6.94% (up)
+
+    - 21 business days (through 2025-05-08): +12.21% (up)
+
+    - 60 business days (through 2025-07-04): +20.19% (up)'
+  horizons:
+  - horizon: 5
+    forecast_date: '2025-04-15'
+    log_return: 0.06705707246491313
+    pct_return: 6.935650724478326
+    direction: up
+  - horizon: 21
+    forecast_date: '2025-05-08'
+    log_return: 0.11516655708939397
+    pct_return: 12.206030910832633
+    direction: up
+  - horizon: 60
+    forecast_date: '2025-07-04'
+    log_return: 0.18389834467818914
+    pct_return: 20.189363800147063
+    direction: up
+verdict:
+  drivers_score: 2
+  drivers_justification: The write-up cited BoC policy, wage growth, oil prices, and
+    domestic macro factors as key drivers. The realized outcome showed a massive rally
+    (+6.94% in 5 days, +20.19% in 60 days) that far exceeded the soft-landing scenario's
+    modest +2% to +4% projection, suggesting the actual drivers were likely global
+    risk-on sentiment, trade/tariff relief, or broader market forces not specifically
+    identified in the write-up. The cited drivers (BoC neutral stance, OPEC+ discipline)
+    are plausible background factors but don't explain the magnitude of the move.
+  calibration_score: 4
+  calibration_justification: The forecaster correctly assigned the higher probability
+    (0.60) to the bullish/recovery scenario versus the bearish stagflationary scenario
+    (0.40), and the realized direction was strongly upward across all horizons. The
+    calibration on direction was correct, though the magnitude of the rally vastly
+    exceeded the +2% to +4% range projected.
+  specificity_score: 3
+  specificity_justification: The write-up includes some specific data points (3.6%
+    wage growth, 6.6% unemployment, specific log return figures from April 4th and
+    8th) and named sector drivers (Financials, Energy). However, the causal narrative
+    is fairly generic for a Canadian macro scenario and lacks dated catalysts or specific
+    event triggers that would make it uniquely checkable.
+  overall_justification: The forecaster got the directional call right by assigning
+    higher probability to the bullish scenario, but the cited macro drivers (BoC policy,
+    wage growth, oil) don't convincingly explain the exceptional magnitude of the
+    realized rally. The write-up shows moderate specificity but falls short on identifying
+    the actual catalysts behind the outsized move.

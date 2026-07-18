@@ -1,0 +1,54 @@
+origin: '2025-04-01'
+judge_model: claude-sonnet-4-6
+judged_at: '2026-07-18T09:51:19.620170+00:00'
+realized_outcome:
+  summary_markdown: 'Realized S&P/TSX Composite cumulative log returns from 2025-04-01:
+
+    - 5 business days (through 2025-04-08): -10.09% (down)
+
+    - 21 business days (through 2025-05-01): -0.95% (down)
+
+    - 60 business days (through 2025-06-26): +6.87% (up)'
+  horizons:
+  - horizon: 5
+    forecast_date: '2025-04-08'
+    log_return: -0.10638502353138138
+    pct_return: -10.092158492008696
+    direction: down
+  - horizon: 21
+    forecast_date: '2025-05-01'
+    log_return: -0.009540767429980997
+    pct_return: -0.949539870719085
+    direction: down
+  - horizon: 60
+    forecast_date: '2025-06-26'
+    log_return: 0.06640226715069124
+    pct_return: 6.865651612500545
+    direction: up
+verdict:
+  drivers_score: 3
+  drivers_justification: The write-up correctly identified tariff-driven headwinds
+    and gold/materials as key drivers, which were indeed relevant to the realized
+    outcome. However, the initial sharp 10% drop in 5 days (likely from Liberation
+    Day tariff shock) and the subsequent strong 60-day recovery to +6.87% suggest
+    dynamics beyond the 'standoff' framing, with the commodity-led scenario's gold/materials
+    thesis partially playing out in the recovery phase.
+  calibration_score: 2
+  calibration_justification: The base case 'Trade Conflict Standoff' assigned 55%
+    probability to a flat-to-slightly-lower outcome (-3% to +1%), but the realized
+    60-day return was +6.87%, which falls squarely in the 'Commodity-Led Divergence'
+    scenario range (+3% to +6%+), assigned only 30% probability. The highest-probability
+    scenario missed the realized direction at the 60-day horizon, and the severe early
+    drawdown (-10%) wasn't captured by any scenario.
+  specificity_score: 4
+  specificity_justification: The write-up is notably specific, citing the March 12
+    BoC rate cut, the 25% tariff on non-CUSMA goods, gold price levels above US$3,100/oz,
+    and sector-level impacts on industrials and consumer discretionary. Named catalysts
+    and quantified thresholds make the scenarios largely checkable against realized
+    events.
+  overall_justification: The forecaster showed good thematic awareness of the key
+    drivers (tariffs, gold, BoC policy) but miscalibrated probabilities by underweighting
+    the commodity-led bullish scenario that best matched the 60-day outcome, while
+    also failing to anticipate the severity of the initial sharp drawdown. The write-up's
+    specificity is a strength, but the probability weighting did not align well with
+    what ultimately materialized.

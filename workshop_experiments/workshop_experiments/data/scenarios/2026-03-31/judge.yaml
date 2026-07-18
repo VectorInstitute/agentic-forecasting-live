@@ -1,0 +1,54 @@
+origin: '2026-03-31'
+judge_model: claude-sonnet-4-6
+judged_at: '2026-07-18T09:51:51.057679+00:00'
+realized_outcome:
+  summary_markdown: 'Realized S&P/TSX Composite cumulative log returns from 2026-03-31:
+
+    - 5 business days (through 2026-04-08): +2.60% (up)
+
+    - 21 business days (through 2026-04-30): +3.65% (up)
+
+    - 60 business days (through 2026-06-25): +6.35% (up)'
+  horizons:
+  - horizon: 5
+    forecast_date: '2026-04-08'
+    log_return: 0.02568659139859016
+    pct_return: 2.601933479309082
+    direction: up
+  - horizon: 21
+    forecast_date: '2026-04-30'
+    log_return: 0.03585756656503278
+    pct_return: 3.650820255279541
+    direction: up
+  - horizon: 60
+    forecast_date: '2026-06-25'
+    log_return: 0.061606424236566024
+    pct_return: 6.354367733001709
+    direction: up
+verdict:
+  drivers_score: 3
+  drivers_justification: The write-up correctly identified commodity sector strength
+    and BoC stability as key drivers, and the realized outcome was positive across
+    all horizons consistent with the base case. However, the realized-outcome summary
+    doesn't confirm whether geopolitical friction, oil prices, or gold specifically
+    drove the gains, making it difficult to fully validate the causal chain. The general
+    direction of 'resource-heavy sector support' appears plausible given the TSX's
+    composition.
+  calibration_score: 5
+  calibration_justification: The base case 'Commodity-Led Defensive Rotation' was
+    assigned the highest probability (0.55) and predicted a +3% to +5% range over
+    60 days. The realized 60-day return of +6.35% slightly exceeded the upper bound
+    but directionally matched perfectly, and the 21-day return of +3.65% fell squarely
+    within the predicted range. The highest-probability scenario clearly matched the
+    realized direction.
+  specificity_score: 4
+  specificity_justification: The write-up includes specific data points such as the
+    BoC rate of 2.25%, unemployment near 6.8%, named sectors (Energy, Materials, Transport,
+    Industrials), and explicit return ranges for each scenario. The causal chains
+    are reasonably concrete, though some drivers like 'geopolitical friction in the
+    Middle East' are somewhat generic without specific named events or dates.
+  overall_justification: The forecaster's base case was well-calibrated, correctly
+    identifying the dominant positive scenario with the highest probability and providing
+    a directionally accurate return range. The specificity was above average with
+    named macro variables and sector-level detail, though causal confirmation from
+    the realized summary is limited.
