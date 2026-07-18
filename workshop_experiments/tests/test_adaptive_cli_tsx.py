@@ -2,9 +2,13 @@
 
 from __future__ import annotations
 
+import argparse
 from pathlib import Path
+from types import SimpleNamespace
 
 from workshop_experiments.adaptive import eval_cli, study_cli
+from workshop_experiments.adaptive import session as session_mod
+from workshop_experiments.adaptive import study as study_mod
 from workshop_experiments.adaptive.domain_tsx import (
     TSX_DISTILL_PROMPT,
     TSX_STUDY_HALL_PROMPT,
@@ -97,3 +101,67 @@ def test_eval_cli_tsx_arm_override_dry_run(capsys, tmp_path) -> None:
     out = capsys.readouterr().out
     assert str(tmp_path / "my-trained") in out
     assert "untrained" in out
+
+
+class _FakeStudyDomain:
+    """Minimal domain config stub recording reseed calls."""
+
+    def __init__(self, base: Path) -> None:
+        """Point the seed/trained dirs under *base* and start with no reseeds."""
+        self.key = "tsx"
+        self.seed_dir = base / "seed"
+        self.trained_dir = base / "trained"
+        self.prompts = StudyHallPrompts(study_hall="go", distill="distill")
+        self.reseed_calls: list[bool] = []
+
+    def reseed(self, force: bool) -> None:
+        """Record the reseed instead of touching any files."""
+        self.reseed_calls.append(force)
+
+    def config_builder(self, *, model: str | None, strategy_dir: Path) -> object:
+        """Return a placeholder config."""
+        return object()
+
+
+def _drive_args() -> argparse.Namespace:
+    return argparse.Namespace(domain="tsx", no_reseed=False, model=None, turn_budget=5, checkpoint_every=5)
+
+
+def _stub_spend_path(monkeypatch, fake_dc) -> None:
+    monkeypatch.setitem(study_cli._DOMAINS, "tsx", lambda: fake_dc)
+    monkeypatch.setattr(session_mod, "AdkStudySession", lambda *a, **k: _FakeSession())
+    fake_result = SimpleNamespace(
+        phase="study_hall",
+        turns_run=0,
+        accounting=SimpleNamespace(input_tokens=0, output_tokens=0, wall_time_s=0.0),
+    )
+    monkeypatch.setattr(study_mod, "run_study_hall", lambda *a, **k: fake_result)
+
+
+def test_study_resume_never_reseeds(tmp_path: Path, monkeypatch, capsys) -> None:
+    """A run_dir with existing study state must not force-reseed the trained strategy.
+
+    Regression: a completed study resumed by a scheduled re-invocation used to
+    reseed first, wiping every accumulated strategy mutation while replaying
+    zero turns.
+    """
+    run_dir = tmp_path / "run"
+    run_dir.mkdir()
+    (run_dir / "study_state.json").write_text("{}", encoding="utf-8")
+    fake_dc = _FakeStudyDomain(tmp_path)
+    _stub_spend_path(monkeypatch, fake_dc)
+    rc = study_cli._drive_study_hall(_drive_args(), run_dir, phase="study")
+    assert rc == 0
+    assert fake_dc.reseed_calls == []
+    assert "skipping reseed" in capsys.readouterr().out
+
+
+def test_study_fresh_run_reseeds(tmp_path: Path, monkeypatch) -> None:
+    """A fresh run_dir (no study state) still reseeds the trained strategy."""
+    run_dir = tmp_path / "run"
+    run_dir.mkdir()
+    fake_dc = _FakeStudyDomain(tmp_path)
+    _stub_spend_path(monkeypatch, fake_dc)
+    rc = study_cli._drive_study_hall(_drive_args(), run_dir, phase="study")
+    assert rc == 0
+    assert fake_dc.reseed_calls == [True]

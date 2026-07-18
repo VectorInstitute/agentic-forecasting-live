@@ -222,8 +222,13 @@ def _drive_study_hall(args: argparse.Namespace, run_dir: Path, *, phase: str) ->
 
     dc = _DOMAINS[args.domain]()
     if not args.no_reseed:
-        dc.reseed(True)
-        print(f"RESEEDed {dc.trained_dir} from {dc.seed_dir}.")
+        if (run_dir / "study_state.json").exists():
+            # A resumed run must never force-reseed: doing so discards every
+            # accumulated strategy mutation while the driver replays no turns.
+            print(f"Existing study state in {run_dir}; skipping reseed (trained strategy preserved).")
+        else:
+            dc.reseed(True)
+            print(f"RESEEDed {dc.trained_dir} from {dc.seed_dir}.")
 
     config = dc.config_builder(model=args.model, strategy_dir=dc.trained_dir)
     session = AdkStudySession(
@@ -257,8 +262,13 @@ def _drive_residency(args: argparse.Namespace, run_dir: Path) -> int:
 
     dc = _DOMAINS[args.domain]()
     if not args.no_reseed:
-        dc.reseed(True)
-        print(f"RESEEDed {dc.trained_dir} from {dc.seed_dir}.")
+        if (run_dir / "study_state.json").exists():
+            # Same resume guard as the study-hall path: never force-reseed over
+            # a run that already holds accumulated state.
+            print(f"Existing study state in {run_dir}; skipping reseed (trained strategy preserved).")
+        else:
+            dc.reseed(True)
+            print(f"RESEEDed {dc.trained_dir} from {dc.seed_dir}.")
 
     if not args.origins:
         raise SystemExit(
