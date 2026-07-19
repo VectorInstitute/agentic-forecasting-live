@@ -1,0 +1,77 @@
+as_of: '2026-06-01T00:00:00'
+wall_time_s: 265.7760808329913
+predictions:
+- predictor_id: agent_predictor_tsx_analyst_code_claude-sonnet-4-6_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T00:10:04.589488'
+  as_of: '2026-06-01T00:00:00'
+  forecast_date: '2026-06-02T00:00:00'
+  payload:
+    point_forecast: 0.0001
+    quantiles:
+      '0.05': -0.01614
+      '0.1': -0.01241
+      '0.2': -0.00804
+      '0.3': -0.00495
+      '0.4': -0.00233
+      '0.5': 0.0001
+      '0.6': 0.00253
+      '0.7': 0.00515
+      '0.8': 0.00824
+      '0.9': 0.01261
+      '0.95': 0.01634
+  metadata:
+    rationale: "Overall framework: The S&P/TSX Composite 1-day log-return forecast\
+      \ for June 2, 2026 is built from three pillars. (A) Statistical: Trailing 63-day\
+      \ realized vol of 0.946%/day is the primary scale parameter; recent data shows\
+      \ mild negative skew and modest excess kurtosis, favouring a light fat-tail\
+      \ correction via t-distribution blending. (B) Macro: BoC on hold at 2.25%, no\
+      \ imminent shock from monetary policy; oil price surge (Middle East conflict)\
+      \ boosts energy sector earnings but also macro uncertainty; gold supporting\
+      \ materials; bank earnings constructive; overall TSX drift near zero given soft\
+      \ domestic growth. (C) Market regime: Recent daily returns oscillate with occasional\
+      \ \xB12-3% outlier days (Jan 30 -3%, Mar 31 +3%), confirming that tail risk\
+      \ is non-trivial and warrants a slightly wider distribution than pure-normal\
+      \ would imply. The point forecast (median) is set to +0.01%, just above zero,\
+      \ reflecting the slight long-run positive equity drift offset by current soft-growth,\
+      \ elevated-uncertainty environment."
+    horizon_rationale: "1-day-ahead forecast anchored on trailing 63-day realized\
+      \ volatility of 0.946% (\u224815.0% annualized), which is elevated relative\
+      \ to the TSX long-run norm of ~11-12% annualized, reflecting heightened macro\
+      \ and geopolitical uncertainty through mid-2026. Key inputs: (1) Bank of Canada\
+      \ on hold at 2.25% \u2014 steady, data-dependent stance removes near-term rate-shock\
+      \ risk but provides no fresh catalyst. (2) Oil extremely volatile: WTI surged\
+      \ >40% from Strait-of-Hormuz closure, boosting TSX energy sector but also elevating\
+      \ macro uncertainty and headline CPI (3.2% in May 2026). (3) Gold supported\
+      \ by geopolitical safe-haven demand \u2014 positive for TSX materials. (4) Canadian\
+      \ macro soft (technical Q1 recession, unemployment 6.5-7%) \u2014 limits upside\
+      \ drift. (5) USD/CAD and GoC yields tracking US Fed 'higher-for-longer' stance;\
+      \ CUSMA mostly intact. (6) Last observed day return: -0.00098 (essentially flat).\
+      \ The distribution is modeled as a 60/40 blend of Normal and Student-t (df=10)\
+      \ distributions, both centred at \u03BC=+0.01% per day (near-zero long-run equity\
+      \ drift adjusted for soft near-term macro), scaled to the 5%-upward-adjusted\
+      \ realized vol (~0.993%). The fat-tail blend (excess kurtosis \u22481.0 from\
+      \ t\u2081\u2080) accounts for observed negative skew (-0.43) and the possibility\
+      \ of sudden geopolitical or commodity shocks. The resulting spread from Q5 to\
+      \ Q95 is \u22483.25%, consistent with typical one-day TSX risk under elevated\
+      \ volatility."
+    tool_calls:
+    - tool: search_web
+      title: Bank of Canada policy rate decision and forward guidance for Canadian
+        equities
+    - tool: search_web
+      title: oil and gold commodity price outlook impact on TSX energy and materials
+        sectors
+    - tool: search_web
+      title: US Federal Reserve policy and tariff trade spillovers into Canadian stocks
+        2026
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python (260 lines)
+    - tool: run_code
+      title: python (61 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 1f6a7fff29ebc4b5f3980fdd37eb03ef
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/1f6a7fff29ebc4b5f3980fdd37eb03ef

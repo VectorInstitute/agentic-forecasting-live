@@ -1,0 +1,97 @@
+as_of: '2026-03-23T00:00:00'
+wall_time_s: 186.0390772910323
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T14:16:03.952756'
+  as_of: '2026-03-23T00:00:00'
+  forecast_date: '2026-03-30T00:00:00'
+  payload:
+    point_forecast: 0.003
+    quantiles:
+      '0.05': -0.046502
+      '0.1': -0.035569
+      '0.2': -0.022329
+      '0.3': -0.012782
+      '0.4': -0.004625
+      '0.5': 0.003
+      '0.6': 0.010625
+      '0.7': 0.018782
+      '0.8': 0.028329
+      '0.9': 0.041569
+      '0.95': 0.052502
+  metadata:
+    rationale: Comprehensive 5-business-day probabilistic forecast for the S&P/TSX
+      Composite Index (as of March 23, 2026). The forecast combines statistical analysis
+      of recent realized volatility (elevated regime) with historical mean-reversion
+      pattern modeling and fundamental news-grounded context (the U.S.-Iran de-escalation
+      and the subsequent pullback in global oil prices).
+    horizon_rationale: 'The S&P/TSX Composite is classified in an ''elevated'' volatility
+      regime, with an annualized trailing 21-day realized volatility of 17.37%. To
+      capture recent market turbulence, a shorter 10-day dispersion window is used,
+      yielding a daily standard deviation (sigma_daily) of 0.012017. Applying a widening
+      factor of 1.12 for elevated volatility and scaling by the square root of the
+      5-day horizon results in a 5-day standard deviation of 0.030096.
+
+
+      While daily returns generally follow a martingale, a modest positive directional
+      lean of +0.0030 (+0.30%) is applied. This shift is strongly supported by historical
+      statistics: when the TSX experiences a 5-day trailing decline worse than -2.5%
+      in an elevated/high volatility regime and begins to bounce (the TSX fell -3.07%
+      over the last 5 days and rallied +1.79% on March 23), the median 5-day forward
+      cumulative return is historically +1.17% (+0.73% for all such high-vol negative-lag
+      cases). This statistical mean-reversion is reinforced by a clear fundamental
+      catalyst: on March 23, 2026, the U.S. signaled a pause in military escalation
+      with Iran, causing WTI crude oil to pull back from recent peaks to $88.13. This
+      pullback directly eases severe global inflationary pressures and interest rate
+      anxieties, providing a strong backdrop for a continued stock market stabilization
+      and relief rally.'
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (88 lines)
+    - tool: run_code
+      title: python (26 lines)
+    - tool: run_code
+      title: python (10 lines)
+    - tool: run_code
+      title: python (9 lines)
+    - tool: run_code
+      title: python (4 lines)
+    - tool: run_code
+      title: python (11 lines)
+    - tool: run_code
+      title: python (54 lines)
+    - tool: search_web
+      title: TSX stock market crash March 2026 financial news
+    - tool: search_web
+      title: oil price drops March 23 2026 stock market recovery
+    - tool: run_code
+      title: python (72 lines)
+    - tool: run_code
+      title: python (36 lines)
+    - tool: run_code
+      title: python (9 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (22 lines)
+    - tool: search_web
+      title: Canada economic news March 2026 GDP retail sales
+    - tool: run_code
+      title: python (18 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 8143e06ac4f2b2d029d27ca37cc1a0bc
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/8143e06ac4f2b2d029d27ca37cc1a0bc

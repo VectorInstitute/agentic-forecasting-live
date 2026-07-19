@@ -1,0 +1,93 @@
+as_of: '2026-04-13T00:00:00'
+wall_time_s: 198.3412350829458
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T19:21:06.842359'
+  as_of: '2026-04-13T00:00:00'
+  forecast_date: '2026-04-20T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.030206
+      '0.1': -0.023534
+      '0.2': -0.015455
+      '0.3': -0.00963
+      '0.4': -0.004652
+      '0.5': 0.0
+      '0.6': 0.004652
+      '0.7': 0.00963
+      '0.8': 0.015455
+      '0.9': 0.023534
+      '0.95': 0.030206
+  metadata:
+    rationale: The S&P/TSX Composite is in an ELEVATED volatility regime (21-day realized
+      vol of 18.43%) driven by extreme energy market fluctuations, including a severe
+      -12.6% trailing 5-day drop in WTI crude oil. To reflect this, our adaptive pipeline
+      utilizes a 10-day dispersion window (daily sigma of 0.008213) to calibrate the
+      prediction intervals. In accordance with the tsx-strategy-trained guidelines,
+      standard-normal Gaussian projection is utilized with no fat-tailed scaling since
+      the TSX daily return distribution remains highly normal under elevated regimes.
+      The point forecast is centered at 0.0 (martingale prior) due to mixed commodity
+      moves and the lack of immediate scheduled policy or macroeconomic catalysts.
+    horizon_rationale: S&P/TSX Composite returns are modeled using an adaptive standard-normal
+      Gaussian distribution for the 5-business-day horizon. The index's 21-day annualized
+      realized volatility stands at 18.43%, classifying the market in the ELEVATED
+      volatility regime. Consequently, a 10-day dispersion window is used to quickly
+      capture the latest market volatility, yielding a daily standard deviation of
+      0.008213. No manual interval widening is applied because the volatility regime
+      is elevated (rather than low), there is no active daily return anomaly (z-score
+      of 0.45), and today is not a TSX Catch-up Day. We adhere to the martingale prior
+      (centered at 0.0) as there are no immediate scheduled domestic catalysts before
+      the April 29 Bank of Canada meeting, and physical commodity drivers are mixed
+      (WTI weekly return of -12.62% vs Gold weekly return of +1.82%).
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (16 lines)
+    - tool: run_code
+      title: python (31 lines)
+    - tool: run_code
+      title: python (38 lines)
+    - tool: run_code
+      title: python (46 lines)
+    - tool: run_code
+      title: python (12 lines)
+    - tool: run_code
+      title: python (104 lines)
+    - tool: run_code
+      title: python (66 lines)
+    - tool: run_code
+      title: python (3 lines)
+    - tool: search_web
+      title: '"TSX" OR "S&P/TSX Composite" April 2026 news market oil price CAD BoC'
+    - tool: search_web
+      title: '"oil price" OR "WTI" OR "crude oil" April 8 2026 OR April 2026 crash
+        drop news'
+    - tool: run_code
+      title: python (54 lines)
+    - tool: run_code
+      title: python (51 lines)
+    - tool: run_code
+      title: python (50 lines)
+    - tool: search_web
+      title: '"Bank of Canada" April 2026 news OR meeting OR rate OR interest OR decision'
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 558a904fa41c2b48c422bc142bee2d72
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/558a904fa41c2b48c422bc142bee2d72

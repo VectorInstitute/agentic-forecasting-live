@@ -1,0 +1,124 @@
+as_of: '2026-03-30T00:00:00'
+wall_time_s: 339.82885458297096
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T16:04:44.081518'
+  as_of: '2026-03-30T00:00:00'
+  forecast_date: '2026-04-28T00:00:00'
+  payload:
+    point_forecast: 0.022
+    quantiles:
+      '0.05': -0.081
+      '0.1': -0.05825
+      '0.2': -0.0307
+      '0.3': -0.01084
+      '0.4': 0.00614
+      '0.5': 0.022
+      '0.6': 0.03786
+      '0.7': 0.05484
+      '0.8': 0.0747
+      '0.9': 0.10225
+      '0.95': 0.125
+  metadata:
+    rationale: S&P/TSX Composite 21-business-day cumulative log return forecast. The
+      index is in an elevated volatility regime. Highly responsive 10-day daily dispersion
+      and a positive median shift of +2.20% are implemented to reflect a robust historical
+      mean-reversion drift observed after severe drawdown conditions (trailing 21-day
+      return of -7.65%) when VIX is elevated. Interval width is adjusted with a 1.05
+      widening factor to account for global market turbulence (VIX at 30.61) and geopolitical
+      commodity spikes (WTI at $102.88).
+    horizon_rationale: The S&P/TSX Composite is classified in an elevated volatility
+      regime (21-day realised vol of 17.91%). A 10-day dispersion window is selected,
+      yielding a daily standard deviation of 1.301% (20.66% annualised). Over the
+      last 21 business days, the index experienced a sharp drawdown of -7.65%. Historical
+      backtesting of the TSX since 2005 demonstrates that when the trailing 21-day
+      return falls below -5% in an elevated risk environment (VIX > 25), the index
+      exhibits a powerful mean-reversion drift over the next 21 business days, with
+      a mean return of +2.15% and a median return of +3.88% (66.5% positive resolutions).
+      To capture this mean-reversion drift, the median forecast is shifted to +2.20%.
+      To protect against tail risk in the high global risk backdrop (VIX at 30.61,
+      WTI crude spiking to $102.88), a conservative 1.05 widening factor is applied
+      to the daily sigma-based interval width, resulting in a robust, well-calibrated
+      forecasting distribution.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (26 lines)
+    - tool: run_code
+      title: python (40 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: search_web
+      title: '"S&P/TSX" OR "TSX" market news March 2026 BoC oil VIX'
+    - tool: run_code
+      title: python (68 lines)
+    - tool: run_code
+      title: python (39 lines)
+    - tool: run_code
+      title: python (48 lines)
+    - tool: run_code
+      title: python (57 lines)
+    - tool: run_code
+      title: python (10 lines)
+    - tool: run_code
+      title: python (35 lines)
+    - tool: run_code
+      title: python (32 lines)
+    - tool: run_code
+      title: python (33 lines)
+    - tool: run_code
+      title: python (35 lines)
+    - tool: run_code
+      title: python (45 lines)
+    - tool: run_code
+      title: python (36 lines)
+    - tool: run_code
+      title: python (36 lines)
+    - tool: run_code
+      title: python (54 lines)
+    - tool: run_code
+      title: python (42 lines)
+    - tool: run_code
+      title: python (43 lines)
+    - tool: run_code
+      title: python (3 lines)
+    - tool: run_code
+      title: python (37 lines)
+    - tool: run_code
+      title: python (33 lines)
+    - tool: run_code
+      title: python (32 lines)
+    - tool: run_code
+      title: python (45 lines)
+    - tool: run_code
+      title: python (40 lines)
+    - tool: run_code
+      title: python (39 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (39 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: load_skill
+      title: load_skill
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 06e818fc22f9024e441d34206cf6c75b
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/06e818fc22f9024e441d34206cf6c75b

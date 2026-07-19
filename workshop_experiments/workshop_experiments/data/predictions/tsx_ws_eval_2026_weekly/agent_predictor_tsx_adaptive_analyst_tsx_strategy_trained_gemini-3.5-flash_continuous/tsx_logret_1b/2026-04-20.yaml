@@ -1,0 +1,73 @@
+as_of: '2026-04-20T00:00:00'
+wall_time_s: 111.47302020899951
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T18:04:27.870952'
+  as_of: '2026-04-20T00:00:00'
+  forecast_date: '2026-04-21T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.00833623
+      '0.1': -0.00649499
+      '0.2': -0.0042654
+      '0.3': -0.0026577
+      '0.4': -0.00128398
+      '0.5': 0.0
+      '0.6': 0.00128398
+      '0.7': 0.0026577
+      '0.8': 0.0042654
+      '0.9': 0.00649499
+      '0.95': 0.00833623
+  metadata:
+    rationale: On April 20, 2026, the S&P/TSX Composite closed flat (log return of
+      +0.00040) with realized annual volatility at 15.26%, placing the index in the
+      ELEVATED regime (15-22%). WTI Crude fell -10.05% over the trailing 5 days as
+      Middle East ceasefire hopes fluctuated, but the BoC held rates steady at 2.25%.
+      No additional calibration corrections are triggered since the vol regime is
+      not LOW and there is no negative return anomaly. We center the 1bd return on
+      a martingale prior of 0.0 and project standard Gaussian intervals.
+    horizon_rationale: The S&P/TSX Composite Index is in an ELEVATED volatility regime
+      as of 2026-04-20, with an annualized 21-day realized volatility of 15.26%. This
+      triggers an adaptive dispersion window of 10 trading days, yielding a daily
+      realized standard deviation (sigma_daily) of 0.00506807. In accordance with
+      active calibration corrections for elevated volatility regimes, the 1bd prediction
+      intervals are projected using a standard-normal Gaussian distribution without
+      fat-tailed scaling (widen = 1.0). The daily return z-score is -0.02, indicating
+      no daily return anomaly and hence no short-term leverage widening is required.
+      The forecast is centered at 0.0 cumulative log return in line with a martingale
+      prior.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (118 lines)
+    - tool: run_code
+      title: python (27 lines)
+    - tool: search_web
+      title: S&P/TSX Composite April 2026 market news bank of canada oil
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (46 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 65fd80c56205bbd2e8f00a4e5d27af51
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/65fd80c56205bbd2e8f00a4e5d27af51

@@ -1,0 +1,112 @@
+as_of: '2026-06-15T00:00:00'
+wall_time_s: 337.0619829169009
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T15:06:34.033511'
+  as_of: '2026-06-15T00:00:00'
+  forecast_date: '2026-06-22T00:00:00'
+  payload:
+    point_forecast: 0.004
+    quantiles:
+      '0.05': -0.034281
+      '0.1': -0.025365
+      '0.2': -0.014461
+      '0.3': -0.006616
+      '0.4': -0.000908
+      '0.5': 0.004
+      '0.6': 0.009168
+      '0.7': 0.014985
+      '0.8': 0.021186
+      '0.9': 0.029927
+      '0.95': 0.037347
+  metadata:
+    rationale: The S&P/TSX Composite 5-business-day cumulative log return forecast
+      as of June 15, 2026. Realised volatility has picked up recently (the annualised
+      21-day realised vol is 15.44%, falling in the 'elevated' category). Backtesting
+      shows that blending a short-term 10-day daily realised volatility projection
+      with a 504-day empirical return distribution achieves superior calibration and
+      minimizes Pinball Loss. The point forecast (0.50 quantile) is set to +0.40%,
+      blending the martingale prior (0%) with the empirical positive drift, and adjusted
+      slightly lower to account for the notable cool-off in energy (WTI oil) and gold
+      prices.
+    horizon_rationale: "Our statistical pipeline classifies the current TSX volatility\
+      \ regime as 'elevated' (21-day annualised realised volatility of 15.44%), which\
+      \ prompts the use of a shorter 10-day dispersion window to compute daily sigma\
+      \ (0.012292). To capture structural features like fat tails and mean reversion,\
+      \ we employ an optimized blend model (weight = 0.5) combining this short-term\
+      \ realised-volatility projection with the index's 2-year (504-day) empirical\
+      \ return distribution. Grounded in the news context that key commodity drivers\u2014\
+      WTI crude oil and gold\u2014are retreating sharply from their peaks in June\
+      \ (WTI was down -4.99% on June 15), we adjust our median forecast downward to\
+      \ +0.40% (compared to the raw 2-year empirical drift of +0.63%) while maintaining\
+      \ robust intervals to reflect elevated market uncertainty."
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: run_code
+      title: python (12 lines)
+    - tool: search_web
+      title: Canada CPI inflation June 2026 OR Bank of Canada June 2026 OR S&P/TSX
+        Composite June 15 2026
+    - tool: search_web
+      title: WTI oil price GC gold price June 2026 OR commodity price retreat June
+        15 2026
+    - tool: run_code
+      title: python (16 lines)
+    - tool: run_code
+      title: python (48 lines)
+    - tool: run_code
+      title: python (8 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (38 lines)
+    - tool: run_code
+      title: python (2 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (77 lines)
+    - tool: run_code
+      title: python (46 lines)
+    - tool: run_code
+      title: python (68 lines)
+    - tool: run_code
+      title: python (77 lines)
+    - tool: run_code
+      title: python (47 lines)
+    - tool: run_code
+      title: python (9 lines)
+    - tool: run_code
+      title: python (72 lines)
+    - tool: run_code
+      title: python (59 lines)
+    - tool: run_code
+      title: python (42 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: ca1e823b58c0b5a617d038ddd1e05259
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/ca1e823b58c0b5a617d038ddd1e05259

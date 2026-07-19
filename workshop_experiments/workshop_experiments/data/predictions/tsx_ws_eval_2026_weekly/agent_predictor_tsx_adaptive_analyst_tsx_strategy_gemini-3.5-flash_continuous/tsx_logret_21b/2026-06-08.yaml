@@ -1,0 +1,80 @@
+as_of: '2026-06-08T00:00:00'
+wall_time_s: 156.3234958340181
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T17:21:51.142722'
+  as_of: '2026-06-08T00:00:00'
+  forecast_date: '2026-07-07T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.0682319789
+      '0.1': -0.0531614473
+      '0.2': -0.0349122143
+      '0.3': -0.0217532333
+      '0.4': -0.0105093693
+      '0.5': 0.0
+      '0.6': 0.0105093693
+      '0.7': 0.0217532333
+      '0.8': 0.0349122143
+      '0.9': 0.0531614473
+      '0.95': 0.0682319789
+  metadata:
+    rationale: A daily-scaled volatility model was fitted using S&P/TSX Composite
+      data up to 2026-06-08. Under the 'normal' volatility regime (14.37% realized
+      volatility) with no recent return anomaly, the 21-day dispersion window is selected.
+      The resulting 21-day cumulative standard deviation is 0.041482. The forecast
+      is centered at a median of 0.00 based on the martingale prior, as the recent
+      Bank of Canada rate pause and commodity environment are largely in line with
+      expectations.
+    horizon_rationale: Sourced ^GSPTSE history up to 2026-06-08. Rolling 21-day annualized
+      realized volatility of the TSX index is 14.37%, placing the market in the 'normal'
+      volatility regime (10-15%). The latest return has a z-score of 0.135, indicating
+      no recent anomaly. Accordingly, we use a 21-day dispersion window, resulting
+      in a daily standard deviation of 0.009052, which scales to a 21-day cumulative
+      standard deviation of 0.041482. In June 2026, the Bank of Canada held its overnight
+      policy rate steady at 2.25% as expected. Given the neutral and balanced macro
+      news context (soft labour data vs. elevated energy prices from Strait of Hormuz
+      tensions), the martingale prior of 0.00 is maintained as the median point forecast.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (150 lines)
+    - tool: search_web
+      title: '"TSX" OR "S&P/TSX" market June 2026 OR May 2026 news Bank of Canada'
+    - tool: search_web
+      title: '"WTI" OR "crude oil" OR "gold" price May June 2026'
+    - tool: run_code
+      title: python (69 lines)
+    - tool: run_code
+      title: python (142 lines)
+    - tool: run_code
+      title: python (32 lines)
+    - tool: run_code
+      title: python (91 lines)
+    - tool: run_code
+      title: python (3 lines)
+    - tool: run_code
+      title: python (80 lines)
+    - tool: run_code
+      title: python (12 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 7acf6fe744c658265f9f16f54db82571
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/7acf6fe744c658265f9f16f54db82571

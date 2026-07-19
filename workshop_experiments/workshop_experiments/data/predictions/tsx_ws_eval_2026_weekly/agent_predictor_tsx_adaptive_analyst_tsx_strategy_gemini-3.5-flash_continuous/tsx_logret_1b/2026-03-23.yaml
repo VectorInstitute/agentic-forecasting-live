@@ -1,0 +1,83 @@
+as_of: '2026-03-23T00:00:00'
+wall_time_s: 144.7599317909917
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T12:54:25.292810'
+  as_of: '2026-03-23T00:00:00'
+  forecast_date: '2026-03-24T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.022137997573
+      '0.1': -0.017248334431
+      '0.2': -0.011327335467
+      '0.3': -0.007057878639
+      '0.4': -0.003409785201
+      '0.5': 0.0
+      '0.6': 0.003409785201
+      '0.7': 0.007057878639
+      '0.8': 0.011327335467
+      '0.9': 0.017248334431
+      '0.95': 0.022137997573
+  metadata:
+    rationale: Statistical analysis of S&P/TSX Composite returns indicates an elevated
+      volatility regime (17.37% annualized realised vol), primarily driven by Middle
+      East geopolitical risks and recent energy/market swings. To model this, the
+      dispersion window is adapted to 10 trading days (sigma_daily = 1.2017%) and
+      a widening factor of 1.12 is applied. The 1-business-day forward return is centered
+      at 0.0 in accordance with the martingale prior.
+    horizon_rationale: The 1-day forecast is symmetric about a point forecast of 0.0,
+      representing a martingale prior. The volatility regime of the S&P/TSX Composite
+      is classified as 'elevated' (realized annualized vol of 17.37%), driven by geopolitical
+      tensions in the Middle East and resulting commodity price shocks. A shorter
+      10-day dispersion window is used to responsively capture the recent risk environment,
+      with a standard deviation of 1.2017%. We apply a 1.12 widening factor to scale
+      the intervals to accommodate elevated tail risk and vol clustering.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: search_web
+      title: S&P/TSX Composite March 2026 stock market news
+    - tool: search_web
+      title: S&P/TSX Composite March 16 to 23 2026 stock market news
+    - tool: run_code
+      title: python (23 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: run_code
+      title: python (58 lines)
+    - tool: run_code
+      title: python (21 lines)
+    - tool: search_web
+      title: S&P/TSX Composite March 23 2026
+    - tool: search_web
+      title: '"S&P/TSX" "March 23, 2026" or "March 23" 2026 index rose/fell'
+    - tool: run_code
+      title: python (49 lines)
+    - tool: run_code
+      title: python (49 lines)
+    - tool: run_code
+      title: python (24 lines)
+    - tool: run_code
+      title: python (12 lines)
+    - tool: run_code
+      title: python (34 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: a72578120f1e40ccabe4447e21e07aad
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/a72578120f1e40ccabe4447e21e07aad

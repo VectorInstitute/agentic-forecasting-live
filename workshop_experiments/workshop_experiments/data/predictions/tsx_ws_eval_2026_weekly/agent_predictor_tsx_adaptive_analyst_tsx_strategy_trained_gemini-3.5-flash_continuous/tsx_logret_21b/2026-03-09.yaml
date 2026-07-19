@@ -1,0 +1,104 @@
+as_of: '2026-03-09T00:00:00'
+wall_time_s: 204.29590645898134
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T20:40:58.908427'
+  as_of: '2026-03-09T00:00:00'
+  forecast_date: '2026-04-07T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.082079
+      '0.1': -0.06395
+      '0.2': -0.041997
+      '0.3': -0.026168
+      '0.4': -0.012642
+      '0.5': 0.0
+      '0.6': 0.012642
+      '0.7': 0.026168
+      '0.8': 0.041997
+      '0.9': 0.06395
+      '0.95': 0.082079
+  metadata:
+    rationale: Overall analysis of the S&P/TSX Composite index cumulative log return
+      over a 21-business-day horizon. As of March 9, 2026, the TSX is in an elevated
+      volatility regime (21-day realized vol of 18.92%) amid geopolitical stress and
+      a major crude oil spike (WTI weekly return +33.05%). High-risk conditions are
+      reflected in a stressed US VIX of 25.50. Following our active strategy corrections
+      (hyp-007, hyp-022), the prediction intervals are projected using a symmetric,
+      standard-normal Gaussian distribution calibrated to the 10-day trailing daily
+      dispersion (sigma_daily = 1.0889%), as the elevated regime exhibits low excess
+      kurtosis and symmetric tails in stressed US VIX states. The point forecast is
+      centered at 0.0 (martingale prior), reflecting balanced force vectors between
+      domestic economic cooling and surging energy sector assets.
+    horizon_rationale: 'Based on the TSX-native forecasting pipeline as of March 9,
+      2026. The annualized 21-day realized volatility of the S&P/TSX Composite is
+      18.92%, placing the index in the ''elevated'' regime. Due to this elevated regime,
+      we use a 10-day dispersion window to compute our daily return volatility (sigma_daily
+      = 1.0889%), which allows the interval projection to react quickly to the recent
+      surge in market volatility. The US CBOE Volatility Index (VIX) is at 25.50,
+      which is in the ''stressed'' state (>25). According to our active calibration
+      corrections (hyp-022), under a stressed US VIX state, the 21bd tail risk for
+      Canadian equities is highly symmetric (~6.1% crash vs ~5.9% surge) and the TSX-native
+      volatility pipeline perfectly self-calibrates using a standard-normal Gaussian
+      distribution (excess kurtosis is low in the elevated regime, hyp-007). Therefore,
+      no manual asymmetric tail-risk adjustments or fat-tailed scaling are applied.
+      The median point forecast remains at 0.0 in accordance with the martingale prior,
+      as macroeconomic indicators are balanced: the massive +33.05% trailing weekly
+      surge in crude oil (spurred by Middle East hostilities) provides strong support
+      to energy-heavy TSX, while the weak February jobs report (-84,000 jobs, 6.7%
+      unemployment) and Bank of Canada pause at 2.25% reflect domestic cooling.'
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: search_web
+      title: tsx s&p tsx index news commodity 2026-03-09 bank of canada
+    - tool: run_code
+      title: python (103 lines)
+    - tool: run_code
+      title: python (105 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (11 lines)
+    - tool: run_code
+      title: python (6 lines)
+    - tool: run_code
+      title: python (50 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (37 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (53 lines)
+    - tool: run_code
+      title: python (81 lines)
+    - tool: run_code
+      title: python (31 lines)
+    - tool: run_code
+      title: python (37 lines)
+    - tool: run_code
+      title: python (56 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: b21923a7ddc74d9dd5cb9aae598ff87f
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/b21923a7ddc74d9dd5cb9aae598ff87f

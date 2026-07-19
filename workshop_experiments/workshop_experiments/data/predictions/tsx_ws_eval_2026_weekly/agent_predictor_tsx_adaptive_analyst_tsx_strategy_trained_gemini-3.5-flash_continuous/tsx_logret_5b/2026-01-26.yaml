@@ -1,0 +1,105 @@
+as_of: '2026-01-26T00:00:00'
+wall_time_s: 230.19198279210832
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T18:39:31.121619'
+  as_of: '2026-01-26T00:00:00'
+  forecast_date: '2026-02-02T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.025571
+      '0.1': -0.019923
+      '0.2': -0.013084
+      '0.3': -0.008152
+      '0.4': -0.003939
+      '0.5': 0.0
+      '0.6': 0.003939
+      '0.7': 0.008152
+      '0.8': 0.013084
+      '0.9': 0.019923
+      '0.95': 0.025571
+  metadata:
+    rationale: The S&P/TSX Composite is classified as being in a LOW volatility regime
+      (21d annualized realised volatility of 8.55%). Daily return standard deviation
+      is 0.005389. Since there is no recent daily return anomaly, a 21-day dispersion
+      window is utilized. However, a massive trailing 5-day gold rally of +10.17%
+      (a major commodity shock exceeding the +3.5% threshold) triggers our learned
+      calibration correction for the LOW-volatility + Commodity Shock joint state,
+      which dictates widening the prediction intervals by 29% (multiplier = 1.29)
+      across all horizons to account for mean-reversion and immediate shock propagation.
+      The point forecast (0.50 quantile) remains at 0.0 under a martingale prior.
+      While US tariff threats on Canadian goods represent a downside macro risk, they
+      are balanced by surging gold prices (supportive of Canada's large materials
+      sector), justifying a symmetric, non-tilted interval grid.
+    horizon_rationale: Forecast for the 5-business-day horizon is constructed from
+      a standard-normal Gaussian distribution centered around a martingale prior (0.0).
+      Daily log return standard deviation is measured over a 21-day dispersion window
+      (0.005389) as GSPTSE is in a low-volatility regime (annualized realised vol
+      of 8.55% < 10.0%) and exhibits no daily return anomaly (latest daily return
+      z-score is -0.41). However, the presence of a strong 5-day commodity shock (physical
+      gold rallied +10.17%, far exceeding the +3.5% shock threshold amid geopolitical
+      tensions and US-Canada tariff reports) triggers our active strategy correction
+      to widen prediction intervals by 29% (multiplier = 1.29) across all horizons.
+      This widening corrects for volatility mean-reversion from low levels and immediate
+      commodity shock propagation.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (56 lines)
+    - tool: run_code
+      title: python (73 lines)
+    - tool: search_web
+      title: Canada stock market news January 26 2026 S&P/TSX Composite
+    - tool: run_code
+      title: python (35 lines)
+    - tool: run_code
+      title: python (94 lines)
+    - tool: run_code
+      title: python (65 lines)
+    - tool: run_code
+      title: python (61 lines)
+    - tool: run_code
+      title: python (30 lines)
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (5 lines)
+    - tool: run_code
+      title: python (6 lines)
+    - tool: run_code
+      title: python (6 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (3 lines)
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: run_code
+      title: python (8 lines)
+    - tool: run_code
+      title: python (11 lines)
+    - tool: run_code
+      title: python (7 lines)
+    - tool: run_code
+      title: python (22 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: e0d264ae32b9124dc835a3d39d418437
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/e0d264ae32b9124dc835a3d39d418437

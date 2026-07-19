@@ -1,0 +1,104 @@
+as_of: '2026-05-11T00:00:00'
+wall_time_s: 163.7382932920009
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T14:44:11.540557'
+  as_of: '2026-05-11T00:00:00'
+  forecast_date: '2026-05-18T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.028423
+      '0.1': -0.022145
+      '0.2': -0.014543
+      '0.3': -0.009062
+      '0.4': -0.004378
+      '0.5': 0.0
+      '0.6': 0.004378
+      '0.7': 0.009062
+      '0.8': 0.014543
+      '0.9': 0.022145
+      '0.95': 0.028423
+  metadata:
+    rationale: 'Following the forecasting strategy, we analyzed the statistical properties
+      of the S&P/TSX Composite (^GSPTSE) alongside commodity and global risk drivers
+      (WTI Crude, Gold, US VIX) up to the cutoff date of 2026-05-11.
+
+
+      1. Vol-Regime Classification: The TSX''s 21-day annualized realized volatility
+      sits at 12.27%, classifying the market in a ''normal'' volatility regime (10%
+      to 15%). Corroborating this, the US VIX is at 18.38, well below the stress threshold
+      of 25.0.
+
+      2. Anomaly Detection: The latest daily return (+0.18%) is not anomalous, with
+      a Z-score of 0.12. Therefore, the default 21-day dispersion window is used to
+      estimate sigma_daily (0.007728).
+
+      3. Trend & News Integration: Macro indicators show the Bank of Canada is holding
+      rates steady at 2.25% with Headline CPI at 2.4%. Although Middle East tensions
+      introduce structural commodity shifts, oil prices have eased slightly to $98/bbl
+      on May 11, warranting a neutral, martingale-centered forecast (point forecast
+      of 0.0) with standard symmetric quantiles.'
+    horizon_rationale: The 5-business-day forecast is centered at 0.0 following a
+      martingale prior, as there are no immediate high-impact catalysts or policy
+      shifts to justify a directional lean. The interval width is calibrated using
+      the standard deviation of daily log returns over a 21-day dispersion window
+      (sigma_daily = 0.007728), scaled by the square root of the horizon. This results
+      in a base 5-day standard deviation of 0.017280, which is perfectly balanced
+      between the extremely calm recent 5-day performance (0.013378 over the last
+      21 days) and the slightly more volatile medium-term trend (0.021030 over the
+      last 63 days).
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: run_code
+      title: python (25 lines)
+    - tool: run_code
+      title: python (35 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: run_code
+      title: python (25 lines)
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (33 lines)
+    - tool: run_code
+      title: python (86 lines)
+    - tool: run_code
+      title: python (23 lines)
+    - tool: search_web
+      title: TSX Composite May 2026
+    - tool: search_web
+      title: Canada stock market May 11 2026 news
+    - tool: run_code
+      title: python (18 lines)
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: a5be20f2260b0ff92c82b8cd3219e82d
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/a5be20f2260b0ff92c82b8cd3219e82d

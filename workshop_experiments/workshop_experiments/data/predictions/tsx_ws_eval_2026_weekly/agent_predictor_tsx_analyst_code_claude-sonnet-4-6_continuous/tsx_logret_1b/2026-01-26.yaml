@@ -1,0 +1,71 @@
+as_of: '2026-01-26T00:00:00'
+wall_time_s: 93.82720945804613
+predictions:
+- predictor_id: agent_predictor_tsx_analyst_code_claude-sonnet-4-6_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-18T21:49:19.557507'
+  as_of: '2026-01-26T00:00:00'
+  forecast_date: '2026-01-27T00:00:00'
+  payload:
+    point_forecast: 0.0002
+    quantiles:
+      '0.05': -0.011215
+      '0.1': -0.008258
+      '0.2': -0.00512
+      '0.3': -0.003051
+      '0.4': -0.001356
+      '0.5': 0.0002
+      '0.6': 0.001756
+      '0.7': 0.003451
+      '0.8': 0.00552
+      '0.9': 0.008658
+      '0.95': 0.011615
+  metadata:
+    rationale: "Forecast uses a Student-t(df=6) parametric model centred at +0.02%\
+      \ daily drift with scale derived from the 63-day trailing realised volatility\
+      \ (0.719%). The positive drift reflects TSX near record highs, commodity strength\
+      \ (gold/energy), and a supportive BoC pause at 2.25%. The t-distribution with\
+      \ df=6 provides moderate fat tails consistent with the occasional \xB11\u2013\
+      2% daily moves observed in recent history (Aug 2025 volatility spike, Oct\u2013\
+      Nov 2025 choppiness). No extreme regime shift is assumed for 2026-01-27 given\
+      \ an absence of scheduled major macro catalysts."
+    horizon_rationale: "1-business-day ahead S&P/TSX Composite log-return forecast\
+      \ for 2026-01-27. Key inputs and assumptions: (1) Volatility regime: trailing\
+      \ 63-day realised vol = 0.719%, consistent with the ~0.76% std observed in recent\
+      \ daily returns since late July 2025. A moderate-volatility, non-crisis regime\
+      \ is confirmed. (2) Drift/location: slight positive drift of +0.02% per day,\
+      \ reflecting TSX at or near record highs with commodity tailwinds (gold at record\
+      \ highs, energy sector strong), BoC holding at 2.25% (a supportive but neutral\
+      \ stance), and a generally constructive Jan-2026 backdrop (average daily return\
+      \ ~+0.22% MTD). The last day's return was mildly negative (-0.16%), providing\
+      \ no strong directional momentum signal. (3) Distribution: Student-t with df=6\
+      \ and scale calibrated so variance matches the trailing 63-day vol. This accommodates\
+      \ fat tails (occasional 1\u20132% gap days seen in Oct\u2013Nov 2025) without\
+      \ over-weighting extreme events. (4) Macro context: BoC paused at 2.25% (data-dependent),\
+      \ inflation near 2% target, labour market softening modestly. US-Canada trade\
+      \ uncertainty persists but is partially priced. No scheduled high-impact Canadian\
+      \ macro releases on 2026-01-27 per available intelligence. Gold and commodity\
+      \ prices provide continued support for TSX energy/materials heavy-weights. GoC\
+      \ bond yields drifting slightly lower, supportive for financials. (5) Risks:\
+      \ upside from continued gold/energy momentum and positive US spillovers; downside\
+      \ from trade-tariff escalation, USD/CAD weakness, or global risk-off moves.\
+      \ Tail quantiles (Q5/Q95 at \xB11.1\u20131.2%) reflect the realised fat-tail\
+      \ behaviour observed in the history."
+    tool_calls:
+    - tool: search_web
+      title: Bank of Canada policy rate decision and forward guidance for Canadian
+        equities
+    - tool: search_web
+      title: oil and gold commodity price outlook impact on the TSX energy and materials
+        sectors
+    - tool: search_web
+      title: US Federal Reserve policy and tariff trade spillovers into Canadian stocks
+        2026
+    - tool: run_code
+      title: python (97 lines)
+    - tool: run_code
+      title: python (52 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 1cb4507636b57e378dba4d33cce5b2ec
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/1cb4507636b57e378dba4d33cce5b2ec

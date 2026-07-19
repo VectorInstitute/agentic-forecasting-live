@@ -1,0 +1,100 @@
+as_of: '2026-03-02T00:00:00'
+wall_time_s: 284.7122388340067
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T15:49:43.925471'
+  as_of: '2026-03-02T00:00:00'
+  forecast_date: '2026-03-31T00:00:00'
+  payload:
+    point_forecast: 0.009973
+    quantiles:
+      '0.05': -0.079493
+      '0.1': -0.047471
+      '0.2': -0.025289
+      '0.3': -0.010138
+      '0.4': 0.001501
+      '0.5': 0.009973
+      '0.6': 0.017925
+      '0.7': 0.024721
+      '0.8': 0.028637
+      '0.9': 0.035704
+      '0.95': 0.038437
+  metadata:
+    rationale: We combine rigorous statistical backtesting with web-grounded news
+      context to forecast the 21-day forward cumulative log return of the S&P/TSX
+      Composite index as of March 2, 2026. Realised volatility is elevated (21.09%
+      annualised), and the index is near record highs. A backtest of historical periods
+      matching these conditions shows that an unshifted empirical distribution outperforms
+      symmetric normal models (CRPS of 0.019281 vs 0.020123 for Normal-10d and 0.020484
+      for Normal-21d) by naturally capturing the negative skewness ('up the stairs,
+      down the elevator') typical of record highs under macro headwinds.
+    horizon_rationale: 'Empirical distribution based on 108 historical periods where
+      the S&P/TSX Composite index was near its 252-day high in an elevated volatility
+      regime. This distribution elegantly captures the structural asymmetry of the
+      current market state: an upward drift (median +1.0%) driven by strong commodity
+      prices (WTI crude oil up to $67.02, Gold up to $5230.50) and robust financial
+      sector earnings, balanced against a substantial downside tail risk (0.05 quantile
+      of -7.95%) stemming from macroeconomic softening (employment down 84k, unemployment
+      at 6.7%) and trade policy headwinds (10% U.S. tariffs on Canadian imports).'
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (49 lines)
+    - tool: run_code
+      title: python (30 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (31 lines)
+    - tool: run_code
+      title: python (3 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (68 lines)
+    - tool: run_code
+      title: python (64 lines)
+    - tool: search_web
+      title: TSX Composite index market news February 2026 Bank of Canada oil gold
+    - tool: search_web
+      title: '"TSX" "March 2, 2026" OR "March 2" 2026 close or performance'
+    - tool: run_code
+      title: python (11 lines)
+    - tool: run_code
+      title: python (50 lines)
+    - tool: run_code
+      title: python (43 lines)
+    - tool: search_web
+      title: '"TSX Composite" outlook March 2026 or February 2026 analyst forecasts'
+    - tool: run_code
+      title: python (38 lines)
+    - tool: run_code
+      title: python (31 lines)
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (94 lines)
+    - tool: run_code
+      title: python (61 lines)
+    - tool: run_code
+      title: python (24 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 813649b12d9815473eb254959334f030
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/813649b12d9815473eb254959334f030

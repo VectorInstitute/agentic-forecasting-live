@@ -1,0 +1,58 @@
+as_of: '2026-04-13T00:00:00'
+wall_time_s: 84.33098170801532
+predictions:
+- predictor_id: agent_predictor_tsx_analyst_news_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-18T09:49:01.747015'
+  as_of: '2026-04-13T00:00:00'
+  forecast_date: '2026-04-14T00:00:00'
+  payload:
+    point_forecast: 0.0003
+    quantiles:
+      '0.05': -0.0185
+      '0.1': -0.014
+      '0.2': -0.009
+      '0.3': -0.0055
+      '0.4': -0.0025
+      '0.5': 0.0003
+      '0.6': 0.0031
+      '0.7': 0.0061
+      '0.8': 0.0096
+      '0.9': 0.0146
+      '0.95': 0.0191
+  metadata:
+    rationale: S&P/TSX Composite daily cumulative log-return forecast for April 14,
+      2026. The Bank of Canada has maintained a steady policy rate of 2.25% as it
+      navigates flat job growth and rising energy-driven headline inflation. The resource-heavy
+      TSX receives solid support from crude oil and safe-haven gold demand, but is
+      tempered by a soft labor market and US policy spillovers. Volatility is calibrated
+      to the trailing 63-day daily standard deviation of 1.10% with adjustments for
+      fat tails.
+    horizon_rationale: For the 1-day horizon, S&P/TSX Composite cumulative log returns
+      are modeled using a symmetric distribution with slightly fatter tails than a
+      standard normal, centered on a positive drift of 0.03% (0.0003). This drift
+      incorporates the ongoing equity risk premium, supported by elevated energy (oil)
+      and materials (gold) prices driven by Middle East tensions. However, broader
+      gains are constrained by domestic economic headwinds, including a soft labor
+      market (6.7% unemployment, flat jobs growth) and trade uncertainties with the
+      United States. The dispersion is guided by the trailing 63-day standard deviation
+      of approximately 1.10% (0.0110), with the 5th and 95th percentiles positioned
+      at -1.85% and +1.91% to reflect current geopolitical risk and commodities volatility.
+    tool_calls:
+    - tool: search_web
+      title: Bank of Canada policy rate decision and forward guidance for Canadian
+        equities
+    - tool: search_web
+      title: S&P/TSX Composite index April 2026 news and performance
+    - tool: search_web
+      title: S&P/TSX Composite index April 13 2026
+    - tool: search_web
+      title: 'S&P/TSX Composite outlook: Canadian bank, energy, and mining sector
+        earnings April 2026'
+    - tool: search_web
+      title: Canada CPI inflation and Labour Force Survey jobs report market reaction
+        April 2026
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 1c7ead33cb3ff2051440f1dc5c3f91e1
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/1c7ead33cb3ff2051440f1dc5c3f91e1

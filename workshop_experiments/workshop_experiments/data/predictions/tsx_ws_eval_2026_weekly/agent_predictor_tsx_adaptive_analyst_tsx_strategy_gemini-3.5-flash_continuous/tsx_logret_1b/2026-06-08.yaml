@@ -1,0 +1,94 @@
+as_of: '2026-06-08T00:00:00'
+wall_time_s: 207.37757712497842
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T13:24:48.663577'
+  as_of: '2026-06-08T00:00:00'
+  forecast_date: '2026-06-09T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.014889
+      '0.1': -0.011601
+      '0.2': -0.007618
+      '0.3': -0.004747
+      '0.4': -0.002293
+      '0.5': 0.0
+      '0.6': 0.002293
+      '0.7': 0.004747
+      '0.8': 0.007618
+      '0.9': 0.011601
+      '0.95': 0.014889
+  metadata:
+    rationale: The S&P/TSX Composite is classified in a normal volatility regime (annualized
+      realized vol of 14.37%). For the 1-business-day horizon, the cumulative log
+      return is modeled symmetrically around a 0.000000 median with a daily standard
+      deviation of 0.009052. This is consistent with a martingale model, as global
+      markets stabilize following a broad-based drop on June 5, 2026, and prepare
+      for the upcoming Bank of Canada rate announcement on June 10.
+    horizon_rationale: The 1-business-day close-to-close cumulative log return is
+      projected using a martingale prior centered at 0.000000, as directional trends
+      are highly unpredictable over short horizons. The dispersion is calibrated using
+      a trailing 21-day realized daily standard deviation of 0.009052, reflecting
+      a normal volatility regime (14.37% annualized). No active calibration corrections
+      apply, and no immediate economic catalysts are scheduled for June 9 (the BoC
+      decision is on June 10), supporting a symmetric and standard-normal calibrated
+      risk profile.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (3 lines)
+    - tool: run_code
+      title: python (23 lines)
+    - tool: run_code
+      title: python (68 lines)
+    - tool: run_code
+      title: python (3 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: search_web
+      title: TSX June 5 2026 Canadian stock market news bank of canada
+    - tool: search_web
+      title: '"TSX" "June 5, 2026" OR "June 5 2026" OR "June 8 2026"'
+    - tool: search_web
+      title: '"June 5, 2026" "jobs report" OR "payroll" OR "S&P 500" OR "TSX"'
+    - tool: run_code
+      title: python (52 lines)
+    - tool: search_web
+      title: Canada economic calendar "June 9, 2026" OR "June 9 2026"
+    - tool: run_code
+      title: python (5 lines)
+    - tool: run_code
+      title: python (22 lines)
+    - tool: run_code
+      title: python (35 lines)
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (9 lines)
+    - tool: run_code
+      title: python (36 lines)
+    - tool: run_code
+      title: python (38 lines)
+    - tool: run_code
+      title: python (30 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 60e5426ee729ea75f894923e27c7df30
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/60e5426ee729ea75f894923e27c7df30

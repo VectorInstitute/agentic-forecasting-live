@@ -1,0 +1,76 @@
+as_of: '2026-06-15T00:00:00'
+wall_time_s: 123.28582066600211
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T13:26:51.949630'
+  as_of: '2026-06-15T00:00:00'
+  forecast_date: '2026-06-16T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.022645
+      '0.1': -0.017643
+      '0.2': -0.011587
+      '0.3': -0.007219
+      '0.4': -0.003488
+      '0.5': 0.0
+      '0.6': 0.003488
+      '0.7': 0.007219
+      '0.8': 0.011587
+      '0.9': 0.017643
+      '0.95': 0.022645
+  metadata:
+    rationale: The S&P/TSX Composite is classified under an elevated volatility regime
+      as of June 15, 2026, with 21-day annualised realised volatility at 15.44%. In
+      line with the martingale prior and our learned strategy, the 1-business-day
+      cumulative log return distribution is centered at 0.0. The standard deviation
+      is estimated using a 10-day rolling window to capture the recent market turbulence
+      (including a sharp -2.31% drop on June 5 followed by a strong 3.2% recovery).
+      To correct for empirical underestimation of tail risks in elevated regimes,
+      we apply a 1.12 widening factor (validated via historical backtesting to achieve
+      optimal coverage).
+    horizon_rationale: Base daily standard deviation is calibrated from a 10-day adaptive
+      dispersion window because the realized volatility regime is classified as elevated
+      (15.44%). We apply a 1.12 widening correction to the daily standard deviation
+      to achieve calibrated empirical coverage, bringing the effective daily standard
+      deviation to 1.377%.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (12 lines)
+    - tool: run_code
+      title: python (75 lines)
+    - tool: search_web
+      title: S&P/TSX Composite market news June 2026
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (88 lines)
+    - tool: load_skill
+      title: load_skill
+    - tool: search_web
+      title: Canada economy June 15 2026 news
+    - tool: run_code
+      title: python (28 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 15130b15c3988e0db6555b5c1287b17e
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/15130b15c3988e0db6555b5c1287b17e

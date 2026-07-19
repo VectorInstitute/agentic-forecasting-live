@@ -1,0 +1,94 @@
+as_of: '2026-01-12T00:00:00'
+wall_time_s: 149.27121775003616
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T17:29:46.062655'
+  as_of: '2026-01-12T00:00:00'
+  forecast_date: '2026-01-13T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.012486
+      '0.1': -0.009728
+      '0.2': -0.006389
+      '0.3': -0.003981
+      '0.4': -0.001923
+      '0.5': 0.0
+      '0.6': 0.001923
+      '0.7': 0.003981
+      '0.8': 0.006389
+      '0.9': 0.009728
+      '0.95': 0.012486
+  metadata:
+    rationale: Integrated statistical pipeline with systematic tsx-strategy calibration
+      corrections. The TSX is classified in a LOW volatility regime (<10%), which
+      is coupled with a positive commodity shock in Gold (>=3.5% over 5bd). To protect
+      against the systematic under-coverage that occurs when low volatility regimes
+      experience commodity volatility shocks, we scale the standard-normal prediction
+      intervals by a confirmed multiplier of 1.29. No directional drift adjustments
+      are applied, maintaining a symmetric distribution around a 0.0 martingale median.
+    horizon_rationale: The S&P/TSX Composite is currently in a LOW volatility regime
+      with 21-day annualized realized volatility at 9.34%. However, we detect a significant
+      trailing 5-day commodity shock in physical Gold, which rose +3.70% over the
+      last 5 business days, triggering our systematic 'low vol + commodity shock'
+      risk playbook. Pursuant to our calibrated tsx-strategy-trained corrections,
+      we apply a 1.29x widening multiplier to the 1bd prediction intervals to safeguard
+      against immediate volatility transmission and shock propagation. The point forecast
+      is centered at exactly 0.0, conforming to the close-to-close martingale prior,
+      as recent returns do not exhibit anomalous daily jumps and macro news sentiment
+      remains stable.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (28 lines)
+    - tool: run_code
+      title: python (6 lines)
+    - tool: run_code
+      title: python (6 lines)
+    - tool: run_code
+      title: python (11 lines)
+    - tool: run_code
+      title: python (62 lines)
+    - tool: run_code
+      title: python (31 lines)
+    - tool: run_code
+      title: python (44 lines)
+    - tool: run_code
+      title: python (48 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (9 lines)
+    - tool: run_code
+      title: python (42 lines)
+    - tool: search_web
+      title: '"S&P/TSX" or "TSX" market news January 2026 OR "Bank of Canada" January
+        2026'
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (48 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: f7175a51a76b36d5d1b49fcdeb04ee0e
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/f7175a51a76b36d5d1b49fcdeb04ee0e

@@ -1,0 +1,111 @@
+as_of: '2026-03-30T00:00:00'
+wall_time_s: 262.59364062489476
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T14:20:26.528352'
+  as_of: '2026-03-30T00:00:00'
+  forecast_date: '2026-04-06T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.053609
+      '0.1': -0.041769
+      '0.2': -0.02743
+      '0.3': -0.017091
+      '0.4': -0.008257
+      '0.5': 0.0
+      '0.6': 0.008257
+      '0.7': 0.017091
+      '0.8': 0.02743
+      '0.9': 0.041769
+      '0.95': 0.053609
+  metadata:
+    rationale: Comprehensive analysis of the S&P/TSX Composite under an elevated volatility
+      regime. The 21-day annualized realized volatility of 17.91% classifies the regime
+      as elevated, and we adaptively shorten the dispersion window to 10 days to capture
+      recent market stress. The VIX spike to 31.05 and crude oil volatility near $100/bbl
+      confirm high macro risk, justifying the application of a 1.12 widening factor
+      to the intervals. A centered point forecast of 0.0 is maintained due to the
+      counterbalancing forces of energy support versus global equity selloffs.
+    horizon_rationale: "Our statistical pipeline identifies that the S&P/TSX Composite\
+      \ is in an elevated volatility regime (21-day annualized realized vol of 17.91%),\
+      \ prompting the selection of an adaptive 10-day dispersion window. The 10-day\
+      \ daily standard deviation is 0.013014 (annualized 20.66%), reflecting the recent\
+      \ rise in volatility amid global geopolitical tensions (US-Iran conflict) and\
+      \ US market declines. Applying the strategy-defined widening factor of 1.12\
+      \ to calibrate the interval widths over the 5-day horizon yields a 90% confidence\
+      \ interval of [-5.36%, +5.36%]. The point forecast (0.50 quantile) is centered\
+      \ at 0.0, consistent with a martingale prior, as offsetting forces\u2014crude\
+      \ oil surging to near $100/bbl (positive for TSX energy) vs. global risk-off\
+      \ sentiment and a sharp drop in the S&P 500 (VIX at 31.05)\u2014do not justify\
+      \ a confident directional lean."
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (54 lines)
+    - tool: run_code
+      title: python (9 lines)
+    - tool: run_code
+      title: python (9 lines)
+    - tool: run_code
+      title: python (66 lines)
+    - tool: search_web
+      title: stock market news March 2026 Canada TSX oil VIX bank of canada inflation
+    - tool: run_code
+      title: python (11 lines)
+    - tool: run_code
+      title: python (39 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (34 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (16 lines)
+    - tool: run_code
+      title: python (3 lines)
+    - tool: run_code
+      title: python (3 lines)
+    - tool: run_code
+      title: python (4 lines)
+    - tool: run_code
+      title: python (29 lines)
+    - tool: run_code
+      title: python (122 lines)
+    - tool: run_code
+      title: python (10 lines)
+    - tool: run_code
+      title: python (9 lines)
+    - tool: run_code
+      title: python (34 lines)
+    - tool: run_code
+      title: python (16 lines)
+    - tool: run_code
+      title: python (61 lines)
+    - tool: run_code
+      title: python (25 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (21 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 75bde8eb3ee41d3424c8b3e26499da9f
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/75bde8eb3ee41d3424c8b3e26499da9f

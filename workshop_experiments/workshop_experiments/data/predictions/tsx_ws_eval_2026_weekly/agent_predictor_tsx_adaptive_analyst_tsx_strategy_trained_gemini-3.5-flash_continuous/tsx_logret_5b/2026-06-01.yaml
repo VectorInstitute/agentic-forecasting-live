@@ -1,0 +1,107 @@
+as_of: '2026-06-01T00:00:00'
+wall_time_s: 292.9066403330071
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T19:47:52.911359'
+  as_of: '2026-06-01T00:00:00'
+  forecast_date: '2026-06-08T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.024914
+      '0.1': -0.019411
+      '0.2': -0.012748
+      '0.3': -0.007943
+      '0.4': -0.003837
+      '0.5': 0.0
+      '0.6': 0.003837
+      '0.7': 0.007943
+      '0.8': 0.012748
+      '0.9': 0.019411
+      '0.95': 0.024914
+  metadata:
+    rationale: The S&P/TSX Composite is classified in a NORMAL volatility regime (realized
+      vol of 10.75%) on June 1, 2026, with a daily standard deviation of 0.006774.
+      No return anomalies or trailing commodity shocks are present. Under normal regimes,
+      the TSX return structure is highly Gaussian, making a standard-normal projection
+      of cumulative returns highly optimal. The martingale prior places the median
+      at exactly 0.0, and prediction intervals are calibrated symmetrically to a daily
+      dispersion window of 21 days.
+    horizon_rationale: Symmetric standard-normal projection centered at 0.0 for the
+      5-day horizon, using a daily return sigma of 0.006774 over a 21-day window in
+      a normal volatility regime. No manual widening or drift is applied because there
+      are no active commodity shocks, return anomalies, or catch-up days on June 1,
+      2026.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: search_web
+      title: '"TSX" OR "S&P/TSX Composite" OR "Canada" market news May 2026 OR June
+        2026'
+    - tool: run_code
+      title: python (25 lines)
+    - tool: run_code
+      title: python (9 lines)
+    - tool: run_code
+      title: python (76 lines)
+    - tool: run_code
+      title: python (3 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (77 lines)
+    - tool: run_code
+      title: python (127 lines)
+    - tool: run_code
+      title: python (30 lines)
+    - tool: run_code
+      title: python (111 lines)
+    - tool: run_code
+      title: python (113 lines)
+    - tool: run_code
+      title: python (36 lines)
+    - tool: run_code
+      title: python (6 lines)
+    - tool: run_code
+      title: python (38 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (40 lines)
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (24 lines)
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (31 lines)
+    - tool: run_code
+      title: python (23 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (43 lines)
+    - tool: run_code
+      title: python (25 lines)
+    - tool: run_code
+      title: python (37 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 15467ddf948ac7bbdea1cfb47e2800d5
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/15467ddf948ac7bbdea1cfb47e2800d5

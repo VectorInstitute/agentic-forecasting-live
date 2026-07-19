@@ -1,0 +1,93 @@
+as_of: '2026-05-11T00:00:00'
+wall_time_s: 191.2774222920416
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T16:27:36.967884'
+  as_of: '2026-05-11T00:00:00'
+  forecast_date: '2026-06-09T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.06333
+      '0.1': -0.04934
+      '0.2': -0.0324
+      '0.3': -0.02019
+      '0.4': -0.00975
+      '0.5': 0.0
+      '0.6': 0.00975
+      '0.7': 0.02019
+      '0.8': 0.0324
+      '0.9': 0.04934
+      '0.95': 0.06333
+  metadata:
+    rationale: Our quantitative pipeline classifies the S&P/TSX Composite's volatility
+      regime as normal based on 21-day annualised realised volatility of 12.43% (daily
+      sigma 0.00783), which selects a 21-day dispersion window. No recent anomalies
+      are detected (z-score of 0.55). The base statistical projection suggests a 21-day
+      interval width of 0.03588. Incorporating news context and trailing statistics,
+      we observe that the trailing 63-day standard deviation of 21-day log returns
+      is 0.03812, and the historical average for this regime is 0.03865. High commodity
+      prices (WTI crude at $95.42/bbl, Gold at $4720/oz) and Middle East geopolitical
+      tensions create a supportive but highly uncertain environment, prompting us
+      to use a calibrated standard deviation of 0.0385. The forecast is centered at
+      0.0 under a martingale prior, as positive factors are balanced by downside policy
+      and inflation risks.
+    horizon_rationale: Symmetric projection centered at 0.0 based on a calibrated
+      standard deviation of 0.0385. This standard deviation is chosen because the
+      21-day daily realised volatility is normal (annualised 12.43%, daily sigma 0.00783),
+      projecting to a 21-day volatility of 0.03588. However, the actual trailing 63-day
+      standard deviation of the 21b log returns is 0.03812, and the historical normal-regime
+      average is 0.03865. The slightly higher uncertainty is corroborated by geopolitical
+      tensions in the Middle East pushing crude oil to $95.42/bbl and VIX to 17.19,
+      leading to a calibration choice of 0.0385. The martingale prior is used to center
+      the distribution at 0.0, as supportive factors (high commodity prices for Canada,
+      solid Q1 earnings) are balanced by downside risks (higher inflation, potential
+      for high global rates).
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (78 lines)
+    - tool: run_code
+      title: python (91 lines)
+    - tool: run_code
+      title: python (115 lines)
+    - tool: run_code
+      title: python (49 lines)
+    - tool: load_skill
+      title: load_skill
+    - tool: search_web
+      title: S&P/TSX Composite index May 2026 market news bank of canada oil gold
+    - tool: search_web
+      title: TSX index week May 4 2026 to May 8 2026 close news
+    - tool: run_code
+      title: python (36 lines)
+    - tool: run_code
+      title: python (74 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (31 lines)
+    - tool: run_code
+      title: python (24 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 71f6499a52bdfb6a1a3f0bdd91445fc6
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/71f6499a52bdfb6a1a3f0bdd91445fc6

@@ -1,0 +1,81 @@
+as_of: '2026-06-08T00:00:00'
+wall_time_s: 172.0627647920046
+predictions:
+- predictor_id: agent_predictor_tsx_analyst_news_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-18T10:45:18.000340'
+  as_of: '2026-06-08T00:00:00'
+  forecast_date: '2026-06-15T00:00:00'
+  payload:
+    point_forecast: 0.0012
+    quantiles:
+      '0.05': -0.032
+      '0.1': -0.024
+      '0.2': -0.014
+      '0.3': -0.008
+      '0.4': -0.003
+      '0.5': 0.0012
+      '0.6': 0.005
+      '0.7': 0.01
+      '0.8': 0.016
+      '0.9': 0.025
+      '0.95': 0.033
+  metadata:
+    rationale: Calibrated probabilistic forecast of the S&P/TSX Composite Index cumulative
+      log returns over a 5-day horizon. The forecast integrates a neutral-to-slightly-positive
+      baseline for the upcoming week, acknowledging the BoC policy rate decision hold,
+      volatile energy/material markets, and trade-related uncertainty with the US.
+    horizon_rationale: 'Based on the S&P/TSX Composite''s drop to 34,478.74 as of
+      June 8, 2026, following its all-time highs above 35,100, we model a slight stabilization/rebound.
+      Key domestic factors include: (1) The Bank of Canada maintaining a wait-and-see
+      policy path, holding its key rate steady at 2.25% on June 10. (2) Stronger-than-expected
+      May jobs data (+88,000) contrasting with a headline CPI acceleration to 3.2%
+      (though core measures remain anchored near 2%). (3) Geopolitical tension in
+      the Middle East keeping oil and gold prices elevated but highly volatile, which
+      serves as a double-edged sword for the resource-heavy TSX. (4) Modest downward
+      pressure on the Loonie and GoC yields due to US policy spillovers and a relatively
+      hawkish Federal Reserve stance. Statistically, the 5-day horizon uses a trailing
+      63-day standard deviation of 1.81%, adjusted for fatter tails (kurtosis) typical
+      in weekly returns.'
+    tool_calls:
+    - tool: search_web
+      title: Bank of Canada policy rate decision and forward guidance for Canadian
+        equities June 2026
+    - tool: search_web
+      title: oil gold commodity prices impact S&P/TSX Composite June 2026
+    - tool: search_web
+      title: S&P/TSX Composite index performance June 1 to June 8 2026
+    - tool: search_web
+      title: S&P/TSX Composite index close June 15 2026
+    - tool: search_web
+      title: '"S&P/TSX Composite" June 15 2026 OR "TSX" "34," OR "35," June 2026'
+    - tool: search_web
+      title: '"34,478.74" OR "34,478" "S&P/TSX" OR "TSX" June 2026'
+    - tool: search_web
+      title: '"S&P/TSX Composite" "June 15, 2026" OR "June 15" close index'
+    - tool: search_web
+      title: '"S&P/TSX" OR "TSX Composite" June 10 11 12 15 2026 close value'
+    - tool: search_web
+      title: '"S&P/TSX Composite" June 12 2026 OR June 15 2026 close price OR value'
+    - tool: search_web
+      title: '"S&P/TSX Composite" OR "S&P/TSX" OR "TSX" "June 15, 2026" OR "June 15"
+        close'
+    - tool: search_web
+      title: S&P/TSX Composite Index close on "June 12, 2026" OR "June 15, 2026"
+    - tool: search_web
+      title: '"S&P/TSX Composite" "June 2026" "34," OR "35," OR "33,"'
+    - tool: search_web
+      title: '"TSX" "34," OR "35," June 12 OR June 15 2026'
+    - tool: search_web
+      title: '"S&P/TSX Composite" "June 15, 2026" close OR value OR index'
+    - tool: search_web
+      title: '"Bank of Canada" "June 10, 2026" policy rate market reaction TSX'
+    - tool: search_web
+      title: '"S&P/TSX Composite" June 15 2026 Yahoo OR Bloomberg close OR value'
+    - tool: search_web
+      title: S&P/TSX Composite Index "June 9" OR "June 10" OR "June 11" OR "June 12"
+        OR "June 15" 2026
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: aba10d32d679c12cfe6344148638cf8d
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/aba10d32d679c12cfe6344148638cf8d

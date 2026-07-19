@@ -1,0 +1,90 @@
+as_of: '2026-06-08T00:00:00'
+wall_time_s: 224.06522224994842
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T19:51:36.972416'
+  as_of: '2026-06-08T00:00:00'
+  forecast_date: '2026-06-15T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.03329391681442185
+      '0.1': -0.02594022380928417
+      '0.2': -0.017035477735341607
+      '0.3': -0.010614529318271537
+      '0.4': -0.0051280656459451145
+      '0.5': 0.0
+      '0.6': 0.0051280656459451145
+      '0.7': 0.010614529318271532
+      '0.8': 0.01703547773534161
+      '0.9': 0.02594022380928417
+      '0.95': 0.033293916814421835
+  metadata:
+    rationale: Projections for the S&P/TSX Composite cumulative log returns over a
+      5-business-day horizon as of June 8, 2026. Realized volatility of the index
+      over the last 21 trading days is 14.37%, placing the market in the NORMAL volatility
+      regime. Daily returns are centered near 0.0 following a martingale prior. Prediction
+      intervals are calibrated using standard-normal Gaussian scaling based on the
+      daily standard deviation of 0.009052 over a 21-day window, resulting in a 5-day
+      standard deviation of 0.020241. All active corrections for normal/elevated regimes
+      are fully applied.
+    horizon_rationale: Base standard-normal projection centered at 0.0 (martingale
+      prior) for the S&P/TSX Composite's 5-day cumulative log return. The 21-day annualized
+      realized volatility of the index is 14.37%, placing it in the NORMAL volatility
+      regime (10-15%). Under the active strategy corrections, in the normal and elevated
+      volatility regimes, the S&P/TSX return distribution is highly Gaussian (excess
+      kurtosis < 0.6), so standard-normal projection with no fat-tail scaling or Student's
+      t adjustment is optimal. No negative return anomaly is detected on the current
+      date, and no commodity or currency shocks are active, so the standard dispersion
+      window of 21 days is utilized with no interval widening. This yields a daily
+      sigma of 0.009052, which scales to a 5-day standard deviation of 0.020241.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (32 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (37 lines)
+    - tool: run_code
+      title: python (69 lines)
+    - tool: run_code
+      title: python (41 lines)
+    - tool: run_code
+      title: python (24 lines)
+    - tool: search_web
+      title: '"TSX" "June 2026" OR "TSX" "June 8, 2026" OR "TSX" "June 5, 2026"'
+    - tool: run_code
+      title: python (87 lines)
+    - tool: run_code
+      title: python (164 lines)
+    - tool: run_code
+      title: python (27 lines)
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (89 lines)
+    - tool: run_code
+      title: python (79 lines)
+    - tool: run_code
+      title: python (35 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: c22a1070f8eeb4b682361997a19d5ded
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/c22a1070f8eeb4b682361997a19d5ded

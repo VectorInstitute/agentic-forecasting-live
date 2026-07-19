@@ -1,0 +1,95 @@
+as_of: '2026-02-23T00:00:00'
+wall_time_s: 207.4637023329269
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T17:46:30.754142'
+  as_of: '2026-02-23T00:00:00'
+  forecast_date: '2026-02-24T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.020753
+      '0.1': -0.016169
+      '0.2': -0.010619
+      '0.3': -0.006616
+      '0.4': -0.003196
+      '0.5': 0.0
+      '0.6': 0.003196
+      '0.7': 0.006616
+      '0.8': 0.010619
+      '0.9': 0.016169
+      '0.95': 0.020753
+  metadata:
+    rationale: This forecast is anchored to the 2026-02-23 as_of date. A comprehensive
+      quantitative analysis confirms that the GSPTSE is in an ELEVATED volatility
+      regime (annualized realized volatility of 20.76%), resulting in an adaptive
+      10-day dispersion window with a localized daily standard deviation of 0.012617.
+      Per learned strategy corrections, a standard-normal Gaussian model is used because
+      the TSX daily return is highly Gaussian in elevated volatility regimes (excess
+      kurtosis < 0.6). The point forecast is kept at 0.00%, honoring the close-to-close
+      martingale core for a 1bd horizon. While positive macro tailwinds exist in energy
+      and materials due to rising oil/gold (Middle East tensions) and solid bank earnings
+      (BMO/National Bank beating expectations), these secular drivers do not justify
+      a short-term directional bias. Standard-normal quantiles are thus projected
+      with a 1.0 scaling factor.
+    horizon_rationale: "At the 1-business-day horizon (2026-02-24), daily equity returns\
+      \ are modeled as a martingale centered at 0.00% to reflect their lack of short-term\
+      \ directionality. Trailing 21-day realized volatility of GSPTSE stands at 20.76%,\
+      \ placing the index in the ELEVATED regime. This triggers an adaptive 10-day\
+      \ dispersion window (as per Correction hyp-004/vol-regime) with a localized\
+      \ daily volatility (\u03C3_daily) of 0.012617. As the realized volatility is\
+      \ in the elevated range (15-22%), a standard-normal Gaussian distribution is\
+      \ highly optimal and well-calibrated (Correction hyp-007), so no fat-tailed\
+      \ scaling is applied (widen = 1.0). The massive 34.1% of TSX return variance\
+      \ represented by overnight gap risk is fully preserved by calibrating with close-to-close\
+      \ returns rather than Parkinson volatility (Correction hyp-010). External commodity\
+      \ markets show positive gains (WTI +5.44% and Gold +3.64% over the trailing\
+      \ 5 days), driven by Middle East geopolitical tensions involving Iran. While\
+      \ this constitutes a gold shock (>= +3.6%), the low-volatility commodity shock\
+      \ corrections are inactive because the TSX is already in an elevated realized-volatility\
+      \ state. No turn-of-the-month or day-of-the-week adjustments are applied, as\
+      \ decadal backtests confirm they are pure noise (Corrections hyp-009/hyp-012)."
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (72 lines)
+    - tool: run_code
+      title: python (10 lines)
+    - tool: run_code
+      title: python (16 lines)
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (83 lines)
+    - tool: run_code
+      title: python (3 lines)
+    - tool: run_code
+      title: python (9 lines)
+    - tool: run_code
+      title: python (41 lines)
+    - tool: search_web
+      title: S&P TSX Composite February 2026 market news
+    - tool: run_code
+      title: python (11 lines)
+    - tool: run_code
+      title: python (11 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: search_web
+      title: Canada US trade tariffs February 2026
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: a77cda82386734877e6d56c9d99b687d
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/a77cda82386734877e6d56c9d99b687d

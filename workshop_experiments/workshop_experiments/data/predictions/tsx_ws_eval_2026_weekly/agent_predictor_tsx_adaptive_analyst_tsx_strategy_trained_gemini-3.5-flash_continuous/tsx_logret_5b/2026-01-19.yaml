@@ -1,0 +1,96 @@
+as_of: '2026-01-19T00:00:00'
+wall_time_s: 249.82279487501364
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T18:35:40.910929'
+  as_of: '2026-01-19T00:00:00'
+  forecast_date: '2026-01-26T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.022028
+      '0.1': -0.017162
+      '0.2': -0.011271
+      '0.3': -0.007023
+      '0.4': -0.003393
+      '0.5': 0.0
+      '0.6': 0.003393
+      '0.7': 0.007023
+      '0.8': 0.011271
+      '0.9': 0.017162
+      '0.95': 0.022028
+  metadata:
+    rationale: Calibrated 5-business-day probabilistic log-return forecast for the
+      S&P/TSX Composite. The pipeline classifies the market in a LOW realized-volatility
+      regime and applies an 18% widening correction to the interval half-widths to
+      protect against volatility mean-reversion, maintaining a symmetric distribution
+      around a martingale prior of 0.0.
+    horizon_rationale: The S&P/TSX Composite is classified in a LOW volatility regime
+      as of 2026-01-19, with annualized 21-day realized volatility at 8.06%. There
+      are no active daily return anomalies (z-score of +0.003) or 5-day commodity
+      shocks (WTI +0.54%, Gold +2.18%). To correct for multi-day volatility mean-reversion
+      characteristic of the LOW regime, we apply an 18% widening correction to the
+      base standard-normal projection at the 5bd horizon. Given that Canadian macro
+      data (December CPI at 2.4% headine) and monetary expectations (BoC rate hold
+      at 2.25%) are well-aligned with prior expectations, we maintain the martingale
+      median of 0.0.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (23 lines)
+    - tool: run_code
+      title: python (72 lines)
+    - tool: run_code
+      title: python (27 lines)
+    - tool: search_web
+      title: S&P/TSX Composite January 2026 market news bank of canada crude oil
+    - tool: search_web
+      title: Bank of Canada interest rate announcement January 2026
+    - tool: search_web
+      title: Canada CPI release date January 2026 inflation
+    - tool: run_code
+      title: python (34 lines)
+    - tool: run_code
+      title: python (146 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (12 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (66 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 51638a9c5f929a3232709f825b146c23
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/51638a9c5f929a3232709f825b146c23

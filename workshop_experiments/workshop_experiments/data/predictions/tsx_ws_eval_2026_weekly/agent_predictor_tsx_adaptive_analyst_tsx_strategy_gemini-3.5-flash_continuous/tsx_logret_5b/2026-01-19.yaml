@@ -1,0 +1,108 @@
+as_of: '2026-01-19T00:00:00'
+wall_time_s: 307.5253033330082
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T13:39:37.685436'
+  as_of: '2026-01-19T00:00:00'
+  forecast_date: '2026-01-26T00:00:00'
+  payload:
+    point_forecast: 0.0015
+    quantiles:
+      '0.05': -0.018101
+      '0.1': -0.013771
+      '0.2': -0.008529
+      '0.3': -0.004749
+      '0.4': -0.001519
+      '0.5': 0.0015
+      '0.6': 0.004519
+      '0.7': 0.007749
+      '0.8': 0.011529
+      '0.9': 0.016771
+      '0.95': 0.021101
+  metadata:
+    rationale: Our quantitative pipeline fetches S&P/TSX Composite historical data
+      up to January 19, 2026. It classifies the volatility regime as 'low' (8.06%
+      annualised realised vol) and applies adaptive dispersion-window selection. Web-grounded
+      macro analysis confirms steady Bank of Canada monetary policy (2.25% rate) and
+      extremely strong gold and commodities prices driving the index to record highs.
+      Rigorous backtests on historical low-volatility, positive-momentum subsets indicate
+      that a slightly drifted (0.15%) and 5% widened standard deviation grid minimizes
+      forecast error (CRPS).
+    horizon_rationale: The S&P/TSX Composite Index is classified in a 'low' volatility
+      regime with 21-day annualised realised volatility at 8.06% as of January 19,
+      2026. The Canadian equity market has experienced a record-breaking bull run
+      over the past 3 months (up ~22%), heavily supported by strong performance in
+      materials (gold reaching record highs of $4,588/oz) and energy sectors. The
+      Bank of Canada has kept policy steady, holding interest rates at 2.25% amid
+      easing core inflation. To model this environment, we fitted a Gaussian distribution
+      to the 5-business-day forward log returns. Historical backtests of similar low-volatility,
+      strong-momentum regimes indicate that a minor positive drift (mu = 0.0015, or
+      +0.15% return) and a slight interval widening factor of 1.05 (calibrated sigma
+      = 0.011916) optimize the Continuous Ranked Probability Score (CRPS). This produces
+      a highly calibrated grid that respects both the market's upward momentum and
+      the persistent calm of the current regime.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (24 lines)
+    - tool: run_code
+      title: python (77 lines)
+    - tool: search_web
+      title: S&P/TSX Composite market news January 2026 Bank of Canada CPI oil
+    - tool: search_web
+      title: TSX composite index "January 19, 2026" OR "January 16, 2026" OR "January
+        15, 2026"
+    - tool: run_code
+      title: python (89 lines)
+    - tool: run_code
+      title: python (26 lines)
+    - tool: run_code
+      title: python (54 lines)
+    - tool: run_code
+      title: python (23 lines)
+    - tool: run_code
+      title: python (83 lines)
+    - tool: run_code
+      title: python (53 lines)
+    - tool: run_code
+      title: python (47 lines)
+    - tool: run_code
+      title: python (30 lines)
+    - tool: run_code
+      title: python (30 lines)
+    - tool: run_code
+      title: python (30 lines)
+    - tool: run_code
+      title: python (54 lines)
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (32 lines)
+    - tool: run_code
+      title: python (40 lines)
+    - tool: run_code
+      title: python (42 lines)
+    - tool: run_code
+      title: python (11 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 4a9f1d2835d840c139c51b01cc0b58f1
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/4a9f1d2835d840c139c51b01cc0b58f1

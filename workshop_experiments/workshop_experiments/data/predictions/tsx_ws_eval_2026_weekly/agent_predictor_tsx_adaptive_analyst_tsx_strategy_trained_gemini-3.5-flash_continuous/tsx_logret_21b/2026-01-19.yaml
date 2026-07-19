@@ -1,0 +1,105 @@
+as_of: '2026-01-19T00:00:00'
+wall_time_s: 238.48509466694668
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T20:10:33.324403'
+  as_of: '2026-01-19T00:00:00'
+  forecast_date: '2026-02-17T00:00:00'
+  payload:
+    point_forecast: 0.002651
+    quantiles:
+      '0.05': -0.05341
+      '0.1': -0.035993
+      '0.2': -0.025613
+      '0.3': -0.013061
+      '0.4': -0.002125
+      '0.5': 0.002651
+      '0.6': 0.00939
+      '0.7': 0.015677
+      '0.8': 0.022143
+      '0.9': 0.031056
+      '0.95': 0.037228
+  metadata:
+    rationale: 'S&P/TSX Composite 21-day log return forecast as of January 19, 2026.
+      The 21-day annualized realized volatility is exceptionally calm at 8.06% (LOW
+      regime). Using our state-trained forecasting strategy, the projection is built
+      using scaled empirical quantiles of historical low-volatility and all-time-high
+      periods (drawdown = 0%). This captures: 1) the positive but modest median fwd
+      return of +0.265% at ATHs, 2) the structural downside skewness (left tail) with
+      a fatter 0.05 quantile (-5.34%) compared to a standard normal projection, and
+      3) the restricted upside potential (0.95 quantile at +3.72%).'
+    horizon_rationale: Base forecast is centered around +0.265% reflecting a low-volatility
+      environment where the TSX is at all-time highs. Interval boundaries are generated
+      using scaled empirical quantiles from historical low-volatility (realized vol
+      < 10%) and all-time-high periods, which perfectly capture the structural downside
+      asymmetry (skewness) and restricted upside potential. This includes an implicit
+      23% widening of the intervals to account for volatility mean-reversion over
+      the 21bd horizon.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (55 lines)
+    - tool: run_code
+      title: python (9 lines)
+    - tool: run_code
+      title: python (43 lines)
+    - tool: search_web
+      title: Canadian stock market TSX energy oil gold VIX January 2026
+    - tool: run_code
+      title: python (38 lines)
+    - tool: run_code
+      title: python (28 lines)
+    - tool: run_code
+      title: python (32 lines)
+    - tool: run_code
+      title: python (38 lines)
+    - tool: run_code
+      title: python (96 lines)
+    - tool: run_code
+      title: python (75 lines)
+    - tool: run_code
+      title: python (22 lines)
+    - tool: run_code
+      title: python (59 lines)
+    - tool: run_code
+      title: python (31 lines)
+    - tool: run_code
+      title: python (32 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (37 lines)
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (48 lines)
+    - tool: run_code
+      title: python (85 lines)
+    - tool: run_code
+      title: python (76 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (49 lines)
+    - tool: run_code
+      title: python (29 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: a1428f8911c9ef4a66e54953a35c7c10
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/a1428f8911c9ef4a66e54953a35c7c10

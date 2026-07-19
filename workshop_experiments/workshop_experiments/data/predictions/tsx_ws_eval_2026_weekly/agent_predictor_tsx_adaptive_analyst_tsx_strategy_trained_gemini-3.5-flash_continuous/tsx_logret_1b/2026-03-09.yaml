@@ -1,0 +1,77 @@
+as_of: '2026-03-09T00:00:00'
+wall_time_s: 101.68938116705976
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T17:52:38.689348'
+  as_of: '2026-03-09T00:00:00'
+  forecast_date: '2026-03-10T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.017912
+      '0.1': -0.013955
+      '0.2': -0.009165
+      '0.3': -0.00571
+      '0.4': -0.002759
+      '0.5': 0.0
+      '0.6': 0.002759
+      '0.7': 0.00571
+      '0.8': 0.009165
+      '0.9': 0.013955
+      '0.95': 0.017912
+  metadata:
+    rationale: Statistical analysis of daily price history up to March 9, 2026, places
+      the TSX in an ELEVATED volatility regime (21d realized vol = 18.92%). Standard-normal
+      projection (widen factor = 1.0) is fitted using a 10-day adaptive dispersion
+      window (sigma = 1.09% daily). This captures elevated turbulence driven by a
+      sharp global geopolitical oil spike (+28.55% 5d) while reflecting offsetting
+      headwinds from weak domestic employment data (unemployment at 6.7%) and persistent
+      macro uncertainties.
+    horizon_rationale: The S&P/TSX Composite's trailing 21-day annualized realized
+      volatility is 18.92%, which classifies the market in the ELEVATED volatility
+      regime. Accordingly, we adaptively shorten the dispersion window to 10 business
+      days to capture current price dynamics. The daily return standard deviation
+      over this window is 1.09% (annualized 17.29%). Per active correction hyp-007,
+      under normal/elevated regimes the TSX return distribution is highly Gaussian
+      (excess kurtosis < 0.6), so standard-normal projection is used without fat-tailed
+      adjustments. On the news front, a major geopolitical supply-threat in the Strait
+      of Hormuz has triggered a massive +28.55% trailing 5-day spike in WTI crude
+      oil (closing at $94.77), which provides significant energy sector tailwinds.
+      However, Canada's economy is simultaneously coping with severe labor market
+      softening (February LFS reported a loss of 84k jobs, with unemployment rising
+      to 6.7%) and trade policy friction with the U.S. These offsetting forces support
+      maintaining a neutral martingale point forecast of 0.0% for the 1-business-day
+      horizon while keeping prediction intervals appropriately wide to reflect the
+      elevated volatility backdrop.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (22 lines)
+    - tool: run_code
+      title: python (71 lines)
+    - tool: run_code
+      title: python (50 lines)
+    - tool: search_web
+      title: '"S&P/TSX Composite" OR "TSX" OR "Canada" market news "March 2026" OR
+        "March 9 2026"'
+    - tool: search_web
+      title: '"oil price" OR "WTI" OR "crude oil" surge OR jump OR spike "March 2026"
+        OR "March 9, 2026"'
+    - tool: run_code
+      title: python (12 lines)
+    - tool: run_code
+      title: python (24 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: e4950f43f9af54a7d30cbec7d7465604
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/e4950f43f9af54a7d30cbec7d7465604

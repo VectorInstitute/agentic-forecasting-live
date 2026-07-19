@@ -1,0 +1,98 @@
+as_of: '2026-03-09T00:00:00'
+wall_time_s: 210.83953091700096
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T19:05:50.461702'
+  as_of: '2026-03-09T00:00:00'
+  forecast_date: '2026-03-16T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.04005
+      '0.1': -0.031204
+      '0.2': -0.020492
+      '0.3': -0.012768
+      '0.4': -0.006169
+      '0.5': 0.0
+      '0.6': 0.006169
+      '0.7': 0.012768
+      '0.8': 0.020492
+      '0.9': 0.031204
+      '0.95': 0.04005
+  metadata:
+    rationale: As of March 9, 2026, the S&P/TSX Composite has entered an ELEVATED
+      volatility regime with a 21-day annualized realized volatility of 18.92%. A
+      recent spike in physical WTI Crude Oil prices (+28.5% over 5 business days)
+      alongside a pullback in physical Gold (-3.91% over 5 business days) has driven
+      a significant increase in broad equity market dispersion. Following our adaptive
+      strategy, we select a 10-day dispersion window (daily standard deviation of
+      1.0889%) to project the 5-business-day cumulative log return distribution. Our
+      decadal-robust analysis shows that during normal and elevated regimes, TSX daily
+      returns remain highly Gaussian (excess kurtosis < 0.6), validating our standard-normal
+      interval projection. No manual volatility adjustments are required as the pipeline
+      perfectly self-calibrates.
+    horizon_rationale: The S&P/TSX Composite is classified in the ELEVATED volatility
+      regime (21-day annualized realized vol at 18.92%), driven by recent market stress,
+      extreme commodity price moves, and geopolitical risk. Following our strategy,
+      we adaptively select a 10-day dispersion window to capture this recent volatility
+      spike (sigma_daily = 1.0889%, annualized to 17.29%). No manual widening or drift
+      is applied because the daily return z-score (0.25) is below the negative return
+      anomaly threshold (< -2.5) and our commodity risk playbook confirms the native
+      realized volatility pipeline perfectly self-calibrates. The forecast is centered
+      at 0.0 under the martingale prior.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: search_web
+      title: S&P/TSX Composite index news February March 2026
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (62 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (8 lines)
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (43 lines)
+    - tool: run_code
+      title: python (9 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (25 lines)
+    - tool: run_code
+      title: python (33 lines)
+    - tool: run_code
+      title: python (38 lines)
+    - tool: run_code
+      title: python (37 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (46 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 3f35260e505543f71df916dc8b4c213b
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/3f35260e505543f71df916dc8b4c213b

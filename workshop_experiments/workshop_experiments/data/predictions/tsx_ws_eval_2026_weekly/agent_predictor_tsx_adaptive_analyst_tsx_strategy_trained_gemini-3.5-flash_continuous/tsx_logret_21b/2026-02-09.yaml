@@ -1,0 +1,114 @@
+as_of: '2026-02-09T00:00:00'
+wall_time_s: 268.51018462504726
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T20:24:41.101375'
+  as_of: '2026-02-09T00:00:00'
+  forecast_date: '2026-03-10T00:00:00'
+  payload:
+    point_forecast: 0.0032
+    quantiles:
+      '0.05': -0.124102
+      '0.1': -0.091476
+      '0.2': -0.056015
+      '0.3': -0.033696
+      '0.4': -0.014625
+      '0.5': 0.0032
+      '0.6': 0.021025
+      '0.7': 0.040096
+      '0.8': 0.062415
+      '0.9': 0.093368
+      '0.95': 0.118929
+  metadata:
+    rationale: This probabilistic forecast of the S&P/TSX Composite 21-business-day
+      cumulative log return is constructed by integrating statistical volatility-regime
+      conditioning with our active strategic calibration corrections as of February
+      9, 2026. Realized volatility is in the ELEVATED regime (17.22%), dictating a
+      standard-normal Gaussian core with an adaptive 10-day dispersion window (sigma_daily
+      = 0.015353) to track the recent spike in index dispersion. The index stands
+      at 33,023.30, representing a shallow -0.46% drawdown from the January 28, 2026
+      peak; our empirical Drawdown Recovery Playbook prescribes a mild positive forward
+      return drift of +0.32% (+0.0032 in log returns) for the median. To safeguard
+      against downside-biased tail risk prevalent in low-to-elevated volatility regimes
+      (and corroborated by a US VIX of 17.36), we shift the 5% and 10% quantiles downward
+      by factors of 1.10 and 1.05 respectively. No manual volatility widening is required
+      for commodity or currency moves as the native volatility pipeline perfectly
+      self-calibrates.
+    horizon_rationale: 'For the 21-business-day (21bd) horizon, the S&P/TSX Composite
+      Index is analyzed using a self-contained quantitative pipeline. Based on a trailing
+      21-day annualized realized volatility of 17.22%, the TSX is classified in the
+      ELEVATED volatility regime (15-22%). According to our learned forecasting strategy
+      (Correction hyp-007), during elevated regimes the return distribution is highly
+      Gaussian (excess kurtosis < 0.6) and is optimally projected using a standard-normal
+      Gaussian core, requiring no fat-tailed or Student''s t adjustments. An adaptive
+      dispersion window of 10 trading days is selected (Pattern 4) due to the elevated
+      regime, yielding a daily standard deviation (sigma_daily) of 0.015353 (annualized
+      realized volatility of 24.37%). This window successfully captures the high-realized-volatility
+      dynamics following the late-January precious metals crash and subsequent early-February
+      rebounds. The index is in a shallow drawdown of -0.46% from its January 28,
+      2026 record high; per our Drawdown Recovery Playbook (Correction hyp-021), shallow
+      drawdowns (0-5%) exhibit a subsequent 21bd average forward return of +0.32%
+      (+0.0032 log return), which we apply as our center drift (median / 0.50 quantile).
+      Lastly, under low and elevated regimes, tail risk is systematically asymmetric
+      on the downside (Correction hyp-013), a behavior mirrored by the starting US
+      VIX of 17.36 (Normal state, 15-25). To protect against this asymmetric left-tail
+      risk, the lower tail quantiles are shifted downward: the 5% quantile distance
+      from the median is multiplied by a factor of 1.10 (resulting in a 5% quantile
+      of -12.41%) and the 10% quantile is multiplied by 1.05 (resulting in a 10% quantile
+      of -9.15%). The remaining quantiles are projected standard-normally, creating
+      a calibrated, non-decreasing grid that robustly manages the asymmetric risk
+      landscape.'
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (84 lines)
+    - tool: run_code
+      title: python (85 lines)
+    - tool: run_code
+      title: python (23 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (83 lines)
+    - tool: run_code
+      title: python (35 lines)
+    - tool: search_web
+      title: S&P/TSX Composite market news February 2026 Bank of Canada
+    - tool: search_web
+      title: S&P/TSX Composite February 2026 market correction news
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (10 lines)
+    - tool: run_code
+      title: python (7 lines)
+    - tool: load_skill
+      title: load_skill
+    - tool: run_code
+      title: python (90 lines)
+    - tool: run_code
+      title: python (63 lines)
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (33 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 88a667b386f6eda46ef15196903b5520
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/88a667b386f6eda46ef15196903b5520

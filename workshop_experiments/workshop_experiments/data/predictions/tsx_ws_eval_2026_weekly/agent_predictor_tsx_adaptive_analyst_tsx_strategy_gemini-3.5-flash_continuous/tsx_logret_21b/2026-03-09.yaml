@@ -1,0 +1,102 @@
+as_of: '2026-03-09T00:00:00'
+wall_time_s: 225.07149887504056
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T15:53:29.017123'
+  as_of: '2026-03-09T00:00:00'
+  forecast_date: '2026-04-07T00:00:00'
+  payload:
+    point_forecast: 0.0125
+    quantiles:
+      '0.05': -0.079431
+      '0.1': -0.059126
+      '0.2': -0.034538
+      '0.3': -0.016809
+      '0.4': -0.00166
+      '0.5': 0.0125
+      '0.6': 0.02666
+      '0.7': 0.041809
+      '0.8': 0.059538
+      '0.9': 0.084126
+      '0.95': 0.104431
+  metadata:
+    rationale: The quantitative pipeline classifies the volatility regime as elevated
+      (realised vol ~18.9%), prompting the selection of an adaptive 10-day dispersion
+      window (sigma_daily ~0.0109) and a standard 1.12 widening factor. Rather than
+      a pure martingale prior (centred at 0.0), a moderate positive lean (median =
+      0.0125) is introduced to reflect the commodity boom (WTI crude oil surging near
+      $100/barrel, gold over $5000/oz) and historical post-shock recovery dynamics
+      in the Canadian equity index, which are highly supported by a steady Bank of
+      Canada policy rate of 2.25% and benign 1.8% inflation.
+    horizon_rationale: S&P/TSX Composite 21-day cumulative log return projection.
+      S&P/TSX realized volatility is elevated at 18.9%, and the US market risk premium
+      is high (VIX at 25.5). Over the past week, the index suffered a sharp drop of
+      ~3.9% due to Middle East geopolitical shock waves. However, WTI crude has surged
+      above $94/barrel (up from $67 in mid-February), which serves as a major fundamental
+      anchor for Canada's massive energy sector. Historical analysis of similar states
+      (elevated vol, high VIX, and >3% weekly drop) reveals a strong mean-reversion
+      / rebound tendency over the subsequent month (median forward return of +2.5%).
+      Consequently, we lean our median slightly positive (+0.0125) while keeping the
+      distribution wide to encompass the ongoing geopolitical tail risks.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (34 lines)
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (11 lines)
+    - tool: run_code
+      title: python (3 lines)
+    - tool: run_code
+      title: python (53 lines)
+    - tool: run_code
+      title: python (5 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: search_web
+      title: S&P/TSX Composite market March 2026 news Bank of Canada
+    - tool: run_code
+      title: python (58 lines)
+    - tool: load_skill
+      title: load_skill
+    - tool: run_code
+      title: python (9 lines)
+    - tool: run_code
+      title: python (48 lines)
+    - tool: run_code
+      title: python (24 lines)
+    - tool: run_code
+      title: python (48 lines)
+    - tool: run_code
+      title: python (10 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (6 lines)
+    - tool: run_code
+      title: python (82 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: efe00b4ecb0a65e5abf1171887bec57b
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/efe00b4ecb0a65e5abf1171887bec57b

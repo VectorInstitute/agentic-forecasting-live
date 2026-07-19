@@ -1,0 +1,87 @@
+as_of: '2026-05-11T00:00:00'
+wall_time_s: 185.55905799998436
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T21:21:30.178920'
+  as_of: '2026-05-11T00:00:00'
+  forecast_date: '2026-06-09T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.05825
+      '0.1': -0.04538
+      '0.2': -0.0298
+      '0.3': -0.01857
+      '0.4': -0.00897
+      '0.5': 0.0
+      '0.6': 0.00897
+      '0.7': 0.01857
+      '0.8': 0.0298
+      '0.9': 0.04538
+      '0.95': 0.05825
+  metadata:
+    rationale: Comprehensive probabilistic projection for the S&P/TSX Composite 21-business-day
+      forward cumulative log return as of May 11, 2026. Realised volatility (12.27%)
+      places the market in a stable NORMAL regime, validating standard-normal Gaussian
+      projection with no fat-tailed or interval-widening scaling. Geopolitical tension-driven
+      commodity strength is balanced by domestic economic softening and higher-for-longer
+      bond yield pressures, supporting a neutral martingale median of 0.0000.
+    horizon_rationale: The S&P/TSX Composite is classified in a NORMAL volatility
+      regime, with trailing 21-day annualised realised volatility of 12.27%. No daily
+      return anomalies are detected (z-score = +0.1358). While there is a trailing
+      5-day commodity shock (Gold 5-day return of +4.31% exceeds the 3.5% threshold),
+      the volatility-regime is not LOW (<10%), so no low-volatility or commodity-shock
+      widening corrections apply. Under our strategy, NORMAL and ELEVATED regimes
+      are highly Gaussian (excess kurtosis is low at 0.24), and standard-normal projection
+      with no fat-tailed scaling or widening (multiplier = 1.0) is optimal. The daily
+      standard deviation of 0.007728 is projected to the 21-day horizon (sigma_21
+      = 0.035414). The median is centered at 0.0000 in accordance with the martingale
+      prior, reflecting a balanced macro outlook where powerful commodity tailwinds
+      (WTI near $108/bbl, Gold near $4,718/oz) are offset by rising bond yields, a
+      softening domestic economy (unemployment at 6.7%), and US trade tariff worries.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (26 lines)
+    - tool: search_web
+      title: S&P/TSX Composite May 2026 Bank of Canada inflation
+    - tool: search_web
+      title: crude oil gold price may 2026 Middle East
+    - tool: run_code
+      title: python (66 lines)
+    - tool: run_code
+      title: python (80 lines)
+    - tool: run_code
+      title: python (8 lines)
+    - tool: run_code
+      title: python (80 lines)
+    - tool: run_code
+      title: python (9 lines)
+    - tool: run_code
+      title: python (89 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: run_code
+      title: python (22 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: e567de6a7b56aee574986b55b31bceca
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/e567de6a7b56aee574986b55b31bceca

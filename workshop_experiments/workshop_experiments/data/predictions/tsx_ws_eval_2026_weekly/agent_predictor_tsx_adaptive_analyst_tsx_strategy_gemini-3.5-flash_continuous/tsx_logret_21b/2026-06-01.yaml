@@ -1,0 +1,102 @@
+as_of: '2026-06-01T00:00:00'
+wall_time_s: 193.38047933299094
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T17:19:14.825361'
+  as_of: '2026-06-01T00:00:00'
+  forecast_date: '2026-06-30T00:00:00'
+  payload:
+    point_forecast: 0.005064
+    quantiles:
+      '0.05': -0.062106
+      '0.1': -0.045647
+      '0.2': -0.02667
+      '0.3': -0.013866
+      '0.4': -0.003687
+      '0.5': 0.005064
+      '0.6': 0.013005
+      '0.7': 0.020619
+      '0.8': 0.028529
+      '0.9': 0.03816
+      '0.95': 0.045303
+  metadata:
+    rationale: S&P/TSX Composite 21-business-day cumulative log return forecast as
+      of 2026-06-01. The market is in a calm, normal volatility regime (realised vol
+      10.75%, VIX 16.05). In accordance with the tsx-strategy, the forecast is centered
+      near 0.0 but incorporates the persistent negative skewness of equity index returns.
+      Backtesting similar regimes reveals that actual forward returns have a larger
+      dispersion than theoretical square-root-of-time scaling (ratio = 1.0716) and
+      a skewness of -1.053. A Skew-Normal distribution with alpha = -3.75 and a calibrated
+      target standard deviation of 0.033266 is used. This realistically expands the
+      5% downside tail to -6.21% while capping the 95% upside tail at 4.53%.
+    horizon_rationale: Modelled using a parametric Skew-Normal distribution (alpha
+      = -3.75, standard deviation = 0.033266, mean = 0.0) calibrated to the TSX 'normal'
+      volatility regime. The 21-day annualised realised volatility of the S&P/TSX
+      Composite stands at 10.75%, placing it in the 'normal' regime (10-15%). Daily
+      return standard deviation over the last 21 days is 0.006774. Backtesting similar
+      'normal' regimes reveals a 7.16% wider empirical dispersion than pure square-root-of-time
+      scaling (target std of 0.033266) and strong negative skewness (-1.053). Applying
+      these parameters produces a slight positive median drift (0.005064) representing
+      the long-term risk premium under calm conditions, while shifting the bulk of
+      the risk to the heavier downside tail to account for energy-price volatility
+      and Middle East geopolitical tensions.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (23 lines)
+    - tool: run_code
+      title: python (75 lines)
+    - tool: run_code
+      title: python (6 lines)
+    - tool: search_web
+      title: TSX June 2026 Bank of Canada
+    - tool: search_web
+      title: TSX May 2026 record high oil price
+    - tool: search_web
+      title: Canada CPI April 2026 release date
+    - tool: search_web
+      title: Crude oil price May 2026
+    - tool: search_web
+      title: Gold price May 2026
+    - tool: run_code
+      title: python (12 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: run_code
+      title: python (16 lines)
+    - tool: run_code
+      title: python (35 lines)
+    - tool: run_code
+      title: python (22 lines)
+    - tool: run_code
+      title: python (38 lines)
+    - tool: run_code
+      title: python (27 lines)
+    - tool: run_code
+      title: python (24 lines)
+    - tool: run_code
+      title: python (34 lines)
+    - tool: load_skill
+      title: load_skill
+    - tool: run_code
+      title: python (25 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: bb999e6b0a1d2ebfff2b4788c598a0b7
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/bb999e6b0a1d2ebfff2b4788c598a0b7

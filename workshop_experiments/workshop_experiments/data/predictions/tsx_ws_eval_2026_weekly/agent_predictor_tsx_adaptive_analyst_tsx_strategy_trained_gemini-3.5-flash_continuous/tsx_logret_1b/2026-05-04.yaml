@@ -1,0 +1,95 @@
+as_of: '2026-05-04T00:00:00'
+wall_time_s: 183.59737099998165
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T18:09:23.233826'
+  as_of: '2026-05-04T00:00:00'
+  forecast_date: '2026-05-05T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.012609
+      '0.1': -0.009824
+      '0.2': -0.006451
+      '0.3': -0.00402
+      '0.4': -0.001942
+      '0.5': 0.0
+      '0.6': 0.001942
+      '0.7': 0.00402
+      '0.8': 0.006451
+      '0.9': 0.009824
+      '0.95': 0.012609
+  metadata:
+    rationale: An S&P/TSX Composite log return forecast for a 1-business-day horizon
+      as of May 4, 2026. The broad-market realized volatility is classified in the
+      Normal regime (12.17% annualized), making standard-normal projection with a
+      21-day dispersion window (sigma_daily = 0.007665) highly optimal. No tail adjustments
+      or directional drifts are warranted, and intervals are perfectly calibrated
+      to reflect close-to-close daily variance.
+    horizon_rationale: Our quantitative pipeline classifies the S&P/TSX Composite's
+      current volatility state as NORMAL, with an annualized 21-day realized volatility
+      of 12.17%. The latest return of -0.75% has a z-score of -0.77 relative to the
+      trailing 63 days, confirming the absence of a daily return anomaly. Under our
+      vol-regime protocol, a 21-day dispersion window is selected (sigma_daily = 0.007665).
+      Historical validation over a 20-year backtest of 1,838 sessions in this regime
+      confirms that a 21-day window is almost perfectly calibrated (achieving 79.92%
+      coverage for the 80% interval and 88.96% for the 90% interval, outperforming
+      the 63-day window's 78.67% and 87.54%). Per Correction hyp-007, daily TSX returns
+      in this regime are highly Gaussian, so standard-normal projection is optimal
+      without fat-tailed adjustments. In accordance with Corrections hyp-009 and hyp-012,
+      no calendar or day-of-the-week adjustments are applied. The point forecast is
+      centered exactly at 0.0 (the 0.50 quantile) under a martingale prior, reflecting
+      the lack of any strong, immediate directional catalyst.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: search_web
+      title: '"S&P/TSX Composite" "May 2026" OR "Toronto Stock Exchange" "May 4, 2026"
+        OR "Canada market news" "May 2026"'
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (83 lines)
+    - tool: run_code
+      title: python (3 lines)
+    - tool: run_code
+      title: python (40 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: run_code
+      title: python (34 lines)
+    - tool: run_code
+      title: python (2 lines)
+    - tool: run_code
+      title: python (23 lines)
+    - tool: run_code
+      title: python (9 lines)
+    - tool: run_code
+      title: python (41 lines)
+    - tool: run_code
+      title: python (42 lines)
+    - tool: run_code
+      title: python (17 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: cf126dfe239c34fbcc18f10d7e927a9a
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/cf126dfe239c34fbcc18f10d7e927a9a

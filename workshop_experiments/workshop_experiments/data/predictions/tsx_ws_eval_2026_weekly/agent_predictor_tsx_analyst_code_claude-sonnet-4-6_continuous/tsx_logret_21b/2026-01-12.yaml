@@ -1,0 +1,83 @@
+as_of: '2026-01-12T00:00:00'
+wall_time_s: 1834.3449747500126
+predictions:
+- predictor_id: agent_predictor_tsx_analyst_code_claude-sonnet-4-6_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T10:11:17.146990'
+  as_of: '2026-01-12T00:00:00'
+  forecast_date: '2026-02-10T00:00:00'
+  payload:
+    point_forecast: 0.01
+    quantiles:
+      '0.05': -0.1689
+      '0.1': -0.1226
+      '0.2': -0.0734
+      '0.3': -0.041
+      '0.4': -0.0144
+      '0.5': 0.01
+      '0.6': 0.0344
+      '0.7': 0.061
+      '0.8': 0.0934
+      '0.9': 0.1426
+      '0.95': 0.1889
+  metadata:
+    rationale: "Single-horizon (21-bd) forecast for the S&P/TSX Composite. Model:\
+      \ Student-t(\u03BC=0.010, \u03C3=0.0921, df=6). Macro backdrop as of 2026-01-12:\
+      \ BoC at 2.25% hold (accommodative), TSX on strong recent momentum driven by\
+      \ commodities and financials, US tariff/trade tensions and soft Canadian labour\
+      \ market as key downside risks. Scaled daily volatility (0.02010 \xD7 \u221A\
+      21 = 0.0921) used as primary dispersion estimate; fat tails via t(6) to reflect\
+      \ geopolitical and trade-policy shock risk."
+    horizon_rationale: "21-business-day cumulative log-return forecast as of 2026-01-12.\
+      \ Volatility anchor: trailing 63-day daily std = 0.02010, scaled to 21-bd horizon\
+      \ gives \u03C3 = 0.0921. Distribution: Student-t with df=6 to capture fat tails\
+      \ reflecting tariff/trade shock risk, centred at \u03BC=+0.010. Drift rationale:\
+      \ (1) Bank of Canada on hold at 2.25% \u2014 accommodative relative to neutral,\
+      \ supportive of risk assets; (2) TSX finished 2025 strongly with metals/materials\
+      \ 'mania' and resilient Big Six bank earnings; (3) gold safe-haven demand remains\
+      \ firm; (4) partial offset from US tariff headwinds on Canadian exporters (steel,\
+      \ aluminium, autos), soft domestic labour market (unemployment ~6.5-7%), and\
+      \ weaker CAD from BoC-Fed policy divergence. Recent 2025+ empirical 21-bd returns\
+      \ (overlapping daily rolling windows) show Q50\u2248+0.03 and tight apparent\
+      \ std (~0.025), but these are autocorrelated rolling observations that systematically\
+      \ understate true forward uncertainty; the scaled-vol model is preferred for\
+      \ spread. Left tail is somewhat fattened vs normal to reflect tail risks from\
+      \ a potential escalation in US trade policy."
+    tool_calls:
+    - tool: search_web
+      title: Bank of Canada policy rate decision and forward guidance for Canadian
+        equities
+    - tool: search_web
+      title: oil and gold commodity price outlook impact on TSX energy and materials
+        sectors
+    - tool: search_web
+      title: US Federal Reserve policy and tariff trade spillovers into Canadian stocks
+        2026
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python (209 lines)
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python (86 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 278042fec06b2d1ea20da1d594a0f2af
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/278042fec06b2d1ea20da1d594a0f2af

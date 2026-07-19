@@ -1,0 +1,86 @@
+as_of: '2026-05-11T00:00:00'
+wall_time_s: 155.77351066691335
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T18:11:59.014484'
+  as_of: '2026-05-11T00:00:00'
+  forecast_date: '2026-05-12T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.012711
+      '0.1': -0.009904
+      '0.2': -0.006504
+      '0.3': -0.004053
+      '0.4': -0.001958
+      '0.5': 0.0
+      '0.6': 0.001958
+      '0.7': 0.004053
+      '0.8': 0.006504
+      '0.9': 0.009904
+      '0.95': 0.012711
+  metadata:
+    rationale: S&P/TSX Composite daily return forecasting pipeline. The annualized
+      21-day realized volatility of 12.27% represents a normal volatility regime (10-15%),
+      so we model the cumulative log returns over the 1-business-day horizon using
+      a standard-normal Gaussian distribution scaled by the trailing 21-day dispersion
+      (0.007728). No volatility widening is applied as no active calibration correction
+      conditions are met. Recent Canadian market news confirms that the Bank of Canada
+      is holding rates patient at 2.25% amid stable core inflation, with the TSX showing
+      underlying resilience, supporting our neutral martingale point-forecast centering.
+    horizon_rationale: The S&P/TSX Composite realized volatility on 2026-05-11 stands
+      at 12.27% (annualized), classifying the market in a 'normal' volatility regime
+      (10-15%). Per our active strategy, normal regimes call for standard-normal Gaussian
+      projection using the trailing 21-day realized daily return standard deviation
+      (sigma_daily = 0.007728) as the dispersion scale. No active widening corrections
+      are triggered because the volatility regime is not low (<10%) and there is no
+      negative return anomaly (last return z-score is +0.10). The point forecast is
+      centered at 0.0 in accordance with the martingale prior.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (20 lines)
+    - tool: search_web
+      title: Canadian holidays May 2026
+    - tool: run_code
+      title: python (70 lines)
+    - tool: run_code
+      title: python (9 lines)
+    - tool: run_code
+      title: python (71 lines)
+    - tool: run_code
+      title: python (9 lines)
+    - tool: run_code
+      title: python (70 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (53 lines)
+    - tool: run_code
+      title: python (137 lines)
+    - tool: run_code
+      title: python (124 lines)
+    - tool: search_web
+      title: '"TSX" "May 2026" market news'
+    - tool: run_code
+      title: python (32 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 6406542cda684a78a53aaed49c7af84e
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/6406542cda684a78a53aaed49c7af84e

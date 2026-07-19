@@ -1,0 +1,129 @@
+as_of: '2026-02-02T00:00:00'
+wall_time_s: 320.7959862499265
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T15:34:29.748438'
+  as_of: '2026-02-02T00:00:00'
+  forecast_date: '2026-03-03T00:00:00'
+  payload:
+    point_forecast: 0.01599
+    quantiles:
+      '0.05': -0.08386
+      '0.1': -0.06112
+      '0.2': -0.03128
+      '0.3': -0.00905
+      '0.4': 0.00531
+      '0.5': 0.01599
+      '0.6': 0.02627
+      '0.7': 0.03323
+      '0.8': 0.04367
+      '0.9': 0.05691
+      '0.95': 0.06975
+  metadata:
+    rationale: This forecast is anchored to the 2026-02-02 close of 32,183.88. On
+      January 30, 2026, the S&P/TSX Composite experienced its largest one-day drop
+      since April 2025 (-3.31%), triggered by U.S. President Donald Trump's nomination
+      of the hawkish Kevin Warsh as Federal Reserve Chair. This nomination sparked
+      a strengthening U.S. dollar and a major commodity sell-off, with Gold dropping
+      11.4% and WTI crude oil falling. On February 2, the TSX showed signs of stabilization,
+      rebounding by 0.82%. Historically, similar episodes combining elevated short-term
+      volatility and commodity-market shocks have led to strong 21-business-day mean-reversion
+      and recovery patterns for the Canadian index, resulting in an empirically positive
+      median return (+1.60%) accompanied by a negatively skewed return distribution
+      (fat left tails). Our conditional bootstrap captures these non-normal empirical
+      shapes and relationships directly, providing a highly calibrated probabilistic
+      forecast.
+    horizon_rationale: Our quantitative pipeline classifies the current volatility
+      regime as 'normal' with a 21-day annualised realised volatility of 15.00%. However,
+      we detect a massive anomaly on January 30, 2026, where the daily return dropped
+      by -3.31% (z-score of -4.12). Under our adaptive pipeline, this anomaly triggers
+      a shorter 10-day dispersion window to capture the rapid spike in daily standard
+      deviation (sigma_daily = 0.0121, or 19.15% annualised), rather than relying
+      on a stale 21-day window. Backtesting over the last 500 days reveals that a
+      Conditional Bootstrap (empirical quantiles conditioned on similar 10-day daily
+      standard deviations) substantially outperforms Gaussian models, reducing mean
+      pinball loss (CRPS) by approximately 10%. We have adopted the empirical conditional
+      bootstrap quantiles as our base forecast. This distribution reflects an empirical
+      positive median of +1.60% and asymmetric tails (wider downside than upside),
+      capturing the historic tendency of the TSX index to mean-revert and recover
+      over a 21-business-day horizon after a sharp, short-term shock.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (24 lines)
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: run_code
+      title: python (11 lines)
+    - tool: run_code
+      title: python (23 lines)
+    - tool: run_code
+      title: python (23 lines)
+    - tool: run_code
+      title: python (52 lines)
+    - tool: run_code
+      title: python (8 lines)
+    - tool: run_code
+      title: python (10 lines)
+    - tool: run_code
+      title: python (16 lines)
+    - tool: search_web
+      title: Canada stock market S&P TSX index drop January 30 2026 OR February 2
+        2026
+    - tool: run_code
+      title: python (52 lines)
+    - tool: search_web
+      title: WTI crude oil price Gold price drop Kevin Warsh nomination January 30
+        2026
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (8 lines)
+    - tool: run_code
+      title: python (45 lines)
+    - tool: run_code
+      title: python (10 lines)
+    - tool: run_code
+      title: python (24 lines)
+    - tool: run_code
+      title: python (66 lines)
+    - tool: run_code
+      title: python (64 lines)
+    - tool: run_code
+      title: python (68 lines)
+    - tool: run_code
+      title: python (47 lines)
+    - tool: run_code
+      title: python (73 lines)
+    - tool: load_skill
+      title: load_skill
+    - tool: run_code
+      title: python (61 lines)
+    - tool: run_code
+      title: python (46 lines)
+    - tool: run_code
+      title: python (43 lines)
+    - tool: run_code
+      title: python (21 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: e37c5b5f9533f31300eea13c06de10cc
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/e37c5b5f9533f31300eea13c06de10cc

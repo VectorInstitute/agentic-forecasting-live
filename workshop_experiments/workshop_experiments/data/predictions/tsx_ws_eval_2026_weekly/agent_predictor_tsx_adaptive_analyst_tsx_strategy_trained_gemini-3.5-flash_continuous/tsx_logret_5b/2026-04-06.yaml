@@ -1,0 +1,90 @@
+as_of: '2026-04-06T00:00:00'
+wall_time_s: 177.78068075003102
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T19:17:48.489812'
+  as_of: '2026-04-06T00:00:00'
+  forecast_date: '2026-04-13T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.041461
+      '0.1': -0.032304
+      '0.2': -0.021214
+      '0.3': -0.013218
+      '0.4': -0.006386
+      '0.5': 0.0
+      '0.6': 0.006386
+      '0.7': 0.013218
+      '0.8': 0.021214
+      '0.9': 0.032304
+      '0.95': 0.041461
+  metadata:
+    rationale: The S&P/TSX Composite is currently in an ELEVATED volatility regime
+      with a trailing 21-day annualized realized volatility of 19.01%. Per active
+      calibration corrections, standard-normal Gaussian projection is highly optimal
+      here as the return distribution is remarkably Gaussian with excess kurtosis
+      < 0.6 in elevated states. Using an adaptive dispersion window of 10 days yields
+      a daily sigma of 0.011273, which scales to a 5b horizon standard deviation of
+      0.025206. While energy and materials are supported by a major Middle East commodity
+      shock (WTI +12.06% weekly, Gold +3.60% weekly), historical 5b forward returns
+      under these joint conditions show no consistent positive drift over a martingale
+      prior. Therefore, the point forecast (0.50 quantile) remains at 0.00%, with
+      the symmetric 90% prediction interval spanning -4.15% to +4.15%.
+    horizon_rationale: Calculated using standard-normal Gaussian model with a dispersion
+      window of 10 days (sigma_daily=0.011273) under the classified ELEVATED volatility
+      regime (annualised realised vol of 19.01%). No additional volatility or drift
+      adjustments are triggered as there are no active corrections for these conditions.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (30 lines)
+    - tool: run_code
+      title: python (11 lines)
+    - tool: run_code
+      title: python (23 lines)
+    - tool: run_code
+      title: python (6 lines)
+    - tool: load_skill
+      title: load_skill
+    - tool: run_code
+      title: python (22 lines)
+    - tool: run_code
+      title: python (11 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (29 lines)
+    - tool: run_code
+      title: python (49 lines)
+    - tool: run_code
+      title: python (25 lines)
+    - tool: search_web
+      title: US stock market open Canadian stock market closed Easter 2026 Good Friday
+        Easter Monday
+    - tool: search_web
+      title: '"S&P/TSX" "April 6, 2026" OR "April 2026" stock market news Canada'
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (45 lines)
+    - tool: run_code
+      title: python (36 lines)
+    - tool: run_code
+      title: python (27 lines)
+    - tool: run_code
+      title: python (52 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: f61920acc638b886e8ee2c6104cf69b8
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/f61920acc638b886e8ee2c6104cf69b8

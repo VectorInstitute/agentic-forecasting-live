@@ -1,0 +1,112 @@
+as_of: '2026-04-27T00:00:00'
+wall_time_s: 299.7818592499243
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T14:37:15.606051'
+  as_of: '2026-04-27T00:00:00'
+  forecast_date: '2026-05-04T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.028552
+      '0.1': -0.022246
+      '0.2': -0.014609
+      '0.3': -0.009103
+      '0.4': -0.004398
+      '0.5': 0.0
+      '0.6': 0.004398
+      '0.7': 0.009103
+      '0.8': 0.014609
+      '0.9': 0.022246
+      '0.95': 0.028552
+  metadata:
+    rationale: Statistical analysis classifies the TSX as being in a 'normal' volatility
+      regime (annualized 21-day realized vol of 12.32%) with no recent daily anomalies.
+      The default 21-day dispersion window is used to estimate daily log return standard
+      deviation of 0.007763, which scales to 0.017359 over 5 business days. While
+      geopolitical risk in the Middle East has pushed oil prices near US$100, the
+      resulting 'oil-up, everything-else-down' macro headwind balances resource-sector
+      gains. With no major near-term policy or data catalysts, the martingale prior
+      (median of 0.0) is maintained.
+    horizon_rationale: Base statistical projection using a 21-day realized daily volatility
+      of 0.007763 scaled by sqrt(5) to obtain a 5-business-day standard deviation
+      of 0.017359. The distribution is centered at 0.0 under a martingale prior, as
+      the positive impact of surging energy prices on the resource-heavy TSX is offset
+      by negative pressures on broader equity valuations due to inflation and rising
+      interest rate expectations.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (16 lines)
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (8 lines)
+    - tool: run_code
+      title: python (148 lines)
+    - tool: search_web
+      title: Canada Bank of Canada rate decision April 2026
+    - tool: search_web
+      title: '"Bank of Canada" interest rate decision April 2026'
+    - tool: search_web
+      title: '"TSX" "April 2026" index drop rise oil'
+    - tool: run_code
+      title: python (67 lines)
+    - tool: run_code
+      title: python (137 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (22 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (31 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (4 lines)
+    - tool: run_code
+      title: python (28 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: search_web
+      title: '"Bank of Canada" meeting schedule April May 2026'
+    - tool: search_web
+      title: '"Bank of Canada" interest rate decision April 15 2026'
+    - tool: search_web
+      title: Canada inflation CPI release May 2026
+    - tool: run_code
+      title: python (61 lines)
+    - tool: run_code
+      title: python (11 lines)
+    - tool: run_code
+      title: python (26 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 1ad459fc034f03db748bfdccfd9e9540
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/1ad459fc034f03db748bfdccfd9e9540

@@ -1,0 +1,136 @@
+as_of: '2026-02-02T00:00:00'
+wall_time_s: 401.9469916250091
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T18:46:13.093368'
+  as_of: '2026-02-02T00:00:00'
+  forecast_date: '2026-02-09T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.059399
+      '0.1': -0.046279
+      '0.2': -0.030393
+      '0.3': -0.018937
+      '0.4': -0.009149
+      '0.5': 0.0
+      '0.6': 0.009149
+      '0.7': 0.018937
+      '0.8': 0.030393
+      '0.9': 0.046279
+      '0.95': 0.059399
+  metadata:
+    rationale: The S&P/TSX Composite is classified in a HIGH volatility regime as
+      of February 2, 2026, with trailing 10-day, 21-day, and 63-day realized volatility
+      all exceeding 23.8% annualized. Daily index returns are modeled as a standard-normal
+      Gaussian distribution around a martingale prior of 0.0, reflecting the absence
+      of scheduled short-term catalysts over the 5bd horizon. The 10-day dispersion
+      window is selected as our adaptive parameter window because the volatility regime
+      is high, capturing the heightened close-to-close variance from late January's
+      market-wide sell-offs.
+    horizon_rationale: Base projection centered at 0 (martingale prior) using a standard-normal
+      Gaussian distribution scaled by the 10-day dispersion window. The 10-day daily
+      standard deviation is 0.01615 (25.64% annualized), reflecting the HIGH volatility
+      regime triggered by the severe market sell-offs and gold/precious metal corrections
+      in late January.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (18 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (26 lines)
+    - tool: run_code
+      title: python (10 lines)
+    - tool: run_code
+      title: python (27 lines)
+    - tool: run_code
+      title: python (53 lines)
+    - tool: run_code
+      title: python (9 lines)
+    - tool: run_code
+      title: python (6 lines)
+    - tool: run_code
+      title: python (3 lines)
+    - tool: run_code
+      title: python (12 lines)
+    - tool: run_code
+      title: python (11 lines)
+    - tool: run_code
+      title: python (11 lines)
+    - tool: search_web
+      title: '"TSX" "February 2 2026" close OR "S&P/TSX" "Feb 2, 2026"'
+    - tool: search_web
+      title: TSX close February 2 2026 OR S&P/TSX Composite Feb 2, 2026 news
+    - tool: search_web
+      title: TSX "February 2, 2026" close OR "S&P/TSX" "Feb 2, 2026" close price
+    - tool: search_web
+      title: '"S&P/TSX" "February 2, 2026" OR "GSPTSE" "Feb 2, 2026" close'
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (22 lines)
+    - tool: run_code
+      title: python (27 lines)
+    - tool: run_code
+      title: python (95 lines)
+    - tool: run_code
+      title: python (32 lines)
+    - tool: run_code
+      title: python (32 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (12 lines)
+    - tool: run_code
+      title: python (30 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (102 lines)
+    - tool: load_skill
+      title: load_skill
+    - tool: run_code
+      title: python (61 lines)
+    - tool: search_web
+      title: Canada economy OR TSX stock market news "February 2, 2026" OR "Feb 2,
+        2026"
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (28 lines)
+    - tool: run_code
+      title: python (30 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (116 lines)
+    - tool: run_code
+      title: python (102 lines)
+    - tool: run_code
+      title: python (32 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: c54052f64a97dc79ef3f7f7aa4e146da
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/c54052f64a97dc79ef3f7f7aa4e146da

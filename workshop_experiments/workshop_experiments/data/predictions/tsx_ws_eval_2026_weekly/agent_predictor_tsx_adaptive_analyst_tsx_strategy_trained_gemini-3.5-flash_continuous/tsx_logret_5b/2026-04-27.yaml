@@ -1,0 +1,89 @@
+as_of: '2026-04-27T00:00:00'
+wall_time_s: 282.9933046249207
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T19:29:01.580056'
+  as_of: '2026-04-27T00:00:00'
+  forecast_date: '2026-05-04T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.028552
+      '0.1': -0.022246
+      '0.2': -0.014609
+      '0.3': -0.009103
+      '0.4': -0.004398
+      '0.5': 0.0
+      '0.6': 0.004398
+      '0.7': 0.009103
+      '0.8': 0.014609
+      '0.9': 0.022246
+      '0.95': 0.028552
+  metadata:
+    rationale: S&P/TSX Composite 5-day cumulative log return forecast as of April
+      27, 2026. The broad market is classified under a NORMAL volatility regime with
+      an annualized realized volatility of 12.32%. Close-to-Close daily return standard
+      deviation is 0.007763. Due to the Gaussian characteristics of daily returns
+      in this regime, standard-normal Gaussian projections are highly optimal, with
+      no fat-tail scaling required. A neutral martingale prior of 0.0000 is maintained
+      for the median, as rising resource exports are balanced by broader geopolitical
+      and trade uncertainties.
+    horizon_rationale: 'The 5-day forecasting model uses a Close-to-Close standard
+      daily volatility of 0.007763, calculated over a 21-day trailing window. In the
+      NORMAL volatility regime (12.32% annualized realized volatility), the base 5-day
+      standard deviation is scaled as 0.017359 (using the square-root of horizon rule).
+      This base scaling achieves near-perfect historical coverage (77.70% for 80%
+      intervals) compared to rolling empirical metrics. As the z-score of the last
+      daily return (-0.26) and weekly commodity returns (WTI: +7.27%, Gold: -2.77%)
+      remain within neutral boundaries, no active calibration corrections are triggered.
+      The point forecast is centered at 0.0000 in accordance with the martingale prior.'
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (12 lines)
+    - tool: run_code
+      title: python (68 lines)
+    - tool: run_code
+      title: python (1482 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (147 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (148 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (36 lines)
+    - tool: search_web
+      title: Canada market news April 2026 Bank of Canada inflation oil TSX
+    - tool: run_code
+      title: python (23 lines)
+    - tool: run_code
+      title: python (55 lines)
+    - tool: run_code
+      title: python (42 lines)
+    - tool: run_code
+      title: python (21 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: f02021e81d0758db20ef1d2d0d9172a5
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/f02021e81d0758db20ef1d2d0d9172a5

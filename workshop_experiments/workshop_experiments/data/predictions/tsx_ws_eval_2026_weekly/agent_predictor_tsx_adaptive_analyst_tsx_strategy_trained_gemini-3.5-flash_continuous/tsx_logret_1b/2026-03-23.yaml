@@ -1,0 +1,75 @@
+as_of: '2026-03-23T00:00:00'
+wall_time_s: 88.72717379196547
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T17:56:28.671232'
+  as_of: '2026-03-23T00:00:00'
+  forecast_date: '2026-03-24T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.019766069261666727
+      '0.1': -0.015400298599152694
+      '0.2': -0.010113692381080423
+      '0.3': -0.006301677356088829
+      '0.4': -0.0030444510719813606
+      '0.5': 0.0
+      '0.6': 0.0030444510719813606
+      '0.7': 0.006301677356088826
+      '0.8': 0.010113692381080425
+      '0.9': 0.015400298599152694
+      '0.95': 0.019766069261666717
+  metadata:
+    rationale: The S&P/TSX Composite index closed at 31883.80 on March 23, 2026, registering
+      a daily log return of +1.79%. Analysis of the underlying volatility structure
+      classifies the TSX under an ELEVATED volatility regime (annualized realized
+      volatility of 17.37%). Since the regime is elevated, the adaptive dispersion
+      window is set to 10 trading days, yielding a daily return volatility of 1.20%.
+      No negative anomaly is detected (z-score is +1.75), and no Canadian holidays
+      occurred to trigger Catch-up Day corrections. In accordance with the forecasting
+      strategy, we employ a standard-normal Gaussian model with a martingale prior
+      centered near 0.0 and standard-normal prediction intervals scaled to 1.20% daily
+      volatility.
+    horizon_rationale: S&P/TSX Composite 1-business-day cumulative log return forecast.
+      Grounded in a martingale prior, the point forecast is centered at 0.0. Under
+      the elevated volatility regime (21-day annualized realized vol of 17.37%), we
+      use an adaptive 10-day dispersion window (daily standard deviation of 1.20%
+      or 19.08% annualized) to capture short-term close-to-close variance. Standard-normal
+      Gaussian intervals are projected as the TSX return distribution remains highly
+      Gaussian in elevated regimes. No active corrections (such as catch-up day or
+      negative anomaly wideners) are triggered since today's daily return z-score
+      is +1.75.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (26 lines)
+    - tool: run_code
+      title: python (49 lines)
+    - tool: run_code
+      title: python (32 lines)
+    - tool: search_web
+      title: '"TSX" market news March 2026 OR "Canada" economy March 23 2026'
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (36 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: f8220d066d98d1418a9d745da352783c
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/f8220d066d98d1418a9d745da352783c

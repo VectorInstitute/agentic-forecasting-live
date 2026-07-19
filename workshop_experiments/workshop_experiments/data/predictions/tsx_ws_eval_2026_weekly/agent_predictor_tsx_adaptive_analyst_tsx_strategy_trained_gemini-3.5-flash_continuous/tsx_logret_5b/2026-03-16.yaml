@@ -1,0 +1,85 @@
+as_of: '2026-03-16T00:00:00'
+wall_time_s: 158.74831816600636
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T19:08:29.208945'
+  as_of: '2026-03-16T00:00:00'
+  forecast_date: '2026-03-23T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.0370054
+      '0.1': -0.028832
+      '0.2': -0.0189345
+      '0.3': -0.0117978
+      '0.4': -0.0056997
+      '0.5': 0.0
+      '0.6': 0.0056997
+      '0.7': 0.0117978
+      '0.8': 0.0189345
+      '0.9': 0.028832
+      '0.95': 0.0370054
+  metadata:
+    rationale: S&P/TSX Composite 5-day log-return forecast as of 2026-03-16. The realised
+      annualised volatility is 16.09% (ELEVATED), prompting the use of a 10-day dispersion
+      window (daily std of 0.010061). In line with the active strategy corrections
+      for normal/elevated volatility regimes, a standard-normal projection is used
+      without manual scaling adjustments or fat-tail scaling. The point forecast is
+      set to 0.0 (martingale prior) with no directional lean, reflecting balanced
+      macroeconomic crosswinds (Middle East geopolitical risk supporting energy vs.
+      soft February Canadian jobs data and U.S. tariff policy adjustments).
+    horizon_rationale: The volatility regime is classified as ELEVATED based on the
+      21-day annualised realised volatility of 16.09%. Under the TSX strategy, a 10-day
+      dispersion window is selected to capture the recent market turbulence, yielding
+      a daily standard deviation of 0.010061. A standard-normal Gaussian distribution
+      is employed for the 5-day horizon without additional scaling, as the TSX return
+      distribution is highly Gaussian in normal/elevated regimes. The point forecast
+      is set to 0.0 (martingale prior) in the absence of a dominant directional catalyst.
+    tool_calls:
+    - tool: load_skill
+      title: load_skill
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (25 lines)
+    - tool: run_code
+      title: python (59 lines)
+    - tool: run_code
+      title: python (16 lines)
+    - tool: run_code
+      title: python (12 lines)
+    - tool: run_code
+      title: python (35 lines)
+    - tool: run_code
+      title: python (33 lines)
+    - tool: run_code
+      title: python (26 lines)
+    - tool: search_web
+      title: Good Friday 2026 date
+    - tool: search_web
+      title: TSX March 16 2026 OR TSX March 2026
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (35 lines)
+    - tool: run_code
+      title: python (45 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 96b8e356a687f1e0e232e866ae297245
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/96b8e356a687f1e0e232e866ae297245

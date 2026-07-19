@@ -1,0 +1,91 @@
+as_of: '2026-04-20T00:00:00'
+wall_time_s: 172.38394220900955
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T13:03:04.185491'
+  as_of: '2026-04-20T00:00:00'
+  forecast_date: '2026-04-21T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.00933673
+      '0.1': -0.00727451
+      '0.2': -0.00477732
+      '0.3': -0.00297667
+      '0.4': -0.00143808
+      '0.5': 0.0
+      '0.6': 0.00143808
+      '0.7': 0.00297667
+      '0.8': 0.00477732
+      '0.9': 0.00727451
+      '0.95': 0.00933673
+  metadata:
+    rationale: 'As of April 20, 2026, the S&P/TSX Composite is trading in an elevated
+      volatility regime (21-day realised vol: 15.26%) amidst Middle East geopolitical
+      tensions, which have elevated oil prices to $89.61/bbl and gold to $4806.60/oz.
+      The Bank of Canada held its overnight policy rate at 2.25% in its cautious stance
+      to combat March inflation of 2.4%. While the last 10 trading days have been
+      relatively calm (daily std of 0.005068), global risk spillovers (US VIX at 18.87)
+      require maintaining a calibrated elevated-regime widen factor of 1.12. Backtesting
+      confirms that this adaptive dispersion window and widen factor strategy is highly
+      effective, yielding a lower historical CRPS (0.004399) and balanced coverage
+      (87.96% for the 90% interval).'
+    horizon_rationale: A 1-business-day horizon close-to-close cumulative log return
+      forecast for the S&P/TSX Composite index as of April 20, 2026. The 21-day annualised
+      realised volatility of the index is 15.26%, classifying the market in the 'elevated'
+      volatility regime. Following our active strategy, this triggers an adaptive
+      dispersion window of 10 days, over which the daily standard deviation is 0.005068.
+      A widen factor of 1.12 is applied to adjust for elevated volatility regime conditions,
+      ensuring adequate coverage and lowering the CRPS under potential tail stress.
+      The point forecast (0.50 quantile) is centered at 0.000000 following the martingale
+      prior for daily returns.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (47 lines)
+    - tool: run_code
+      title: python (24 lines)
+    - tool: run_code
+      title: python (9 lines)
+    - tool: run_code
+      title: python (3 lines)
+    - tool: run_code
+      title: python (83 lines)
+    - tool: run_code
+      title: python (7 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: run_code
+      title: python (16 lines)
+    - tool: search_web
+      title: S&P/TSX Composite index market news April 20 2026
+    - tool: search_web
+      title: global financial market news April 20 2026
+    - tool: run_code
+      title: python (25 lines)
+    - tool: run_code
+      title: python (61 lines)
+    - tool: load_skill
+      title: load_skill
+    - tool: run_code
+      title: python (12 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 35208648ca8656626d94a86737da6132
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/35208648ca8656626d94a86737da6132

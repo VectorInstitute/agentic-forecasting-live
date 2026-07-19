@@ -1,0 +1,98 @@
+as_of: '2026-03-02T00:00:00'
+wall_time_s: 261.4152218339732
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T19:02:19.593430'
+  as_of: '2026-03-02T00:00:00'
+  forecast_date: '2026-03-09T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.023706
+      '0.1': -0.01847
+      '0.2': -0.01213
+      '0.3': -0.007558
+      '0.4': -0.003651
+      '0.5': 0.0
+      '0.6': 0.003651
+      '0.7': 0.007558
+      '0.8': 0.01213
+      '0.9': 0.01847
+      '0.95': 0.023706
+  metadata:
+    rationale: Our quantitative pipeline classifies the TSX as of March 2, 2026, in
+      an ELEVATED volatility regime with an annualized 21-day realized volatility
+      of 21.09% (driven by sharp moves in early February). The daily volatility has
+      cooled over the past 10 trading sessions to a daily standard deviation of 0.006445.
+      Using a standard-normal Gaussian model for the ELEVATED regime with the 10-day
+      dispersion window, we project a 5-day cumulative log return standard deviation
+      of 0.014412. This is well-supported by the trailing 63-day 5-day return standard
+      deviation of 0.015456. Geopolitically, positive commodity momentum from Middle
+      East tensions acts as a tailwind, while 10% U.S. baseline tariffs on Canadian
+      exports create a macro headwind; hence, a martingale point forecast (median
+      = 0.0) is highly optimal.
+    horizon_rationale: 'The S&P/TSX Composite 21-day annualized realized volatility
+      is 21.09%, classifying the market in an ELEVATED volatility regime (15-22%).
+      Per our strategy, this selects a shorter 10-day dispersion window (daily sigma
+      of 0.006445) to capture the recent cooling of volatility over the last two weeks,
+      projecting a 5-day volatility of 0.014412. No active calibration corrections
+      are triggered: there is no TSX return anomaly (z = +0.48), no trailing weekly
+      gold/oil shock, and no Canadian holiday catch-up risk. Per our ELEVATED regime
+      playbook, prediction intervals are projected using a standard-normal Gaussian
+      distribution (widen multiplier = 1.0) with a martingale point forecast of 0.0.'
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (75 lines)
+    - tool: run_code
+      title: python (84 lines)
+    - tool: run_code
+      title: python (8 lines)
+    - tool: run_code
+      title: python (92 lines)
+    - tool: run_code
+      title: python (49 lines)
+    - tool: run_code
+      title: python (80 lines)
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (23 lines)
+    - tool: run_code
+      title: python (83 lines)
+    - tool: run_code
+      title: python (23 lines)
+    - tool: search_web
+      title: S&P/TSX Composite market news Bank of Canada March 2026
+    - tool: search_web
+      title: Bank of Canada interest rate announcement March 2026 date
+    - tool: search_web
+      title: Bank of Canada rate decision March 4 2026
+    - tool: run_code
+      title: python (32 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (120 lines)
+    - tool: run_code
+      title: python (52 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: f775ec52c6d272cb6540f9fbb723b567
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/f775ec52c6d272cb6540f9fbb723b567

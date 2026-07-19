@@ -1,0 +1,109 @@
+as_of: '2026-04-13T00:00:00'
+wall_time_s: 274.0144449999789
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T14:28:14.736961'
+  as_of: '2026-04-13T00:00:00'
+  forecast_date: '2026-04-20T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.038666
+      '0.1': -0.030126
+      '0.2': -0.019784
+      '0.3': -0.012327
+      '0.4': -0.005955
+      '0.5': 0.0
+      '0.6': 0.005955
+      '0.7': 0.012327
+      '0.8': 0.019784
+      '0.9': 0.030126
+      '0.95': 0.038666
+  metadata:
+    rationale: 'The S&P/TSX Composite is in an elevated volatility regime with a 21-day
+      realized volatility of 18.43%. While recent market stress has calmed (VIX falling
+      from 30.61 to 19.12, oil cooling to $99.08) making the shorter 10-day dispersion
+      window of 0.008213 appropriate, the upcoming Bank of Canada rate announcement
+      on April 15 represents a key catalyst. Historical backtesting during elevated
+      regimes shows that the standard 10-day window with a 1.12 widen factor under-covers
+      (86.95% coverage), whereas a calibrated 1.28 widen factor achieves exactly 90%
+      coverage. We maintain a neutral median of 0.0% (martingale prior) due to offsetting
+      forces: soaring safe-haven gold and a strong weekly index rebound (+2.08%) are
+      balanced by falling oil prices and persistent US trade/tariff headwinds.'
+    horizon_rationale: Forecast for the 5-business-day cumulative log return of the
+      S&P/TSX Composite. The standard deviation is calibrated using a 10-day dispersion
+      window (daily std of 0.008213) with an empirical widen factor of 1.28. This
+      accounts for the elevated vol regime and the event-related uncertainty of the
+      upcoming Bank of Canada policy rate announcement on April 15, 2026.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (28 lines)
+    - tool: run_code
+      title: python (16 lines)
+    - tool: run_code
+      title: python (53 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (143 lines)
+    - tool: search_web
+      title: TSX S&P/TSX Composite index market April 2026
+    - tool: search_web
+      title: '"Bank of Canada" April 2026 interest rate announcement'
+    - tool: search_web
+      title: '"Bank of Canada" rate decision "April 15, 2026" or "April 2026"'
+    - tool: search_web
+      title: '"Bank of Canada" "April 15, 2026"'
+    - tool: search_web
+      title: '"S&P/TSX Composite" "April 2026"'
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (5 lines)
+    - tool: run_code
+      title: python (40 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (6 lines)
+    - tool: run_code
+      title: python (16 lines)
+    - tool: run_code
+      title: python (24 lines)
+    - tool: run_code
+      title: python (42 lines)
+    - tool: run_code
+      title: python (34 lines)
+    - tool: run_code
+      title: python (34 lines)
+    - tool: run_code
+      title: python (38 lines)
+    - tool: run_code
+      title: python (7 lines)
+    - tool: run_code
+      title: python (26 lines)
+    - tool: run_code
+      title: python (31 lines)
+    - tool: run_code
+      title: python (21 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 304daad77bd7c58d148e03e6d43a62b3
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/304daad77bd7c58d148e03e6d43a62b3

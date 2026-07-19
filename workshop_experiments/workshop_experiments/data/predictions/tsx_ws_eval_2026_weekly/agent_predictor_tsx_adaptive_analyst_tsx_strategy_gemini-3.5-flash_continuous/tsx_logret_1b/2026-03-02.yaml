@@ -1,0 +1,97 @@
+as_of: '2026-03-02T00:00:00'
+wall_time_s: 196.57841508300044
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T12:47:38.227096'
+  as_of: '2026-03-02T00:00:00'
+  forecast_date: '2026-03-03T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.018909237295434124
+      '0.1': -0.014732716797500725
+      '0.2': -0.009675277701154221
+      '0.3': -0.0060285082940916375
+      '0.4': -0.0029124782976491536
+      '0.5': 0.0
+      '0.6': 0.0029124782976491536
+      '0.7': 0.0060285082940916375
+      '0.8': 0.009675277701154221
+      '0.9': 0.014732716797500725
+      '0.95': 0.018909237295434124
+  metadata:
+    rationale: An integrated quantitative pipeline and news-grounded calibration.
+      While trailing 10-day realized volatility indicates a calm period, the sudden
+      WTI crude oil spike (+6.09%) and US VIX escalation (closing at 21.44) signify
+      that a significant commodity and risk shock has begun. By leveraging historical
+      matching environments under elevated volatility regimes with crude oil spikes,
+      the standard deviation is calibrated to a highly robust 0.011496 (annualized
+      18.25%) to ensure the forecast intervals do not run too narrow.
+    horizon_rationale: The S&P/TSX Composite is classified under an elevated volatility
+      regime, with its trailing 21-day annualized realised volatility standing at
+      21.09%. Although the last 10 trading days were temporarily calm (trailing 10-day
+      annualized volatility of 10.23%), a major commodity and geopolitical risk catalyst
+      occurred today, as WTI crude oil spiked by 6.09% (closing at $71.23) amid US-Iran
+      tensions and Strait of Hormuz threat concerns, while the US VIX rose to 21.44
+      (intraday high over 25). To prevent underestimating risk, a historical backtest
+      of matching TSX environments (21-day annualized vol between 15% and 25%, accompanied
+      by a WTI crude oil spike of over 3%) was conducted. The analysis of these 139
+      matching days reveals a subsequent-day daily standard deviation of 0.011496
+      (annualized 18.25%). This calibrated volatility provides an exceptional fit
+      to historical empirical quantiles (e.g., empirical 5% quantile of -2.02% vs.
+      normal-calibrated -1.89%, and empirical 95% quantile of +1.77% vs. normal-calibrated
+      +1.89%). In line with our martingale prior for a 1-day horizon close-to-close
+      return, the forecast is centered at 0.0.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (19 lines)
+    - tool: search_web
+      title: oil price spike march 2026 middle east canada market news
+    - tool: search_web
+      title: '"march 2, 2026" OR "march 2026" canada market news tsx composite oil
+        boe'
+    - tool: run_code
+      title: python (68 lines)
+    - tool: run_code
+      title: python (16 lines)
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (57 lines)
+    - tool: load_skill
+      title: load_skill
+    - tool: run_code
+      title: python (32 lines)
+    - tool: run_code
+      title: python (36 lines)
+    - tool: run_code
+      title: python (23 lines)
+    - tool: run_code
+      title: python (52 lines)
+    - tool: run_code
+      title: python (48 lines)
+    - tool: run_code
+      title: python (46 lines)
+    - tool: run_code
+      title: python (31 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 63c59932ccc65502683f07fe77b8cf87
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/63c59932ccc65502683f07fe77b8cf87

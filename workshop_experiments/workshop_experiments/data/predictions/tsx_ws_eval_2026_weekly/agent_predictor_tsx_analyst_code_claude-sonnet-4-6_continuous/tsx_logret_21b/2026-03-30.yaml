@@ -1,0 +1,91 @@
+as_of: '2026-03-30T00:00:00'
+wall_time_s: 1791.65533804195
+predictions:
+- predictor_id: agent_predictor_tsx_analyst_code_claude-sonnet-4-6_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T14:27:43.694598'
+  as_of: '2026-03-30T00:00:00'
+  forecast_date: '2026-04-28T00:00:00'
+  payload:
+    point_forecast: -0.01
+    quantiles:
+      '0.05': -0.094
+      '0.1': -0.07
+      '0.2': -0.046
+      '0.3': -0.031
+      '0.4': -0.02
+      '0.5': -0.01
+      '0.6': 0.002
+      '0.7': 0.014
+      '0.8': 0.03
+      '0.9': 0.052
+      '0.95': 0.07
+  metadata:
+    rationale: 'Overall framework: Used empirical return history (2000-2026), current
+      macro intelligence (BoC hold at 2.25%, 2.4% CPI, 6.5-7% unemployment, US tariffs,
+      Middle East oil shock, technical recession), and momentum/volatility signals.
+      The as-of date log return of -0.07 and trailing vol of 3.47%/day indicate an
+      elevated-stress regime. The median forecast of -0.010 reflects partial mean-reversion
+      from an oversold position, with macro headwinds preventing a strong bounce.
+      The distribution is widened relative to calm periods and left-skewed to reflect
+      asymmetric downside risk from trade escalation, recession deepening, or further
+      geopolitical shocks.'
+    horizon_rationale: "Forecast as of 2026-03-30 for 21-business-day horizon. The\
+      \ TSX cumulative log return stands at -0.07, having dropped sharply from +0.05\
+      \ in early March \u2014 a ~12pp drawdown over roughly 15 trading days. Trailing\
+      \ 63-day volatility is elevated at 3.47% per day. Key macro drivers: (1) Bank\
+      \ of Canada on hold at 2.25%, balancing a technical recession (GDP contraction\
+      \ in late 2025/early 2026) against sticky CPI inflation of 2.4% driven by Middle\
+      \ East energy shock \u2014 no near-term easing catalyst; (2) US tariffs (10%\
+      \ global tariff effective Feb 24, 2026) creating material headwinds for auto,\
+      \ steel, aluminum and agricultural exporters; (3) Unemployment at 6.5-7% with\
+      \ deteriorating labour market; (4) Oil prices elevated on Middle East conflict\
+      \ (energy sector tailwind) but also raising input costs; (5) Gold firm as safe-haven\
+      \ (gold miners benefit); (6) USD/CAD and GoC yields volatile amid trade uncertainty\
+      \ and BoC-Fed policy divergence. Momentum is strongly negative, but the magnitude\
+      \ of the recent drawdown (~-0.07 cumulative log return at origin) suggests some\
+      \ mean-reversion potential. Point forecast set at -0.010, reflecting partial\
+      \ recovery from oversold levels offset by fundamental headwinds. Volatility\
+      \ for 21bd window estimated at ~0.045 (scaled from daily ~0.0347, with slight\
+      \ upward adjustment for regime). Distribution has slight left skew to account\
+      \ for recession/tariff escalation tail risk. The 5th percentile at -0.094 captures\
+      \ a scenario of tariff escalation or oil shock amplification; the 95th at +0.070\
+      \ captures a trade deal resolution or commodity-driven rally."
+    tool_calls:
+    - tool: search_web
+      title: Bank of Canada policy rate decision and forward guidance for Canadian
+        equities
+    - tool: search_web
+      title: oil and gold commodity price outlook impact on the TSX energy and materials
+        sectors
+    - tool: search_web
+      title: US Federal Reserve policy and tariff trade spillovers into Canadian stocks
+        2026
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python (51 lines)
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: c9e76e3bb275e93595c0c53488727bee
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/c9e76e3bb275e93595c0c53488727bee

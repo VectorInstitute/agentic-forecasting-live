@@ -1,0 +1,87 @@
+as_of: '2026-06-15T00:00:00'
+wall_time_s: 159.17230237508193
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T19:54:16.169333'
+  as_of: '2026-06-15T00:00:00'
+  forecast_date: '2026-06-22T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.04521
+      '0.1': -0.035225
+      '0.2': -0.023133
+      '0.3': -0.014414
+      '0.4': -0.006963
+      '0.5': 0.0
+      '0.6': 0.006963
+      '0.7': 0.014414
+      '0.8': 0.023133
+      '0.9': 0.035225
+      '0.95': 0.04521
+  metadata:
+    rationale: This probabilistic forecast is generated using a regime-adaptive realized
+      volatility pipeline. On June 15, 2026, the S&P/TSX Composite is classified under
+      the ELEVATED volatility regime (21-day realized vol of 15.44%). The pipeline
+      automatically selects a 10-day dispersion window (sigma_daily = 0.012292) to
+      reflect the immediate impact of a massive -11.55% WTI crude oil crash (trailing
+      5-day return). No manual widening or drift adjustments are applied, as the native
+      pipeline perfectly self-calibrates to the commodity shock, and directional drift
+      after energy shocks is highly non-stationary. The intervals are constructed
+      using a symmetric standard-normal distribution centered at 0.0 (martingale prior).
+    horizon_rationale: Forecast for the 5-business-day forward cumulative log return
+      of the S&P/TSX Composite Index from the close of June 15, 2026 to June 22, 2026.
+      The 21-day rolling realized volatility of the index is 15.44%, which places
+      the market in the ELEVATED volatility regime (15-22%). Under this regime, our
+      strategy switches to an adaptive 10-day dispersion window, which yields a daily
+      standard deviation (sigma_daily) of 0.012292 (annualized 19.51%). This represents
+      a 26% expansion in daily volatility compared to the 21-day average, successfully
+      capturing the volatility surge from the recent -11.55% WTI Crude Oil crash (which
+      constitutes a major commodity shock). Per our strategy corrections (hyp-007),
+      return distributions in elevated regimes are highly Gaussian (excess kurtosis
+      < 0.6), so standard-normal projection is used without fat-tailed scaling. The
+      median is centered at 0.0 in accordance with a martingale prior, as historical
+      post-commodity-crash drift is highly non-stationary and prone to overfitting.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (39 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (125 lines)
+    - tool: search_web
+      title: TSX "June 2026" OR "June 15, 2026" OR "June 12, 2026" news stock market
+        Canada
+    - tool: search_web
+      title: '"Bank of Canada" rate decision June 2026 OR "June 3, 2026" OR "June
+        17, 2026"'
+    - tool: search_web
+      title: '"Canada inflation" "June 2026" release date OR "CPI" June 2026'
+    - tool: search_web
+      title: '"Canada" "CPI" release date "June 16, 2026" OR "June 23, 2026" OR "June
+        17, 2026"'
+    - tool: search_web
+      title: Statistics Canada CPI release date June 2026
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 22839d38679d0e41b9d7b88b91719d4d
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/22839d38679d0e41b9d7b88b91719d4d

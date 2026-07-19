@@ -1,0 +1,101 @@
+as_of: '2026-02-16T00:00:00'
+wall_time_s: 219.92828233295586
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T20:28:21.044148'
+  as_of: '2026-02-16T00:00:00'
+  forecast_date: '2026-03-17T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.122787
+      '0.1': -0.095667
+      '0.2': -0.054632
+      '0.3': -0.03404
+      '0.4': -0.016445
+      '0.5': 0.0
+      '0.6': 0.016445
+      '0.7': 0.03404
+      '0.8': 0.054632
+      '0.9': 0.083189
+      '0.95': 0.106772
+  metadata:
+    rationale: S&P/TSX Composite Index forecast for the 21-business-day horizon ending
+      mid-March 2026. The index is in an elevated volatility regime (realised vol
+      of 20.25% with 10d daily sigma of 1.417%), which dictates a 10-day dispersion
+      window. The US VIX is in a normal state at 20.60. The forecast is centered at
+      0.0 using a martingale prior, as no extreme commodity shocks or central-bank
+      changes are present. In line with learned strategy correction hyp-013, the 5%
+      and 10% quantiles are shifted downward (multiplied by 1.15) to account for structural
+      downside skewness observed historically in elevated regimes and under normal
+      VIX states.
+    horizon_rationale: Forecast for the S&P/TSX Composite 21-day cumulative log return
+      as of February 16, 2026. The 21bd realized volatility of the TSX is 20.25%,
+      placing it in the ELEVATED regime (15-22%). The US VIX is at 20.60 (Normal state).
+      According to the trained TSX strategy, we use standard-normal Gaussian distribution
+      for base projection (dispersion window of 10 days, daily sigma of 0.014165),
+      but apply a downward shift to the 5% and 10% quantiles (multiplying by 1.15)
+      to calibrate asymmetric left-tail risk (downside skewness) and protect against
+      severe downside moves under VIX Normal states where massive upside surges are
+      structurally impossible.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (47 lines)
+    - tool: load_skill
+      title: load_skill
+    - tool: search_web
+      title: S&P/TSX Composite index news February 2026 Canada market
+    - tool: search_web
+      title: Bank of Canada rate announcement or meeting February 2026
+    - tool: run_code
+      title: python (39 lines)
+    - tool: run_code
+      title: python (36 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: search_web
+      title: '"Shift the lower tail quantiles" TSX OR "hyp-013"'
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (7 lines)
+    - tool: search_web
+      title: '"Shift the lower tail quantiles (5% and 10%) downward" OR "Shift the
+        lower tail quantiles"'
+    - tool: run_code
+      title: python (65 lines)
+    - tool: run_code
+      title: python (61 lines)
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (32 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (16 lines)
+    - tool: run_code
+      title: python (45 lines)
+    - tool: run_code
+      title: python (28 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 6f7253195d2252c071e71bde5976819e
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/6f7253195d2252c071e71bde5976819e

@@ -1,0 +1,98 @@
+as_of: '2026-05-25T00:00:00'
+wall_time_s: 185.35634341696277
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T21:27:30.322298'
+  as_of: '2026-05-25T00:00:00'
+  forecast_date: '2026-06-23T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.06042420395615725
+      '0.1': -0.04707819097576403
+      '0.2': -0.030917214904705167
+      '0.3': -0.019264014144110175
+      '0.4': -0.009306783765283207
+      '0.5': 0.0
+      '0.6': 0.009306783765283207
+      '0.7': 0.019264014144110168
+      '0.8': 0.03091721490470517
+      '0.9': 0.04707819097576403
+      '0.95': 0.060424203956157226
+  metadata:
+    rationale: The S&P/TSX Composite's 21-day log return distribution is projected
+      under a NORMAL volatility regime (12.73% annualized realized vol), which historical
+      evidence confirms is highly Gaussian and well-modeled by a standard-normal projection.
+      Despite WTI crude experiencing a sharp weekly drop of -8.74% and the TSX trading
+      at its all-time high, historical backtesting confirms that maintaining a martingale
+      prior (median = 0.0) yields superior out-of-sample CRPS performance compared
+      to shifting the median. The prediction intervals are calibrated via a 21-day
+      dispersion window (daily standard deviation of 0.008016) scaled by the square
+      root of the 21-day horizon.
+    horizon_rationale: The S&P/TSX Composite is at its all-time high as of May 25,
+      2026, amid a patient Bank of Canada holding interest rates steady at 2.25% and
+      some recent volatility in energy markets where WTI crude experienced a trailing
+      5-day drop of -8.74% to $96.60. Annualized 21-day realized volatility of the
+      TSX is 12.73%, classifying the index in a NORMAL volatility regime. This regime
+      is highly Gaussian, confirming that standard-normal projection is optimal. Based
+      on our robust historical backtests, the martingale prior (point forecast of
+      0.0) outperforms directional shifts (such as shifting the median negative based
+      on all-time high status) on CRPS/proper scoring metrics. Therefore, we project
+      a symmetric 21-day cumulative log return distribution centered at 0.0, calibrated
+      using a daily standard deviation of 0.008016 (annualized 12.73%) scaled by the
+      square root of the 21-day horizon, resulting in a standard deviation of 0.036735
+      for the 21-day forward log return.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (32 lines)
+    - tool: run_code
+      title: python (16 lines)
+    - tool: run_code
+      title: python (5 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (56 lines)
+    - tool: search_web
+      title: '"Victoria Day" 2026 holiday Canada'
+    - tool: search_web
+      title: '"Memorial Day" 2026 holiday US'
+    - tool: run_code
+      title: python (52 lines)
+    - tool: run_code
+      title: python (12 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (45 lines)
+    - tool: run_code
+      title: python (40 lines)
+    - tool: run_code
+      title: python (45 lines)
+    - tool: run_code
+      title: python (44 lines)
+    - tool: run_code
+      title: python (53 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 691fd8ac1ee965d9bef91db5513ef9bd
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/691fd8ac1ee965d9bef91db5513ef9bd

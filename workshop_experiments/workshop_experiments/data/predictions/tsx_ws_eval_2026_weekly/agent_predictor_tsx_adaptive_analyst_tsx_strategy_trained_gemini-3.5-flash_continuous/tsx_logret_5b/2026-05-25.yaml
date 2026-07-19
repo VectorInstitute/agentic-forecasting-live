@@ -1,0 +1,81 @@
+as_of: '2026-05-25T00:00:00'
+wall_time_s: 155.90697858401109
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T19:42:59.963097'
+  as_of: '2026-05-25T00:00:00'
+  forecast_date: '2026-06-01T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.029484
+      '0.1': -0.022972
+      '0.2': -0.015086
+      '0.3': -0.0094
+      '0.4': -0.004541
+      '0.5': 0.0
+      '0.6': 0.004541
+      '0.7': 0.0094
+      '0.8': 0.015086
+      '0.9': 0.022972
+      '0.95': 0.029484
+  metadata:
+    rationale: Forecasting S&P/TSX Composite 5-business-day log returns under a NORMAL
+      volatility regime. Realised annualised volatility is 12.73% and no anomalous
+      shocks are present. The dispersion window is set to 21 days, yielding a daily
+      standard deviation of 0.008016. Scaling to the 5bd horizon gives a standard
+      deviation of 0.017925. In accordance with strategy corrections, a standard-normal
+      Gaussian projection is utilized, and the martingale prior of 0.0 is maintained.
+    horizon_rationale: S&P/TSX Composite 5-business-day cumulative log return forecast.
+      The trailing 21-day annualised realised volatility is 12.73%, classifying the
+      market in the NORMAL regime. The latest daily return of +0.73% has a z-score
+      of +0.72, showing no anomaly. Using a standard-normal Gaussian distribution
+      with a daily standard deviation of 0.008016 (dispersion window of 21 days) scaled
+      to 5 business days (sigma_5d = 0.017925). The median point forecast is set to
+      0.0 based on the martingale prior.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (10 lines)
+    - tool: run_code
+      title: python (4 lines)
+    - tool: run_code
+      title: python (31 lines)
+    - tool: run_code
+      title: python (12 lines)
+    - tool: run_code
+      title: python (28 lines)
+    - tool: run_code
+      title: python (31 lines)
+    - tool: run_code
+      title: python (73 lines)
+    - tool: run_code
+      title: python (34 lines)
+    - tool: search_web
+      title: '"TSX" "Bank of Canada" May 2026'
+    - tool: search_web
+      title: '"TSX" "May 25, 2026" OR "May 2026" index close level'
+    - tool: search_web
+      title: '"Bank of Canada" rate decision calendar 2026 OR April May June 2026'
+    - tool: run_code
+      title: python (13 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 5d2f26619022d7d907f242a8802e7a6d
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/5d2f26619022d7d907f242a8802e7a6d

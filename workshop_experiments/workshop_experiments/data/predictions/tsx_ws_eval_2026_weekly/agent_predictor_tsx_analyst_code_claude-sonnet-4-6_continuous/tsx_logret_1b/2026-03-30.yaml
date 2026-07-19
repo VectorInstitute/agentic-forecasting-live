@@ -1,0 +1,81 @@
+as_of: '2026-03-30T00:00:00'
+wall_time_s: 283.7181051670341
+predictions:
+- predictor_id: agent_predictor_tsx_analyst_code_claude-sonnet-4-6_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-18T22:51:16.721401'
+  as_of: '2026-03-30T00:00:00'
+  forecast_date: '2026-03-31T00:00:00'
+  payload:
+    point_forecast: -0.0002
+    quantiles:
+      '0.05': -0.02166
+      '0.1': -0.01592
+      '0.2': -0.00999
+      '0.3': -0.00616
+      '0.4': -0.00305
+      '0.5': -0.0002
+      '0.6': 0.00265
+      '0.7': 0.00576
+      '0.8': 0.00959
+      '0.9': 0.01552
+      '0.95': 0.02126
+  metadata:
+    rationale: "Overall forecast framework: parametric Student-t(df=5) model calibrated\
+      \ to trailing 63-day realised vol (\u03C3=1.065%), shifted slightly negative\
+      \ (\u03BC=-0.02% daily) to reflect: (a) ongoing US tariff headwinds and CUSMA\
+      \ uncertainty weighing on Canadian equity risk premia; (b) Canada near technical\
+      \ recession with soft labour market; (c) BoC on hold at 2.25% with no imminent\
+      \ catalyst to drive re-rating; (d) recent negative momentum in March 2026 (last\
+      \ 10 days net -4%). Fat-tail parameterisation (df=5) reflects the elevated frequency\
+      \ of \xB11\u20132% daily moves observed since October 2025 in the daily return\
+      \ series. Commodity support from oil/gold provides some offset but is insufficient\
+      \ to flip the bias positive in the near term."
+    horizon_rationale: "1-day ahead S&P/TSX log-return forecast as of 2026-03-30.\
+      \ Core model: Student-t (df=5) centred at mu=-0.0002 with scale=0.010651 (trailing\
+      \ 63-day realised standard deviation). Key inputs and adjustments: (1) Bank\
+      \ of Canada: policy rate held at 2.25% since Oct-2025 cut; data-dependent stance\
+      \ with soft labour market (unemployment 6.5\u20137%) and core CPI near 2% target,\
+      \ providing a neutral-to-slightly-supportive policy backdrop but no fresh catalyst.\
+      \ (2) Trade headwinds: US 25% tariffs on Canadian goods (auto, steel, aluminum,\
+      \ agriculture) remain a dominant headwind; courts struck down some IEEPA tariffs\
+      \ in Feb-2026 but replacement measures were introduced quickly, sustaining uncertainty\
+      \ and dampening investment. Canada in or near technical recession in Q1-2026.\
+      \ (3) Commodity mixed: oil prices elevated due to Middle East geopolitical risk\
+      \ (supportive for TSX Energy), but broader global growth weakness and trade\
+      \ disruption cap upside; gold supported by safe-haven demand (supportive for\
+      \ Materials). Net commodity effect is roughly neutral to slightly positive for\
+      \ TSX. (4) USD/CAD: CAD under pressure from trade uncertainty and BoC-Fed policy\
+      \ divergence; weaker CAD moderately supportive for exporters but also signals\
+      \ risk-off. (5) Momentum signal: last 10 trading days sum = -4.0%, indicating\
+      \ net selling pressure in March; however, the last day (Mar 30) printed essentially\
+      \ flat (-0.00) after a -2% day on Mar 26 and a +1% on Mar 25\u2014suggesting\
+      \ short-term mean-reversion is muted. A small negative drift (-0.0002) is applied\
+      \ to reflect the above headwinds versus the long-run positive drift. (6) Fat\
+      \ tails: Student-t with df=5 chosen to reflect observed large daily moves (e.g.,\
+      \ -3% on 2026-01-30, multiple \xB12% days in Feb\u2013Mar 2026), consistent\
+      \ with elevated macro/trade uncertainty regime. The resulting distribution is\
+      \ symmetric-ish around a near-zero median, with Q5/Q95 at approximately \xB1\
+      2.1%, well matching the empirical tail events in the recent history."
+    tool_calls:
+    - tool: search_web
+      title: Bank of Canada policy rate decision and forward guidance for Canadian
+        equities
+    - tool: search_web
+      title: oil and gold commodity price outlook impact on the TSX energy and materials
+        sectors
+    - tool: search_web
+      title: US Federal Reserve policy and tariff trade spillovers into Canadian stocks
+        2026
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python (169 lines)
+    - tool: run_code
+      title: python (119 lines)
+    - tool: run_code
+      title: python (56 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: a0ccc226c17fc6f65f611156e5d4649f
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/a0ccc226c17fc6f65f611156e5d4649f

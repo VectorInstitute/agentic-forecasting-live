@@ -1,0 +1,113 @@
+as_of: '2026-04-13T00:00:00'
+wall_time_s: 305.58223120798357
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T21:04:56.575824'
+  as_of: '2026-04-13T00:00:00'
+  forecast_date: '2026-05-12T00:00:00'
+  payload:
+    point_forecast: 0.0032
+    quantiles:
+      '0.05': -0.071088
+      '0.1': -0.049857
+      '0.2': -0.028476
+      '0.3': -0.014563
+      '0.4': -0.004047
+      '0.5': 0.0032
+      '0.6': 0.017503
+      '0.7': 0.0257
+      '0.8': 0.031708
+      '0.9': 0.038893
+      '0.95': 0.046535
+  metadata:
+    rationale: Comprehensive quantitative pipeline combining yfinance data-fetch,
+      vol-regime classification, and trend-projection. On April 13, 2026, the TSX
+      is in an Elevated volatility regime (18.04% 21bd realised vol) and a shallow
+      drawdown (-1.92%). WTI crude oil has experienced a negative trailing 5-day shock
+      of -12.62% to $99.08/bbl, creating a global commodity/equity crash context but
+      not requiring a manual volatility adjustment as our adaptive pipeline self-calibrates.
+      To manage tail-risk asymmetry, we utilize a calibrated skew scaling factor fitted
+      from 291 historical elevated/shallow drawdown sessions, widening the lower tail
+      to absorb geopolitical shocks while tightening the upper tail to reflect modern
+      resource and monetary policy friction.
+    horizon_rationale: Calibrated probabilistic forecast for the 21-day rolling log
+      return of the S&P/TSX Composite. The TSX is classified under an ELEVATED volatility
+      regime (annualized realized vol of 18.04%). Per our adaptive window selection
+      rule, we utilize a 10-business-day dispersion window (sigma_daily = 0.008213)
+      to capture the current market consolidation. The index sits in a shallow drawdown
+      of -1.92% from its 252-day high; our Drawdown Recovery Playbook indicates an
+      average subsequent 21bd return of +0.32% (0.0032), which we use to anchor our
+      median point forecast. Due to the elevated regime and a VIX Normal state of
+      19.12, the index exhibits significant structural downside skewness where severe
+      crash risks are present but massive positive surges are structurally limited.
+      We shift the lower tail quantiles (5% and 10%) downward (widening by 20% and
+      10% respectively) and narrow the upper tail quantiles (90% and 95% by 26% and
+      30%) to protect against asymmetric left-tail risk and avoid over-extrapolating
+      upside momentum.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (25 lines)
+    - tool: search_web
+      title: S&P/TSX Composite index April 2026
+    - tool: run_code
+      title: python (78 lines)
+    - tool: run_code
+      title: python (91 lines)
+    - tool: run_code
+      title: python (54 lines)
+    - tool: run_code
+      title: python (31 lines)
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (21 lines)
+    - tool: search_web
+      title: '"Calibrate asymmetric tail risk at the 21bd horizon" "Shift the lower
+        tail quantiles"'
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (11 lines)
+    - tool: run_code
+      title: python (70 lines)
+    - tool: run_code
+      title: python (22 lines)
+    - tool: search_web
+      title: Bank of Canada interest rate decision April 2026
+    - tool: search_web
+      title: Bank of Canada interest rate meeting date April 2026
+    - tool: run_code
+      title: python (57 lines)
+    - tool: run_code
+      title: python (37 lines)
+    - tool: run_code
+      title: python (30 lines)
+    - tool: run_code
+      title: python (33 lines)
+    - tool: run_code
+      title: python (42 lines)
+    - tool: run_code
+      title: python (42 lines)
+    - tool: run_code
+      title: python (40 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 0e2e2e0f8aec515d2dd9939b3c4a29b9
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/0e2e2e0f8aec515d2dd9939b3c4a29b9

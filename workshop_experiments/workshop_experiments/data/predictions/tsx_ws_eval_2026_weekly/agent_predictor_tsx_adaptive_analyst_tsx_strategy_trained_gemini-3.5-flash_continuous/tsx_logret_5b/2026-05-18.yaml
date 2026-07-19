@@ -1,0 +1,98 @@
+as_of: '2026-05-18T00:00:00'
+wall_time_s: 194.72977287496906
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T19:40:24.071245'
+  as_of: '2026-05-18T00:00:00'
+  forecast_date: '2026-05-25T00:00:00'
+  payload:
+    point_forecast: 0.00226
+    quantiles:
+      '0.05': -0.028473
+      '0.1': -0.021685
+      '0.2': -0.013465
+      '0.3': -0.007538
+      '0.4': -0.002474
+      '0.5': 0.00226
+      '0.6': 0.006994
+      '0.7': 0.012058
+      '0.8': 0.017985
+      '0.9': 0.026205
+      '0.95': 0.032993
+  metadata:
+    rationale: Highly calibrated 5-business-day probabilistic forecast for the S&P/TSX
+      Composite index (^GSPTSE) as of Monday, May 18, 2026. The forecast combines
+      the native realized volatility pipeline with empirical historical conditioning
+      on a strong positive crude oil shock and shallow drawdown, projecting a symmetric
+      Gaussian distribution around a slightly positive median of +0.226%.
+    horizon_rationale: S&P/TSX Composite 5-business-day forecast constructed by running
+      our full statistical pipeline on Yahoo Finance data up to the 2026-05-18 exclusive
+      cutoff. Daily 21-day realized volatility of 13.26% classifies the market in
+      a Normal regime (10-15%). With no daily return anomaly (z-score -1.37), the
+      standard 21-day dispersion window is selected, giving sigma_daily = 0.008356
+      and a 5b horizon-scaled volatility of 0.018684. While the default martingale
+      prior is 0, a strong commodity catalyst (WTI Crude Oil weekly surge of +10.48%
+      vs. Gold weekly return of -3.49%) in a shallow drawdown of -2.05% justifies
+      a slight positive lean. Filtering historical periods since 2005 under these
+      exact parameters reveals 49 matching days with an empirical median 5b forward
+      return of +0.226%, which we adopt as our point forecast and 0.50 quantile. Prediction
+      intervals are projected using standard-normal Gaussian quantiles as per our
+      normal-regime active correction, providing highly calibrated coverage.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: search_web
+      title: S&P/TSX Composite May 2026 bank of canada oil gold
+    - tool: run_code
+      title: python (39 lines)
+    - tool: run_code
+      title: python (22 lines)
+    - tool: run_code
+      title: python (10 lines)
+    - tool: run_code
+      title: python (12 lines)
+    - tool: run_code
+      title: python (49 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (34 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: run_code
+      title: python (31 lines)
+    - tool: run_code
+      title: python (9 lines)
+    - tool: run_code
+      title: python (27 lines)
+    - tool: run_code
+      title: python (58 lines)
+    - tool: run_code
+      title: python (26 lines)
+    - tool: run_code
+      title: python (26 lines)
+    - tool: run_code
+      title: python (9 lines)
+    - tool: run_code
+      title: python (26 lines)
+    - tool: run_code
+      title: python (23 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 66585bc0509c9d4eb6032cbf457f0e16
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/66585bc0509c9d4eb6032cbf457f0e16

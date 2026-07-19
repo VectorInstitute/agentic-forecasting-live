@@ -1,0 +1,80 @@
+as_of: '2026-02-23T00:00:00'
+wall_time_s: 99.697728500003
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T12:44:21.616922'
+  as_of: '2026-02-23T00:00:00'
+  forecast_date: '2026-02-24T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.0232435
+      '0.1': -0.01810966
+      '0.2': -0.01189299
+      '0.3': -0.00741033
+      '0.4': -0.00358006
+      '0.5': 0.0
+      '0.6': 0.00358006
+      '0.7': 0.00741033
+      '0.8': 0.01189299
+      '0.9': 0.01810966
+      '0.95': 0.0232435
+  metadata:
+    rationale: The S&P/TSX Composite is projected for the 1-business-day horizon (as
+      of 2026-02-23) using our standard statistical pipeline. The 21-day annualised
+      realised volatility of 20.76% indicates an 'elevated' regime. Accordingly, we
+      adaptively select a shorter 10-day dispersion window to compute our base daily
+      standard deviation of 0.012617, ensuring the model incorporates the recent regime
+      shift and larger daily moves of mid-February. Per our trend-projection pipeline,
+      we scale the interval widths by a 1.12 widening factor to properly calibrate
+      against tail underestimation during high/elevated volatility. The point forecast
+      and 0.50 quantile are set to 0.0, consistent with our martingale prior for a
+      1-day horizon.
+    horizon_rationale: At the 1-business-day horizon, the S&P/TSX Composite return
+      is modelled as a martingale centered exactly at 0.0. The 21-day annualised realised
+      volatility of the index is 20.76%, classifying the market in an elevated volatility
+      regime. Using an adaptive 10-day dispersion window to capture recent return
+      clustering (including a -2.40% return on February 12 and +1.86% on February
+      13), the daily volatility of returns (sigma_daily) is calculated as 0.012617.
+      Under the elevated volatility regime, a standard 1.12 widening factor is applied
+      to calibrate the forecast interval and adjust for under-dispersion.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (28 lines)
+    - tool: run_code
+      title: python (72 lines)
+    - tool: run_code
+      title: python (2 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: search_web
+      title: '"S&P/TSX Composite" February 2026 news market'
+    - tool: search_web
+      title: '"Bank of Canada" rate decision February 2026'
+    - tool: search_web
+      title: TSX Monday "February 23, 2026" or "Feb 23, 2026"
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (37 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: d739c908865f3cd872b36540fa89218d
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/d739c908865f3cd872b36540fa89218d

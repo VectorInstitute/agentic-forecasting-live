@@ -1,0 +1,99 @@
+as_of: '2026-05-04T00:00:00'
+wall_time_s: 297.5970209579682
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T19:33:59.170981'
+  as_of: '2026-05-04T00:00:00'
+  forecast_date: '2026-05-11T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.02819256
+      '0.1': -0.02196562
+      '0.2': -0.01442527
+      '0.3': -0.00898815
+      '0.4': -0.00434233
+      '0.5': 0.0
+      '0.6': 0.00434233
+      '0.7': 0.00898815
+      '0.8': 0.01442527
+      '0.9': 0.02196562
+      '0.95': 0.02819256
+  metadata:
+    rationale: S&P/TSX Composite 5-business-day cumulative log return projection from
+      May 4, 2026. The index is in a normal volatility regime (annualised realized
+      vol is 12.47%) with no daily anomalies. Standard-normal Gaussian projection
+      is utilized based on a 21-business-day close-to-close daily dispersion window
+      (sigma_daily = 0.007665). No active corrections are triggered. The point forecast
+      remains at 0.0 as the neutral Bank of Canada hold (overnight rate at 2.25%)
+      and Middle East geopolitics-driven oil surge (+10.43% weekly) are offset by
+      short-term equity consolidation.
+    horizon_rationale: Statistical standard-normal projection for a normal volatility
+      regime. Trailing 21-day daily dispersion (sigma_daily = 0.007665) is scaled
+      by sqrt(5). Point forecast is centered at 0.0 as supportive energy cues are
+      balanced by soft short-term broad-market equity momentum.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (34 lines)
+    - tool: run_code
+      title: python (6 lines)
+    - tool: run_code
+      title: python (8 lines)
+    - tool: run_code
+      title: python (6 lines)
+    - tool: run_code
+      title: python (27 lines)
+    - tool: run_code
+      title: python (46 lines)
+    - tool: run_code
+      title: python (5 lines)
+    - tool: run_code
+      title: python (46 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (12 lines)
+    - tool: run_code
+      title: python (1485 lines)
+    - tool: run_code
+      title: python (66 lines)
+    - tool: run_code
+      title: python (24 lines)
+    - tool: run_code
+      title: python (30 lines)
+    - tool: run_code
+      title: python (16 lines)
+    - tool: run_code
+      title: python (66 lines)
+    - tool: run_code
+      title: python (8 lines)
+    - tool: search_web
+      title: '"S&P/TSX" OR "TSX" OR "Canadian market" OR "Bank of Canada" news May
+        2026'
+    - tool: run_code
+      title: python (36 lines)
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: ed9c5be1341176ef22b5e3c4fb21a24d
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/ed9c5be1341176ef22b5e3c4fb21a24d

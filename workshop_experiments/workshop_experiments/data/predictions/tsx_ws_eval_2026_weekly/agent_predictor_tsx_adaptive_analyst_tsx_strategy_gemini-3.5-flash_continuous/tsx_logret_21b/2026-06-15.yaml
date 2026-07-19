@@ -1,0 +1,101 @@
+as_of: '2026-06-15T00:00:00'
+wall_time_s: 222.44552729197312
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T17:25:33.564071'
+  as_of: '2026-06-15T00:00:00'
+  forecast_date: '2026-07-14T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.103772
+      '0.1': -0.080852
+      '0.2': -0.053097
+      '0.3': -0.033084
+      '0.4': -0.015983
+      '0.5': 0.0
+      '0.6': 0.015983
+      '0.7': 0.033084
+      '0.8': 0.053097
+      '0.9': 0.080852
+      '0.95': 0.103772
+  metadata:
+    rationale: Calibrated 21-business-day cumulative log return forecast for the S&P/TSX
+      Composite index as of June 15, 2026. We execute our quantitative pipeline by
+      loading the latest index data, classifying the current volatility regime as
+      elevated (realised vol of 15.44%), and selecting a reactive 10-day daily dispersion
+      window. Our intervals are scaled by the 21-business-day horizon and widened
+      by a 1.12 factor to incorporate the risk from the material commodity slide.
+      To maintain statistical calibration, the point forecast is centered at 0.00,
+      representing a neutral martingale expectation given opposing macroeconomic forces
+      (dovish BoC stance and weak Canadian GDP vs. strong US markets and a powerful
+      3-day domestic rebound).
+    horizon_rationale: S&P/TSX Composite cumulative log return projection for the
+      21-business-day horizon as of June 15, 2026. The 21-day annualised realised
+      volatility of 15.44% classifies the index in the elevated regime, prompting
+      an adaptive 10-day dispersion window (daily sigma of 0.012292) to track the
+      recent sharp moves. A 1.12 widening factor is applied to incorporate commodity-market
+      tail risk, as WTI crude oil has slid over 20% to $80.75 following a tentative
+      US-Iran peace deal. The point forecast is centered at 0.00 to reflect the martingale
+      prior amid balanced macro signals, including a Bank of Canada rate hold at 2.25%
+      and slow domestic GDP versus a strong US stock market and a sharp 3-day rebound
+      of +3.3% in the TSX.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (37 lines)
+    - tool: search_web
+      title: '"S&P/TSX" OR TSX "June 2026" OR "June 15, 2026" bank of canada oil gold'
+    - tool: run_code
+      title: python (48 lines)
+    - tool: run_code
+      title: python (9 lines)
+    - tool: run_code
+      title: python (53 lines)
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (16 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (36 lines)
+    - tool: search_web
+      title: '"S&P/TSX" OR TSX "June 2026" OR "June 15, 2026" BoC inflation gross
+        domestic product oil'
+    - tool: run_code
+      title: python (33 lines)
+    - tool: run_code
+      title: python (36 lines)
+    - tool: run_code
+      title: python (31 lines)
+    - tool: run_code
+      title: python (27 lines)
+    - tool: run_code
+      title: python (4 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (31 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: f386e8ee09dc55698da745d441189ac9
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/f386e8ee09dc55698da745d441189ac9

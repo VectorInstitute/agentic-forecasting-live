@@ -1,0 +1,149 @@
+as_of: '2026-01-12T00:00:00'
+wall_time_s: 461.39041812508367
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T20:06:34.823106'
+  as_of: '2026-01-12T00:00:00'
+  forecast_date: '2026-02-10T00:00:00'
+  payload:
+    point_forecast: 0.01194
+    quantiles:
+      '0.05': -0.07282
+      '0.1': -0.03629
+      '0.2': -0.02224
+      '0.3': -0.00574
+      '0.4': 0.00258
+      '0.5': 0.01194
+      '0.6': 0.01721
+      '0.7': 0.02529
+      '0.8': 0.03255
+      '0.9': 0.04437
+      '0.95': 0.05116
+  metadata:
+    rationale: S&P/TSX Composite cumulative log return forecast for the 21-business-day
+      horizon as of January 12, 2026. The index is in a LOW volatility regime (realised
+      vol < 10%) and is experiencing a trailing 5-day commodity shock in physical
+      Gold (+3.70% return). Although the index is at an all-time high, low-volatility
+      momentum and the supportive Oil+/Gold+ commodity backdrop justify a moderately
+      positive median drift of +1.19%. Tail risk is modeled as asymmetric on the downside,
+      with lower tail quantiles shifted downward (5% quantile at -7.28%) to protect
+      against asymmetric left-tail risk.
+    horizon_rationale: "This 21-business-day forward probabilistic forecast for the\
+      \ S&P/TSX Composite Index is constructed using our adaptive forecasting strategy,\
+      \ which integrates quantitative analysis of trailing volatility, commodity shock\
+      \ indicators, index momentum, and macro news context. \n\n1. Volatility Regime:\
+      \ Trailing 21-day annualised realised volatility of the TSX is 9.32%, which\
+      \ is below our 10% threshold, classifying the index in a LOW volatility regime.\n\
+      2. Commodity Shock: Over the trailing 5 business days, physical Gold prices\
+      \ rose by 3.70% (log return) / 3.77% (simple return), exceeding the +3.5% threshold\
+      \ for a weekly Gold commodity shock. WTI crude oil also rose by 2.00% (Oil+/Gold+\
+      \ state). Under our strategy's active calibration corrections, the joint condition\
+      \ of LOW volatility and a commodity shock requires broad-market interval widening\
+      \ of 29% (widen multiplier of 1.29) to protect against immediate shock propagation.\n\
+      3. Momentum and ATH Context: The TSX closed at an all-time high (32,874.70)\
+      \ on January 12, 2026, representing a 0.00% drawdown. In low-volatility regimes,\
+      \ the index exhibits durable momentum, supporting a positive forward drift (median\
+      \ +1.19%).\n4. Asymmetric Left-Tail risk: Consistent with our strategy, in low-volatility\
+      \ environments tail risk is heavily skewed to the downside, while large positive\
+      \ surges are structurally rare. We incorporate this asymmetry by shifting the\
+      \ lower tail quantiles (5% and 10%) downward. Specifically, we project our quantiles\
+      \ using scaled empirical distributions from 163 historical matched days (LOW\
+      \ vol + commodity shock + near ATH) adjusted to the current realized volatility\
+      \ of 9.32%. This creates a highly calibrated, non-decreasing grid where the\
+      \ 5% quantile is at -7.28% and the 95% quantile is at +5.12%."
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (9 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (28 lines)
+    - tool: run_code
+      title: python (12 lines)
+    - tool: search_web
+      title: TSX "January 2026" OR "January 12, 2026" market Canadian economy
+    - tool: search_web
+      title: '"WTI" crude oil "January 2026" OR "gold" price "January 2026"'
+    - tool: run_code
+      title: python (44 lines)
+    - tool: run_code
+      title: python (37 lines)
+    - tool: run_code
+      title: python (7 lines)
+    - tool: run_code
+      title: python (5 lines)
+    - tool: run_code
+      title: python (10 lines)
+    - tool: load_skill
+      title: load_skill
+    - tool: run_code
+      title: python (45 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (38 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: run_code
+      title: python (40 lines)
+    - tool: run_code
+      title: python (7 lines)
+    - tool: run_code
+      title: python (16 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (24 lines)
+    - tool: run_code
+      title: python (88 lines)
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (49 lines)
+    - tool: run_code
+      title: python (6 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (37 lines)
+    - tool: run_code
+      title: python (27 lines)
+    - tool: run_code
+      title: python (8 lines)
+    - tool: run_code
+      title: python (38 lines)
+    - tool: run_code
+      title: python (57 lines)
+    - tool: run_code
+      title: python (43 lines)
+    - tool: run_code
+      title: python (63 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (40 lines)
+    - tool: run_code
+      title: python (28 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: a428ab77418ad4c300d534b80dd22c9d
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/a428ab77418ad4c300d534b80dd22c9d

@@ -1,0 +1,92 @@
+as_of: '2026-05-04T00:00:00'
+wall_time_s: 176.8056526669534
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T21:18:24.612349'
+  as_of: '2026-05-04T00:00:00'
+  forecast_date: '2026-06-02T00:00:00'
+  payload:
+    point_forecast: 0.0032
+    quantiles:
+      '0.05': -0.054578
+      '0.1': -0.041816
+      '0.2': -0.026363
+      '0.3': -0.01522
+      '0.4': -0.005699
+      '0.5': 0.0032
+      '0.6': 0.012099
+      '0.7': 0.02162
+      '0.8': 0.032763
+      '0.9': 0.048216
+      '0.95': 0.060978
+  metadata:
+    rationale: Comprehensive 21-day log return forecast for the S&P/TSX Composite.
+      On the as-of date (May 4, 2026), the broad index is in a normal volatility regime
+      (rolling 21-day realized vol ~12.17%) and exhibits no significant daily return
+      anomalies (z-score of -0.75). The forecast centers at +0.32% to reflect the
+      historical shallow drawdown recovery premium (-2.61% drawdown) and strong crude
+      oil tailwinds, while the prediction intervals are projected using standard-normal
+      Gaussian parameters scaled by the square root of the horizon. No manual interval
+      widening is applied, as the normal regime is highly Gaussian and the index-native
+      realized volatility pipeline is self-calibrating across commodity shocks and
+      cross-market/FX risk transmissions.
+    horizon_rationale: S&P/TSX Composite (GSPTSE) 21-day log return projection. The
+      index is classified in the NORMAL volatility regime (realized vol ~12.17%) on
+      May 4, 2026. The return distribution is projected using a standard-normal Gaussian
+      model (dispersion window of 21 business days, daily standard deviation of 0.77%)
+      with no fat-tailed or Student's t adjustments, as the TSX return structure is
+      highly Gaussian during normal/elevated periods. To incorporate the robust, decadal-consistent
+      shallow drawdown recovery playbook (drawdown is -2.61%), the median point forecast
+      is set at +0.32% (+0.0032), reflecting the empirical forward-return premium.
+      This positive drift is further supported by strong energy sector conditions,
+      with WTI crude oil prices surging +10.43% over the trailing week to $106.42
+      due to Middle East geopolitical tensions.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (28 lines)
+    - tool: run_code
+      title: python (27 lines)
+    - tool: run_code
+      title: python (16 lines)
+    - tool: run_code
+      title: python (40 lines)
+    - tool: run_code
+      title: python (36 lines)
+    - tool: run_code
+      title: python (24 lines)
+    - tool: run_code
+      title: python (39 lines)
+    - tool: search_web
+      title: '"S&P/TSX Composite" OR TSX "May 2026" OR "May 4, 2026" OR "Bank of Canada"
+        "May 2026" OR "oil" "gold" OR "VIX"'
+    - tool: run_code
+      title: python (25 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: run_code
+      title: python (27 lines)
+    - tool: run_code
+      title: python (24 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 4bd6287fff5c089b98018711223a0053
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/4bd6287fff5c089b98018711223a0053

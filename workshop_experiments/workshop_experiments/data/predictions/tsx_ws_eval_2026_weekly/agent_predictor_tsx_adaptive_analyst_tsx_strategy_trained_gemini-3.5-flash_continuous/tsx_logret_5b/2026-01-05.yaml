@@ -1,0 +1,86 @@
+as_of: '2026-01-05T00:00:00'
+wall_time_s: 191.3438987910049
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T18:28:56.590706'
+  as_of: '2026-01-05T00:00:00'
+  forecast_date: '2026-01-12T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.024539
+      '0.1': -0.019119
+      '0.2': -0.012556
+      '0.3': -0.007824
+      '0.4': -0.00378
+      '0.5': 0.0
+      '0.6': 0.00378
+      '0.7': 0.007824
+      '0.8': 0.012556
+      '0.9': 0.019119
+      '0.95': 0.024539
+  metadata:
+    rationale: The S&P/TSX Composite is classified in a LOW volatility regime (annualized
+      realized volatility of 8.98%), with no trailing commodity shocks or daily return
+      anomalies. Applying the active calibration correction from our learned strategy,
+      we widen our standard-normal prediction intervals by 18% for the 5-day horizon.
+      Point forecast is centered at 0.0 following the martingale prior, as the broad-market
+      tone remains constructive with concluded BoC rate-cutting cycle and stable commodity
+      pricing.
+    horizon_rationale: Symmetric forecast centered at 0.0 following a martingale prior.
+      The trailing 21-day annualized realized volatility is classified as LOW (8.98%
+      < 10%). Following the active correction hyp-001, prediction intervals at the
+      5-day horizon are widened by 18% to correct for volatility mean-reversion, which
+      historical backtesting shows increases 80% coverage from 73.1% to a highly optimal
+      80.4%.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: search_web
+      title: '"S&P/TSX" OR "TSX" OR "Canada market" OR "Bank of Canada" January 2026
+        OR "January 5, 2026"'
+    - tool: run_code
+      title: python (98 lines)
+    - tool: run_code
+      title: python (49 lines)
+    - tool: run_code
+      title: python (60 lines)
+    - tool: run_code
+      title: python (11 lines)
+    - tool: run_code
+      title: python (55 lines)
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (140 lines)
+    - tool: run_code
+      title: python (8 lines)
+    - tool: run_code
+      title: python (10 lines)
+    - tool: run_code
+      title: python (8 lines)
+    - tool: run_code
+      title: python (8 lines)
+    - tool: run_code
+      title: python (23 lines)
+    - tool: run_code
+      title: python (51 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: d7cdde6ae58d6df953fc45bca47b20ee
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/d7cdde6ae58d6df953fc45bca47b20ee

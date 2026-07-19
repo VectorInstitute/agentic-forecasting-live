@@ -1,0 +1,97 @@
+as_of: '2026-02-23T00:00:00'
+wall_time_s: 212.1388692080509
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T20:31:53.205923'
+  as_of: '2026-02-23T00:00:00'
+  forecast_date: '2026-03-24T00:00:00'
+  payload:
+    point_forecast: -0.004
+    quantiles:
+      '0.05': -0.123519
+      '0.1': -0.089174
+      '0.2': -0.052662
+      '0.3': -0.034321
+      '0.4': -0.018648
+      '0.5': -0.004
+      '0.6': 0.010648
+      '0.7': 0.026321
+      '0.8': 0.044662
+      '0.9': 0.070099
+      '0.95': 0.091105
+  metadata:
+    rationale: 'The S&P/TSX Composite Index is trading near all-time highs (drawdown
+      of -0.12%), suggesting a historical mean-reversion drift of -0.40% over the
+      next 21 business days. Market volatility is elevated (realised vol of 20.76%),
+      driven by geopolitical risk premiums in Middle East energy markets and precious
+      metals (notably physical gold, which experienced a weekly return shock of +3.57%).
+      We apply our active calibration corrections: utilizing a 10-day dispersion window
+      to capture the current high-volatility environment, employing a standard Gaussian
+      model as the baseline, and shifting the 5% and 10% quantiles downward to model
+      the TSX''s characteristic downside tail asymmetry in elevated regimes.'
+    horizon_rationale: Calibrated probabilistic forecast of S&P/TSX Composite cumulative
+      log returns over a 21-day horizon as of 2026-02-23. The TSX is trading right
+      at all-time highs (drawdown of -0.12%), which historical recovery playbooks
+      indicate leads to a slight cooling-off period of -0.40% on average over the
+      subsequent 21 business days. Volatility is currently elevated (realised vol
+      of 20.76%), and standard Gaussian models are used as the core baseline. However,
+      under the elevated volatility regime and corroborated by a normal US VIX of
+      21.01, the TSX exhibits structural downside tail asymmetries. To protect against
+      this asymmetric left-tail risk, the 5% and 10% lower tail quantiles are shifted
+      downward (using -2.0671 and -1.4731 standard deviations from the median, respectively,
+      calibrated directly from decadal-robust historical regime distributions) while
+      remaining standard Gaussian for the other intervals.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: search_web
+      title: S&P TSX Composite index February 2026
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (78 lines)
+    - tool: run_code
+      title: python (76 lines)
+    - tool: run_code
+      title: python (16 lines)
+    - tool: run_code
+      title: python (66 lines)
+    - tool: run_code
+      title: python (36 lines)
+    - tool: run_code
+      title: python (51 lines)
+    - tool: run_code
+      title: python (39 lines)
+    - tool: run_code
+      title: python (48 lines)
+    - tool: run_code
+      title: python (51 lines)
+    - tool: search_web
+      title: Canada market February 23 2026
+    - tool: run_code
+      title: python (79 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (27 lines)
+    - tool: run_code
+      title: python (36 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 523b8a1ec909f8a4808ddba6bae30dd8
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/523b8a1ec909f8a4808ddba6bae30dd8

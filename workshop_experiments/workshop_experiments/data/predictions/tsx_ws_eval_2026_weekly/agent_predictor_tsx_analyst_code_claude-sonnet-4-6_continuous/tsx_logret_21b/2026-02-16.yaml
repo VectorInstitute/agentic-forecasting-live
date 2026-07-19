@@ -1,0 +1,87 @@
+as_of: '2026-02-16T00:00:00'
+wall_time_s: 1262.3494759160094
+predictions:
+- predictor_id: agent_predictor_tsx_analyst_code_claude-sonnet-4-6_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T12:26:15.647361'
+  as_of: '2026-02-16T00:00:00'
+  forecast_date: '2026-03-17T00:00:00'
+  payload:
+    point_forecast: 0.0147
+    quantiles:
+      '0.05': -0.048
+      '0.1': -0.0265
+      '0.2': -0.0103
+      '0.3': -0.0014
+      '0.4': 0.0068
+      '0.5': 0.0147
+      '0.6': 0.0225
+      '0.7': 0.0307
+      '0.8': 0.0396
+      '0.9': 0.051
+      '0.95': 0.062
+  metadata:
+    rationale: "Overall approach: empirical non-overlapping monthly log-return distribution\
+      \ (2000\u20132026, n=281) blended with a fitted t(4) parametric model, then\
+      \ shifted and scaled to reflect the current macro regime. Key assumptions \u2014\
+      \ BoC neutral hold at 2.25%, TSX positive February momentum driven by financials/energy/gold,\
+      \ modest CAD depreciation supportive of resource exporters, US 10% tariff risk\
+      \ maintained as a left-tail anchor, and low-to-moderate vol environment. Point\
+      \ forecast equals Q0.50 = +0.0147 (approximately +1.5% log-return over the next\
+      \ 21 business days)."
+    horizon_rationale: "Forecast origin 2026-02-16; last observed 21bd cumulative\
+      \ log-return = 0.00 (flat). Statistical backbone: 281 approximately non-overlapping\
+      \ monthly observations (2000\u20132026) yield historical mean ~0.007 and std\
+      \ ~0.043, with a fat-tailed t(4) fit (loc=0.011, scale=0.030). A 60/40 blend\
+      \ of shifted-empirical and parametric t-distributions centres the Q50 at ~0.015.\
+      \ Macro adjustments: (1) BoC on hold at 2.25% with a neutral bias provides a\
+      \ benign rate backdrop; (2) TSX was notably outperforming US equities in February\
+      \ 2026, supported by positive bank earnings, rising gold prices, and resilient\
+      \ energy names; (3) GoC 10yr yield ~3.41% (mild upward pressure post-strong\
+      \ jobs data) is manageable for financials; (4) USD/CAD 1.35\u20131.37 (mild\
+      \ CAD softness) benefits resource exporters; (5) downside risks from CUSMA/US\
+      \ 10% global tariff uncertainty and soft labour market (6.5% unemployment) cap\
+      \ the upside and widen the left tail. Regime overlay: trailing 63d daily std\
+      \ = 0.0186 implies ~8.5% annualised 21bd vol, but recent rolling overlapping\
+      \ returns show much lower dispersion (~0.020 std), suggesting a calm momentum\
+      \ regime \u2014 volatility scaled to ~85% of historical. Net result: a mildly\
+      \ positive median (~+1.5%) with a left tail reaching \u20135% (5th percentile)\
+      \ to capture trade-shock risk, and an upside 95th of ~+6% for a commodity/earnings\
+      \ rally scenario."
+    tool_calls:
+    - tool: search_web
+      title: Bank of Canada policy rate decision and forward guidance for Canadian
+        equities
+    - tool: search_web
+      title: oil and gold commodity price outlook impact on the TSX energy and materials
+        sectors
+    - tool: search_web
+      title: US Federal Reserve policy and tariff trade spillovers into Canadian stocks
+        2026
+    - tool: run_code
+      title: python
+    - tool: search_web
+      title: USD/CAD Canadian dollar Government of Canada 10-year bond yield February
+        2026
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python (260 lines)
+    - tool: run_code
+      title: python (415 lines)
+    - tool: run_code
+      title: python (133 lines)
+    - tool: run_code
+      title: python (61 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: a1b15260f2bcb31e844ca8ae26c02f34
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/a1b15260f2bcb31e844ca8ae26c02f34

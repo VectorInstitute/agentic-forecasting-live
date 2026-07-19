@@ -1,0 +1,111 @@
+as_of: '2026-03-02T00:00:00'
+wall_time_s: 341.39987758290954
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T20:37:34.614500'
+  as_of: '2026-03-02T00:00:00'
+  forecast_date: '2026-03-31T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.100125
+      '0.1': -0.07801
+      '0.2': -0.024857
+      '0.3': -0.015488
+      '0.4': -0.007483
+      '0.5': 0.0
+      '0.6': 0.007483
+      '0.7': 0.015488
+      '0.8': 0.024857
+      '0.9': 0.037851
+      '0.95': 0.048581
+  metadata:
+    rationale: S&P/TSX Composite 21-day horizon forecast as of March 2, 2026. This
+      forecast blends statistical analysis of trailing return history with real-world
+      news context. With the TSX in an ELEVATED volatility regime (21.09% 21bd realized
+      vol), we apply our active strategy corrections. We use the 10-day adaptive dispersion
+      window (sigma = 0.006445) as our base to project a standard-normal distribution,
+      but shift the lower tail quantiles (5% and 10%) downward using the 21-day standard
+      deviation (sigma = 0.013283) to protect against the asymmetric downside tail
+      risk that is structurally characteristic of this regime. The point forecast
+      is centered at 0.00% under the martingale prior, while the upper tail is compressed
+      to reflect the structural impossibility of large positive surges.
+    horizon_rationale: Forecast for the 21-day horizon as of March 2, 2026. The S&P/TSX
+      Composite is classified in the ELEVATED volatility regime, with 21-day annualized
+      realized volatility at 21.09%, driven by recent market drops in late January
+      and early February. Per our active strategy corrections, we project intervals
+      using a standard-normal distribution. At the 21bd horizon, we calibrate asymmetric
+      tail risk to reflect structural downside skewness, where severe crash probabilities
+      (under -10%) are positive (1.7% in elevated) while massive positive surges are
+      structurally impossible. To protect against this left-tail risk, the lower tail
+      quantiles (5% and 10%) are shifted downward by utilizing the 21-day realized
+      volatility (0.013283), yielding a 5% quantile of -10.01% and a 10% quantile
+      of -7.80%. The remaining quantiles are calibrated to the 10-day adaptive dispersion
+      window (0.006445), reflecting the calmer trading over the last 10 sessions.
+      This results in a point forecast (0.50 quantile) of 0.00%, consistent with the
+      martingale prior, and a compressed upper tail (95% quantile at 4.86%), matching
+      the empirical absence of large positive surges. The news context supports this
+      caution, with a complex domestic economy, U.S. baseline 10% tariffs taking effect,
+      and geopolitical risks in the Middle East.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (33 lines)
+    - tool: run_code
+      title: python (23 lines)
+    - tool: run_code
+      title: python (4 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: search_web
+      title: TSX stock market news February 2026 BoC inflation
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (67 lines)
+    - tool: load_skill
+      title: load_skill
+    - tool: run_code
+      title: python (39 lines)
+    - tool: run_code
+      title: python (44 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (49 lines)
+    - tool: run_code
+      title: python (38 lines)
+    - tool: search_web
+      title: '"Shift the lower tail quantiles" "asymmetric left-tail risk" "hyp-013"'
+    - tool: run_code
+      title: python (63 lines)
+    - tool: run_code
+      title: python (62 lines)
+    - tool: search_web
+      title: '"March 2, 2026" holiday Canada TSX'
+    - tool: run_code
+      title: python (39 lines)
+    - tool: run_code
+      title: python (43 lines)
+    - tool: run_code
+      title: python (47 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: bb1889277c3e4f146bc969d8fb738762
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/bb1889277c3e4f146bc969d8fb738762

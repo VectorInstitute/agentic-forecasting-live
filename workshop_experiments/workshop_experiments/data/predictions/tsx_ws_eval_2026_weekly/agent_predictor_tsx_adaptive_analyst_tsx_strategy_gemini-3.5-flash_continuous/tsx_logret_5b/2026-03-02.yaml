@@ -1,0 +1,105 @@
+as_of: '2026-03-02T00:00:00'
+wall_time_s: 331.1730764169479
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T14:07:35.929164'
+  as_of: '2026-03-02T00:00:00'
+  forecast_date: '2026-03-09T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.026549
+      '0.1': -0.020685
+      '0.2': -0.013585
+      '0.3': -0.008464
+      '0.4': -0.004089
+      '0.5': 0.0
+      '0.6': 0.004089
+      '0.7': 0.008464
+      '0.8': 0.013585
+      '0.9': 0.020685
+      '0.95': 0.026549
+  metadata:
+    rationale: S&P/TSX Composite Index cumulative log return forecast for a 5-business-day
+      horizon as of March 2, 2026. The 21-day annualised realised volatility of 21.09%
+      places the TSX in an elevated regime, triggering the selection of a 10-day dispersion
+      window (daily standard deviation of 0.006445, or annualised 10.23%). Scaling
+      by sqrt(5) and applying a 1.12 widening factor yields a calibrated standard
+      deviation of 1.61%, matching closely with the actual trailing 63-day standard
+      deviation of 5-day log returns (1.55%).
+    horizon_rationale: We utilize the adaptive 10-day dispersion window to capture
+      the current volatility regime of 21.09% (elevated) and apply a widening factor
+      of 1.12 to adjust for potential commodity-driven shocks. Offsetting forces of
+      a 6.28% single-day surge in WTI crude oil and gold strength against U.S. baseline
+      tariff trade frictions keep the point forecast centered symmetrically at 0.0,
+      in line with the martingale prior.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: search_web
+      title: S&P/TSX Composite market news oil BoC February 2026 March 2026
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (139 lines)
+    - tool: run_code
+      title: python (40 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (25 lines)
+    - tool: run_code
+      title: python (16 lines)
+    - tool: run_code
+      title: python (34 lines)
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (38 lines)
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (24 lines)
+    - tool: run_code
+      title: python (23 lines)
+    - tool: run_code
+      title: python (24 lines)
+    - tool: run_code
+      title: python (16 lines)
+    - tool: run_code
+      title: python (90 lines)
+    - tool: run_code
+      title: python (52 lines)
+    - tool: run_code
+      title: python (39 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (4 lines)
+    - tool: run_code
+      title: python (37 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (24 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 94a5865da171d9192b51fb12454cef6a
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/94a5865da171d9192b51fb12454cef6a

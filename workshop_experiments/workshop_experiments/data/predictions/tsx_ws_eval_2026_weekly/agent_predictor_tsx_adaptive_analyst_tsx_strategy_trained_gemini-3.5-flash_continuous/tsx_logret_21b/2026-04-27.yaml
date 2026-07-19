@@ -1,0 +1,82 @@
+as_of: '2026-04-27T00:00:00'
+wall_time_s: 176.21461287490092
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T21:15:27.788573'
+  as_of: '2026-04-27T00:00:00'
+  forecast_date: '2026-05-26T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.058518
+      '0.1': -0.045593
+      '0.2': -0.029942
+      '0.3': -0.018656
+      '0.4': -0.009013
+      '0.5': 0.0
+      '0.6': 0.009013
+      '0.7': 0.018656
+      '0.8': 0.029942
+      '0.9': 0.045593
+      '0.95': 0.058518
+  metadata:
+    rationale: Calibrated probabilistic forecast of the S&P/TSX Composite index 21-day
+      cumulative log return as of April 27, 2026. The volatility regime is classified
+      as NORMAL (12.32% realised), triggering a 21-day standard-normal dispersion
+      window. No active calibration corrections or tail skew adjustments are applied,
+      in accordance with the normal regime strategy playbook. Due to the lack of clear,
+      strong directional catalysts from the Bank of Canada or commodity markets, the
+      point forecast is centered around 0.0.
+    horizon_rationale: 'S&P/TSX Composite 21-day log return forecast evaluated under
+      a NORMAL volatility regime (realised annualised volatility: 12.32%) with no
+      active return anomalies (daily return z-score: -0.26). A standard-normal Gaussian
+      distribution is projected over a 21-day dispersion window with no fat-tailed
+      scaling (widen=1.0). Due to mixed macro and commodity signals, the median is
+      kept at a neutral martingale prior of 0.0.'
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (26 lines)
+    - tool: run_code
+      title: python (62 lines)
+    - tool: run_code
+      title: python (75 lines)
+    - tool: search_web
+      title: '"April 2026" "holiday" Canada OR "Easter" OR "Good Friday" 2026'
+    - tool: search_web
+      title: '"Easter" "2026" date'
+    - tool: search_web
+      title: '"S&P/TSX" OR "TSX" OR "Canada" "April 2026" "interest rate" OR "Bank
+        of Canada" OR "inflation" OR "market" OR "oil"'
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (58 lines)
+    - tool: run_code
+      title: python (24 lines)
+    - tool: run_code
+      title: python (3 lines)
+    - tool: load_skill
+      title: load_skill
+    - tool: run_code
+      title: python (35 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: a9edca0c16fe6f3360f97db38e87f7c3
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/a9edca0c16fe6f3360f97db38e87f7c3

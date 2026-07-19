@@ -1,0 +1,78 @@
+as_of: '2026-05-18T00:00:00'
+wall_time_s: 144.28558995900676
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T18:14:23.277363'
+  as_of: '2026-05-18T00:00:00'
+  forecast_date: '2026-05-19T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.016768
+      '0.1': -0.013064
+      '0.2': -0.00858
+      '0.3': -0.005346
+      '0.4': -0.002583
+      '0.5': 0.0
+      '0.6': 0.002583
+      '0.7': 0.005346
+      '0.8': 0.00858
+      '0.9': 0.013064
+      '0.95': 0.016768
+  metadata:
+    rationale: Forecast for the S&P/TSX Composite index cumulative log return over
+      a 1-day horizon as of May 18, 2026. The baseline model uses a martingale prior
+      (median = 0) and standard-normal projection based on a 21-day trailing dispersion
+      window. To account for the Canadian Holiday Catch-Up effect, a 1.22 widening
+      multiplier is applied to the 1-day prediction interval half-width.
+    horizon_rationale: The S&P/TSX Composite is classified in the NORMAL volatility
+      regime with a trailing 21d annualized realized volatility of 13.26% (daily standard
+      deviation of 0.008356). Monday, May 18, 2026, was Victoria Day (a Canadian-only
+      holiday when US markets were open, and the S&P 500 closed flat while WTI crude
+      surged +3.07%). Reopening on Tuesday, May 19 is a TSX Catch-up Day. We apply
+      Correction hyp-014, multiplying the standard-normal 1-day interval half-width
+      by 1.22 to protect against the catch-up gap-volatility explosion.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (24 lines)
+    - tool: run_code
+      title: python (4 lines)
+    - tool: run_code
+      title: python (16 lines)
+    - tool: run_code
+      title: python (10 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (66 lines)
+    - tool: run_code
+      title: python (4 lines)
+    - tool: run_code
+      title: python (55 lines)
+    - tool: search_web
+      title: S&P/TSX Composite market news May 2026
+    - tool: run_code
+      title: python (4 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 0a12c86e1532edba51284851b8597147
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/0a12c86e1532edba51284851b8597147

@@ -1,0 +1,99 @@
+as_of: '2026-05-18T00:00:00'
+wall_time_s: 174.77878604095895
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T21:24:24.964186'
+  as_of: '2026-05-18T00:00:00'
+  forecast_date: '2026-06-16T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.06298328
+      '0.1': -0.04907204
+      '0.2': -0.03222661
+      '0.3': -0.02007988
+      '0.4': -0.00970094
+      '0.5': 0.0
+      '0.6': 0.00970094
+      '0.7': 0.02007988
+      '0.8': 0.03222661
+      '0.9': 0.04907204
+      '0.95': 0.06298328
+  metadata:
+    rationale: The forecast is generated using a robust quantitative pipeline mapping
+      historical TSX realized volatility to its appropriate regime, then adjusted
+      according to active strategy corrections. Trailing 21d realized vol of 13.26%
+      establishes a NORMAL regime, where returns are highly Gaussian. In the absence
+      of extreme commodity shocks in a LOW regime, or daily negative return anomalies,
+      no manual interval widening is applied. Balanced macro policies and commodity
+      inputs justify a neutral martingale point forecast of 0.0, with symmetric Gaussian
+      bands scaled by the square root of the 21-day horizon.
+    horizon_rationale: "The S&P/TSX Composite trailing 21-day annualized realized\
+      \ volatility is classified at 13.26%, placing the index firmly in the NORMAL\
+      \ volatility regime (10-15%). Per active calibration correction (Correction\
+      \ hyp-007), broad returns in the NORMAL regime exhibit a highly Gaussian core\
+      \ (excess kurtosis < 0.6), meaning a standard-normal Gaussian model is highly\
+      \ optimal for interval projection with no fat-tailed or Student's t adjustments.\
+      \ The dispersion window is set to 21 trading days (as there are no active daily\
+      \ return anomalies), yielding a daily return standard deviation (sigma_daily)\
+      \ of 0.008356. With balanced macroeconomic drivers\u2014including the Bank of\
+      \ Canada holding interest rates steady at 2.25%, stable core inflation near\
+      \ 2%, and a mixed physical commodity backdrop (WTI crude oil up 9.97% weekly\
+      \ and Gold down 3.55% weekly)\u2014there is no clear directional bias. Thus,\
+      \ we center our forecast on a martingale prior of 0.0 cumulative log return,\
+      \ projecting symmetric, horizon-scaled intervals using standard-normal quantiles\
+      \ (z_q * sigma_daily * sqrt(21))."
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (41 lines)
+    - tool: run_code
+      title: python (36 lines)
+    - tool: run_code
+      title: python (6 lines)
+    - tool: run_code
+      title: python (42 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (22 lines)
+    - tool: run_code
+      title: python (17 lines)
+    - tool: search_web
+      title: Canada holidays May 2026
+    - tool: search_web
+      title: is TSX open on Victoria Day 2026
+    - tool: search_web
+      title: Canada market news May 2026
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (56 lines)
+    - tool: run_code
+      title: python (24 lines)
+    - tool: run_code
+      title: python (47 lines)
+    - tool: run_code
+      title: python (12 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 921b419e5d778f150f2b225b68ce8f7c
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/921b419e5d778f150f2b225b68ce8f7c

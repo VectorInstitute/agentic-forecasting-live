@@ -1,0 +1,100 @@
+as_of: '2026-02-16T00:00:00'
+wall_time_s: 341.92109808395617
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T13:57:57.733210'
+  as_of: '2026-02-16T00:00:00'
+  forecast_date: '2026-02-23T00:00:00'
+  payload:
+    point_forecast: 0.00312
+    quantiles:
+      '0.05': -0.023341
+      '0.1': -0.017496
+      '0.2': -0.010419
+      '0.3': -0.005316
+      '0.4': -0.000956
+      '0.5': 0.00312
+      '0.6': 0.007196
+      '0.7': 0.011556
+      '0.8': 0.016659
+      '0.9': 0.023736
+      '0.95': 0.029581
+  metadata:
+    rationale: As of February 16, 2026, the S&P/TSX Composite Index is classified
+      under an elevated volatility regime (21-day annualized realized volatility of
+      20.25%). The daily return standard deviation over the last 10 days was high
+      (1.42%) due to major daily moves, including a -2.4% drop on Feb 12 and a massive
+      +1.85% (600+ points) rally on Feb 13. This relief rally was sparked by the U.S.
+      Supreme Court striking down emergency tariffs, substituting them with a uniform
+      10% tariff, which significantly lowered Canadian trade risk relative to expectations.
+      Systematic backtesting shows that after such large daily moves, extrapolating
+      short-term daily volatility with the square-root-of-time rule yields excessively
+      wide intervals, whereas utilizing the trailing 63-day standard deviation of
+      the 5-day cumulative returns (0.016087) results in optimal out-of-sample CRPS
+      performance (0.020165 vs 0.020826). The forecast is centered on the historical
+      median return of 0.00312, with interval widths calibrated to this robust 63-day
+      historical dispersion.
+    horizon_rationale: Forecast centered on the historical median 5-day log return
+      of 0.00312, reflecting the long-term upward drift of GSPTSE and the positive
+      momentum from the recent tariff relief rally. Interval width is calibrated using
+      the trailing 63-day standard deviation of the 5-day cumulative log returns (0.016087)
+      which represents a robust measure of 5-day dispersion under an elevated volatility
+      regime (21-day annualised realised vol of 20.25%).
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (29 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: search_web
+      title: S&P/TSX Composite February 13 2026
+    - tool: search_web
+      title: Bank of Canada interest rate decision February 2026
+    - tool: run_code
+      title: python (57 lines)
+    - tool: run_code
+      title: python (67 lines)
+    - tool: run_code
+      title: python (16 lines)
+    - tool: run_code
+      title: python (3 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (29 lines)
+    - tool: run_code
+      title: python (30 lines)
+    - tool: run_code
+      title: python (36 lines)
+    - tool: search_web
+      title: Canada economic calendar February 16 2026 to February 23 2026
+    - tool: run_code
+      title: python (22 lines)
+    - tool: run_code
+      title: python (81 lines)
+    - tool: run_code
+      title: python (65 lines)
+    - tool: run_code
+      title: python (61 lines)
+    - tool: run_code
+      title: python (23 lines)
+    - tool: run_code
+      title: python (32 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 27de494e4d6c1fb997032767cffc20e1
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/27de494e4d6c1fb997032767cffc20e1

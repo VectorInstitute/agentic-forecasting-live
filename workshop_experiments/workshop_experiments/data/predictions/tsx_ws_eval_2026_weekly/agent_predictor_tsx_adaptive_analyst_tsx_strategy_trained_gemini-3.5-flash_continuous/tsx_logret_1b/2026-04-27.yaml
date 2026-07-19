@@ -1,0 +1,73 @@
+as_of: '2026-04-27T00:00:00'
+wall_time_s: 111.71330591698643
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T18:06:19.605128'
+  as_of: '2026-04-27T00:00:00'
+  forecast_date: '2026-04-28T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.01276925
+      '0.1': -0.00994888
+      '0.2': -0.00653363
+      '0.3': -0.004071
+      '0.4': -0.00196677
+      '0.5': 0.0
+      '0.6': 0.00196677
+      '0.7': 0.004071
+      '0.8': 0.00653363
+      '0.9': 0.00994888
+      '0.95': 0.01276925
+  metadata:
+    rationale: Our quantitative pipeline classifies the S&P/TSX Composite in a NORMAL
+      volatility regime (12.32% annualised realised vol). Under our learned forecasting
+      strategy (Correction hyp-007), normal volatility regimes are highly Gaussian
+      and require no fat-tail adjustments. No daily return anomalies (z-score = -0.26)
+      or holiday catch-up gaps are present. Recent Canadian news shows a wait-and-see
+      posture by the Bank of Canada (holding at 2.25%) amid mixed global oil-led inflation
+      and soft domestic growth, reinforcing the martingale prior. The 1bd prediction
+      intervals are thus calibrated purely on the trailing 21-day dispersion (daily
+      sigma = 0.00776315) without any active widening adjustments.
+    horizon_rationale: At the 1-business-day horizon on April 27, 2026, the S&P/TSX
+      Composite return is projected using a standard-normal Gaussian model under a
+      NORMAL volatility regime. The trailing 21-day annualised realised volatility
+      is 12.32%, and there is no daily return anomaly (latest return z-score is -0.26)
+      or Canadian catch-up day effect. The forecast is centred on a log return of
+      0.0 in accordance with the martingale prior, with a daily standard deviation
+      of 0.00776315.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (33 lines)
+    - tool: run_code
+      title: python (125 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: search_web
+      title: '"S&P/TSX" OR TSX stock market news April 2026'
+    - tool: search_web
+      title: Canada market news "April 27, 2026" OR "April 26, 2026" OR "April 25,
+        2026"
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 398c70b5006d199318884329ca0d8269
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/398c70b5006d199318884329ca0d8269

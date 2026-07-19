@@ -1,0 +1,95 @@
+as_of: '2026-03-09T00:00:00'
+wall_time_s: 173.41500579193234
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T14:10:29.328892'
+  as_of: '2026-03-09T00:00:00'
+  forecast_date: '2026-03-16T00:00:00'
+  payload:
+    point_forecast: 0.013
+    quantiles:
+      '0.05': -0.031858
+      '0.1': -0.02195
+      '0.2': -0.009952
+      '0.3': -0.001301
+      '0.4': 0.006091
+      '0.5': 0.013
+      '0.6': 0.019909
+      '0.7': 0.027301
+      '0.8': 0.035952
+      '0.9': 0.04795
+      '0.95': 0.057858
+  metadata:
+    rationale: This forecast applies a full quantitative pipeline (fetch, vol-regime,
+      trend-projection) on ^GSPTSE, WTI, Gold, and VIX up to the March 9, 2026 cutoff.
+      A +1.30% positive directional lean is applied to the 5-business-day horizon
+      to capture the strong historical 'energy catch-up' pattern triggered by the
+      massive Middle East oil shock (WTI up 28.5% over 5 days) and the TSX's concurrent
+      risk-off pullback.
+    horizon_rationale: 'The S&P/TSX Composite index is projected over the 5-business-day
+      horizon using a statistical pipeline calibrated on recent realized volatility
+      and adjusted for a powerful geopolitical/commodity catalyst. Daily 21-day realized
+      volatility of the TSX is currently 18.92%, placing the index in the ''elevated''
+      volatility regime. Accordingly, we select a 10-day dispersion window (sigma_daily
+      = 0.010889) and apply a 1.12 widening multiplier to account for heightened tail
+      risk.
+
+
+      While the martingale prior suggests a median of 0.0, we apply a strong +1.30%
+      positive directional lean. This shift is justified by a massive commodity/geopolitical
+      shock: following U.S. and Israeli strikes on Iran, Brent and WTI crude surged
+      by over 28.5% over the trailing 5 business days (WTI ending at $94.77). Although
+      the TSX initially pulled back by -3.99% due to global risk-off panic and a spike
+      in VIX to 29.5, VIX has begun to recede to 25.5 as of March 9. A systematic
+      historical backtest of instances since 2000 where WTI surged >10% over 5 days
+      while the TSX fell <-2% confirms a powerful energy-sector catch-up effect, yielding
+      a mean forward 5-business-day return of +1.33% and median of +1.63%. Evaluating
+      various shifts using the Continuous Ranked Probability Score (CRPS) on these
+      historical episodes confirms that a shift of +1.30% (+0.013 log return) minimizes
+      the CRPS from 0.018051 to 0.016970.'
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (47 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: search_web
+      title: TSX S&P Composite index March 2026 news
+    - tool: search_web
+      title: Canada jobs report March 6 2026
+    - tool: search_web
+      title: Middle East conflict oil prices March 2026
+    - tool: run_code
+      title: python (80 lines)
+    - tool: run_code
+      title: python (79 lines)
+    - tool: run_code
+      title: python (48 lines)
+    - tool: run_code
+      title: python (68 lines)
+    - tool: load_skill
+      title: load_skill
+    - tool: run_code
+      title: python (43 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 203d118b49d9754f8e0470e453ef2e77
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/203d118b49d9754f8e0470e453ef2e77

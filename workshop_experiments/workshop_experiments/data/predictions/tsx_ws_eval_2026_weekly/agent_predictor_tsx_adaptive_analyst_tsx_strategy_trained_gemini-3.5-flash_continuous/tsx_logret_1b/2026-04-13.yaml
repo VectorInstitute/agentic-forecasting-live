@@ -1,0 +1,92 @@
+as_of: '2026-04-13T00:00:00'
+wall_time_s: 139.68716545798816
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T18:02:36.397279'
+  as_of: '2026-04-13T00:00:00'
+  forecast_date: '2026-04-14T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.013509
+      '0.1': -0.010525
+      '0.2': -0.006912
+      '0.3': -0.004307
+      '0.4': -0.002081
+      '0.5': 0.0
+      '0.6': 0.002081
+      '0.7': 0.004307
+      '0.8': 0.006912
+      '0.9': 0.010525
+      '0.95': 0.013509
+  metadata:
+    rationale: Overall probabilistic forecast for the S&P/TSX Composite daily cumulative
+      log return as of April 13, 2026. The 21-day realized volatility of 18.43% places
+      the market in the elevated volatility regime, but the last 10 days have experienced
+      lower dispersion (daily sigma of 0.008213), which is selected as our adaptive
+      dispersion window. In the elevated volatility regime, TSX daily returns exhibit
+      a highly Gaussian core (excess kurtosis < 0.60), so we project standard-normal
+      intervals without student-t or fat-tailed adjustments. The martingale prior
+      dictates a symmetric, zero-centered return expectation of 0.00% for the 1-business-day
+      horizon.
+    horizon_rationale: A 1-business-day cumulative log return forecast for the S&P/TSX
+      Composite index as of April 13, 2026, constructed by combining our quantitative
+      pipeline and current market news. On the statistical side, the trailing 21-day
+      annualized realized volatility of the index return series is 18.43%, classifying
+      the current market in the ELEVATED volatility regime (15-22%). The last daily
+      log return is +0.54%, which corresponds to a z-score of +0.45 relative to the
+      trailing 63-day window; this indicates there is no active negative return anomaly
+      (which would require z < -2.5). In accordance with the adaptive forecasting
+      strategy for elevated volatility regimes, we select a shorter 10-day dispersion
+      window to capture the most recent and relevant return dispersion, giving a daily
+      standard deviation (sigma_daily) of 0.008213. Active calibration corrections
+      for normal and elevated regimes prescribe projecting the prediction intervals
+      using a standard-normal Gaussian distribution (excess kurtosis remains low at
+      <0.60) without any fat-tailed scaling. Market-news context shows WTI Crude oil
+      fell 11.86% over the last week (simple return) due to cooling supply-chain fears,
+      indicating a global commodity crash state. Since the martingale prior is the
+      dominant signal for daily returns and no domestic BoC policy or US trade tariff
+      surprises are immediately scheduled for the next session, the distribution is
+      centered tightly at a point forecast of 0.000000.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (29 lines)
+    - tool: run_code
+      title: python (56 lines)
+    - tool: search_web
+      title: Canada market news April 13 2026 S&P/TSX Composite
+    - tool: run_code
+      title: python (34 lines)
+    - tool: run_code
+      title: python (23 lines)
+    - tool: run_code
+      title: python (6 lines)
+    - tool: run_code
+      title: python (31 lines)
+    - tool: run_code
+      title: python (58 lines)
+    - tool: run_code
+      title: python (10 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 9d38c87fdcf5a282937339f485f4355b
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/9d38c87fdcf5a282937339f485f4355b

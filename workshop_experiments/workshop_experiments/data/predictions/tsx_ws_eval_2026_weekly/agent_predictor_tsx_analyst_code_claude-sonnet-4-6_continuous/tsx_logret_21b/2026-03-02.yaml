@@ -1,0 +1,92 @@
+as_of: '2026-03-02T00:00:00'
+wall_time_s: 1272.939798833977
+predictions:
+- predictor_id: agent_predictor_tsx_analyst_code_claude-sonnet-4-6_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T12:58:59.912774'
+  as_of: '2026-03-02T00:00:00'
+  forecast_date: '2026-03-31T00:00:00'
+  payload:
+    point_forecast: 0.015
+    quantiles:
+      '0.05': -0.13
+      '0.1': -0.085
+      '0.2': -0.045
+      '0.3': -0.018
+      '0.4': -0.003
+      '0.5': 0.015
+      '0.6': 0.032
+      '0.7': 0.05
+      '0.8': 0.072
+      '0.9': 0.1
+      '0.95': 0.13
+  metadata:
+    rationale: "Overall forecast methodology: empirical distribution from 25+ years\
+      \ of TSX weekly 21-business-day forward returns was used as the base, scaled\
+      \ by current realised volatility (trailing 63d std = 0.01664/day, implying ~7.6%\
+      \ over 21bd). The central estimate (+0.015) is above the long-run unconditional\
+      \ mean (~0.008\u20130.010/21bd) to reflect: (a) positive momentum entering March\
+      \ 2026 with TSX outperforming US indices, (b) commodity tailwinds from oil and\
+      \ gold, (c) BoC on hold at 2.25% with still-accommodative real rates, and (d)\
+      \ resilient bank earnings. The distribution is widened relative to unconditional\
+      \ history to reflect elevated macro uncertainty from US tariffs, soft Canadian\
+      \ labour market (unemployment 6.7%), and potential trade escalation. The downside\
+      \ tail is fatter than the upside, reflecting asymmetric tariff escalation risk."
+    horizon_rationale: "Forecast for 21 business days ahead from 2026-03-02. Key inputs:\
+      \ (1) Recent momentum: trailing 21-day cumulative log return is +0.05, and the\
+      \ TSX rose ~7.6% in February 2026, driven by Energy and Materials sector strength\
+      \ amid US-Iran geopolitical tensions supporting oil prices and gold safe-haven\
+      \ demand. (2) BoC on hold at 2.25% since Oct 2025 \u2014 neutral to mildly supportive\
+      \ for equities; the economy is operating below potential with unemployment rising\
+      \ to 6.7% in Feb 2026. (3) Trade headwind: the US imposed a baseline 10% tariff\
+      \ effective Feb 24, 2026 under Section 122 of the 1974 Trade Act, creating near-term\
+      \ downside risk for Canadian exporters. Uncertainty around CUSMA review persists.\
+      \ (4) GoC bond yields under downward pressure in February \u2014 supportive\
+      \ for equity valuations. (5) Big Six bank earnings tone is resilient with stable\
+      \ net interest margins, providing a floor. (6) Statistical calibration: 63-day\
+      \ realised daily vol of ~0.01664 implies a 21-day horizon std of ~0.076. The\
+      \ distribution is centred modestly positive (~+0.015) to reflect slightly positive\
+      \ trend/carry but tempered by tariff tail risk on the downside. Slight negative\
+      \ skew applied: the downside tail (-0.13 at 5th pct) is wider than the upside\
+      \ (+0.13 at 95th pct) given asymmetric tariff/trade escalation risk. Recent\
+      \ strong run-up introduces some mean-reversion risk, partially offset by positive\
+      \ commodity and rate-environment backdrop."
+    tool_calls:
+    - tool: search_web
+      title: Bank of Canada policy rate decision and forward guidance for Canadian
+        equities
+    - tool: search_web
+      title: oil and gold commodity price outlook impact on the TSX energy and materials
+        sectors
+    - tool: search_web
+      title: US Federal Reserve policy and tariff trade spillovers into Canadian stocks
+        2026
+    - tool: search_web
+      title: USD/CAD Canadian dollar Government of Canada 10-year bond yield March
+        2026
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: bfe02ad9fa5b6b89a0decf577058767e
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/bfe02ad9fa5b6b89a0decf577058767e

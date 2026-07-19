@@ -1,0 +1,90 @@
+as_of: '2026-02-16T00:00:00'
+wall_time_s: 195.69825512496755
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T17:43:03.214540'
+  as_of: '2026-02-16T00:00:00'
+  forecast_date: '2026-02-17T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.02329948
+      '0.1': -0.01815328
+      '0.2': -0.01192163
+      '0.3': -0.00742818
+      '0.4': -0.00358868
+      '0.5': 0.0
+      '0.6': 0.00358868
+      '0.7': 0.00742818
+      '0.8': 0.01192163
+      '0.9': 0.01815328
+      '0.95': 0.02329948
+  metadata:
+    rationale: The S&P/TSX Composite is currently in an ELEVATED volatility regime
+      (annualised realized volatility of 20.25% over the trailing 21 days), driven
+      by recent cross-market turbulence and commodity swings, including a sharp -2.40%
+      drop on February 12 and a subsequent +1.86% rebound on February 13. To adapt
+      to this higher-volatility state, we use a 10-day dispersion window (daily sigma
+      of 0.014165) for our standard-normal interval projection. No negative return
+      anomaly is detected on the latest day itself (Feb 13 has a positive return and
+      a Z-score of +1.96), so we do not apply the 40% negative anomaly multiplier.
+      Tuesday, February 17, 2026 is also not a catch-up day as both US and Canadian
+      markets were closed on Monday, February 16, for Presidents' Day / Family Day.
+    horizon_rationale: S&P/TSX Composite daily cumulative log return projection for
+      the 1-business-day horizon (resolving on February 17, 2026). The volatility
+      regime is classified as ELEVATED with trailing 21-day annualised realised volatility
+      at 20.25%. We adaptively use a 10-day dispersion window to capture the recent
+      volatility spike (daily sigma = 0.014165), projecting a standard-normal Gaussian
+      distribution around a martingale median of 0.0.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (74 lines)
+    - tool: run_code
+      title: python (38 lines)
+    - tool: run_code
+      title: python (39 lines)
+    - tool: run_code
+      title: python (101 lines)
+    - tool: search_web
+      title: Presidents Day stock market holiday 2026
+    - tool: search_web
+      title: US stock market closed Presidents Day 2026
+    - tool: search_web
+      title: Canada stock market news TSX February 13 2026
+    - tool: run_code
+      title: python (32 lines)
+    - tool: run_code
+      title: python (45 lines)
+    - tool: run_code
+      title: python (68 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (3 lines)
+    - tool: run_code
+      title: python (54 lines)
+    - tool: run_code
+      title: python (28 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 9798555bb8b37238576ede2bb26c66bb
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/9798555bb8b37238576ede2bb26c66bb

@@ -1,0 +1,86 @@
+as_of: '2026-04-06T00:00:00'
+wall_time_s: 138.51775137498043
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T12:57:55.313290'
+  as_of: '2026-04-06T00:00:00'
+  forecast_date: '2026-04-07T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.020767
+      '0.1': -0.01618
+      '0.2': -0.010626
+      '0.3': -0.006621
+      '0.4': -0.003199
+      '0.5': 0.0
+      '0.6': 0.003199
+      '0.7': 0.006621
+      '0.8': 0.010626
+      '0.9': 0.01618
+      '0.95': 0.020767
+  metadata:
+    rationale: Statistical analysis of the S&P/TSX Composite up to 2026-04-06 reveals
+      an elevated volatility regime (21-day realized vol of 19.01%), driven by strong
+      commodity shocks (WTI crude at $112.41 and Gold at $4656.80) and spillover from
+      elevated US equity volatility (VIX at 24.17). Using an adaptive 10-day dispersion
+      window (daily standard deviation of 0.011273) and a 1.12x widening factor, we
+      project a calibrated, symmetric daily log return distribution centered at 0.0
+      for the 1-business-day horizon.
+    horizon_rationale: "Following our quantitative pipeline, we classify the S&P/TSX\
+      \ Composite's current volatility regime as 'elevated' based on its 21-day annualized\
+      \ realized volatility of 19.01% (within the 15%\u201322% band). Since the regime\
+      \ is elevated, we use an adaptive dispersion window of 10 trading days to capture\
+      \ the most recent market turbulence. This yields a trailing daily log return\
+      \ standard deviation of 0.011273. To calibrate the interval widths against heightened\
+      \ risk, we apply a 1.12x widening factor to the standard-normal quantile grid.\
+      \ This accounts for a turbulent geopolitical and commodity backdrop, with WTI\
+      \ crude soaring to $112.41, Gold at record highs of $4656.80, and the US VIX\
+      \ elevated at 24.17. At a 1-business-day horizon, the martingale prior dictates\
+      \ centering the point forecast and median cumulative log return at 0.0, keeping\
+      \ the projected forward distribution symmetric."
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (23 lines)
+    - tool: run_code
+      title: python (7 lines)
+    - tool: run_code
+      title: python (5 lines)
+    - tool: search_web
+      title: TSX S&P/TSX Composite Bank of Canada crude oil gold stock market news
+        April 2026
+    - tool: search_web
+      title: '"April 6, 2026" stock market TSX energy oil gold news'
+    - tool: run_code
+      title: python (77 lines)
+    - tool: run_code
+      title: python (22 lines)
+    - tool: run_code
+      title: python (23 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (59 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: b0fd50b7754ca43b40565bb33cdbafc7
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/b0fd50b7754ca43b40565bb33cdbafc7

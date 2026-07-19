@@ -1,0 +1,97 @@
+as_of: '2026-06-08T00:00:00'
+wall_time_s: 173.5720214160392
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T21:33:39.561766'
+  as_of: '2026-06-08T00:00:00'
+  forecast_date: '2026-07-07T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.068232
+      '0.1': -0.053161
+      '0.2': -0.034912
+      '0.3': -0.021753
+      '0.4': -0.010509
+      '0.5': 0.0
+      '0.6': 0.010509
+      '0.7': 0.021753
+      '0.8': 0.034912
+      '0.9': 0.053161
+      '0.95': 0.068232
+  metadata:
+    rationale: Calibrated probabilistic forecast for the 21-day S&P/TSX Composite
+      cumulative log return as of June 8, 2026. Daily log return volatility is 14.37%
+      annualized (sigma_daily of 0.009052), which corresponds to the 'normal' volatility
+      regime. The 21-day horizon volatility (sigma_21) is 0.041482. No manual calibration
+      corrections are active. The prediction intervals are built on a standard-normal
+      Gaussian core centered around 0.0, which has been shown to be highly optimal
+      and well-calibrated for the TSX during normal-volatility stretches.
+    horizon_rationale: Base forecast projected from 21-day realized volatility of
+      14.37% (annualized) as of June 8, 2026, which places the S&P/TSX Composite in
+      a normal volatility regime (10-15%). The daily return distribution is modeled
+      using a standard-normal Gaussian core with no fat-tailed scaling or Student's
+      t adjustment required, in line with TSX historical performance in this regime.
+      No active manual corrections are triggered because the volatility regime is
+      normal, no negative return anomaly is detected (z-score of -2.49 is above the
+      -2.5 threshold), and there are no active rate-hiking cycles or catch-up holiday
+      effects. The point forecast is centered at 0.0 following a martingale prior
+      as there are no strong directional catalysts from the Bank of Canada or global
+      macro news.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: search_web
+      title: '"S&P/TSX" OR "TSX" OR "Toronto Stock Exchange" OR "Bank of Canada" market
+        news June 2026'
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (90 lines)
+    - tool: run_code
+      title: python (6 lines)
+    - tool: run_code
+      title: python (84 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (10 lines)
+    - tool: run_code
+      title: python (49 lines)
+    - tool: run_code
+      title: python (6 lines)
+    - tool: run_code
+      title: python (35 lines)
+    - tool: run_code
+      title: python (4 lines)
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (26 lines)
+    - tool: run_code
+      title: python (27 lines)
+    - tool: run_code
+      title: python (29 lines)
+    - tool: run_code
+      title: python (6 lines)
+    - tool: run_code
+      title: python (25 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: eca49ff6efbf0b41b0a3f1c5d9dd2ec2
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/eca49ff6efbf0b41b0a3f1c5d9dd2ec2

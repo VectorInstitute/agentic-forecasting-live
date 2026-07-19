@@ -70,7 +70,17 @@ remaining matrix models (incl. sonnet-5, opus-4-8 spot reads), agent_code
   evidence over time. 28 graduations in one session pattern-matches the
   overzealous-self-update risk in its structural form. Study model:
   gemini-3.5-flash (hence untouched by the Anthropic schema-bug window).
-- Adaptive-eval traces owed after that stage runs.
+- **Adaptive-eval trace reads COMPLETE, 2026-07-19** (war-low origin 2026-03-30,
+  h=21, both arms): pre-seed trace `06e818fc22f9024e441d34206cf6c75b`, trained
+  trace `c177eebe52b6a42633c191b912bf19b6`. Verified: each arm loads its OWN
+  strategy via load_skill — trained output contains learned corrections ("Widen
+  prediction intervals…"), seed output contains "No calibration corrections
+  yet" — so the pre/post manipulation is real; same model/tools/origins
+  otherwise. Behavioral note: trained arm used 22 generations vs seed's 39 at
+  this origin (strategy → decisiveness); quantify across origins before citing.
+  Gap note: pre arm initially completed 70/72 (one ContinuousAgentForecastOutput
+  validation failure at 2026-05-25 h=21 + one sibling); refilled via resumable
+  re-run before scoring.
 
 Judge design note: the judge's realized-outcome context is returns-only (5/21/60d),
 deliberately not a curated news summary — so calibration/specificity verdicts are

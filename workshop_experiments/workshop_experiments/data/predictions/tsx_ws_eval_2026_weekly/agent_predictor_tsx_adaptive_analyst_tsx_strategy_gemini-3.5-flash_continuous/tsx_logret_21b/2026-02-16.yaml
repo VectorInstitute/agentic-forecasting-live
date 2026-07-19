@@ -1,0 +1,100 @@
+as_of: '2026-02-16T00:00:00'
+wall_time_s: 215.63811412500218
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T15:41:50.304566'
+  as_of: '2026-02-16T00:00:00'
+  forecast_date: '2026-03-17T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.119584
+      '0.1': -0.093171
+      '0.2': -0.061188
+      '0.3': -0.038125
+      '0.4': -0.018419
+      '0.5': 0.0
+      '0.6': 0.018419
+      '0.7': 0.038125
+      '0.8': 0.061188
+      '0.9': 0.093171
+      '0.95': 0.119584
+  metadata:
+    rationale: S&P/TSX Composite 21-day forward cumulative log return forecast. Anchored
+      to a martingale prior of 0.000 for the median. We classify the TSX as being
+      in an elevated volatility regime due to recent extreme daily swings and precious
+      metal turbulence (Gold crash on Jan 30). A shorter 10-day window is used to
+      estimate the daily return standard deviation (0.014165), and a 1.12x widening
+      correction is applied to account for the heightened risks under the current
+      commodity and tariff-related stress backdrop.
+    horizon_rationale: Forecast for the 21-business-day cumulative log return of the
+      S&P/TSX Composite. The market is in an elevated volatility regime (21-day annualised
+      realised vol of 20.25%), driven by recent massive daily swings (e.g., -3.37%
+      on Jan 30, -2.40% on Feb 12, +1.86% on Feb 13) and a major commodity shock (Gold
+      plunged over 11% on Jan 30). We select a shorter 10-day dispersion window (daily
+      sigma = 0.014165) to reflect the current high-volatility state and apply a 1.12x
+      widening factor to calibrate the intervals against under-dispersion. The distribution
+      is centered at 0.000 in accordance with the martingale prior.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (20 lines)
+    - tool: search_web
+      title: Canada stock market TSX energy bank of canada oil gold february 2026
+    - tool: run_code
+      title: python (70 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: search_web
+      title: '"January 30, 2026" stock market OR tariff OR trade OR "February 2026"
+        OR "January 2026" OR canada'
+    - tool: search_web
+      title: '"January 30, 2026" tariff OR trade OR market OR tsx OR canada OR US
+        OR Trump OR "Supreme Court"'
+    - tool: search_web
+      title: '"January 30, 2026" "S&P 500" OR "dow jones" OR stock market OR drop
+        OR crash OR Nasdaq'
+    - tool: run_code
+      title: python (30 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (4 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (25 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (25 lines)
+    - tool: run_code
+      title: python (12 lines)
+    - tool: run_code
+      title: python (58 lines)
+    - tool: run_code
+      title: python (47 lines)
+    - tool: run_code
+      title: python (31 lines)
+    - tool: run_code
+      title: python (29 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: e2b6e12f3932d841626c23651826db8e
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/e2b6e12f3932d841626c23651826db8e

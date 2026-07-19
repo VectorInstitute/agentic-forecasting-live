@@ -1,0 +1,99 @@
+as_of: '2026-04-06T00:00:00'
+wall_time_s: 203.52840483398177
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T16:08:07.628609'
+  as_of: '2026-04-06T00:00:00'
+  forecast_date: '2026-05-05T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.08495
+      '0.1': -0.06618
+      '0.2': -0.04347
+      '0.3': -0.02708
+      '0.4': -0.01308
+      '0.5': 0.0
+      '0.6': 0.01308
+      '0.7': 0.02708
+      '0.8': 0.04347
+      '0.9': 0.06618
+      '0.95': 0.08495
+  metadata:
+    rationale: Comprehensive probabilistic projection of the 21-business-day forward
+      cumulative log return of the S&P/TSX Composite index from the April 6, 2026
+      cutoff. It combines a systematic daily volatility analysis (elevated regime,
+      10-day dispersion window) with web-grounded commodity and central bank news
+      context.
+    horizon_rationale: As of April 6, 2026, the S&P/TSX Composite's 21-day annualised
+      realised volatility stands at 19.01%, classifying the market in the elevated
+      regime (15%-22%). In response, we adopt an adaptive 10-day dispersion window,
+      yielding a daily standard deviation of 0.01127 (annualised 17.89%). Geopolitical
+      tensions in the Middle East have driven WTI crude oil prices to $112.41/bbl
+      and gold to $4,656.80/oz, supporting Canada's resource-heavy index, but stoking
+      inflation fears (headline CPI rose to 2.4% in March). Meanwhile, the Bank of
+      Canada holds its policy rate at 2.25%, balancing soft labour markets against
+      gasoline-driven inflation. Given these offsetting factors, we adhere to a martingale
+      prior with a point forecast of 0.0. Backtesting over historical elevated-volatility
+      regimes confirms that unscaled (widen = 1.0) daily-sigma intervals provide optimal
+      calibration, yielding the highest log-likelihood and lowest CRPS.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (11 lines)
+    - tool: run_code
+      title: python (90 lines)
+    - tool: run_code
+      title: python (66 lines)
+    - tool: run_code
+      title: python (45 lines)
+    - tool: search_web
+      title: '"S&P/TSX Composite" April 2026 OR March 2026 news market'
+    - tool: search_web
+      title: '"S&P/TSX" OR "TSX" market April 6 2026 OR April 5 2026 OR April 3 2026'
+    - tool: run_code
+      title: python (97 lines)
+    - tool: run_code
+      title: python (8 lines)
+    - tool: run_code
+      title: python (89 lines)
+    - tool: run_code
+      title: python (7 lines)
+    - tool: run_code
+      title: python (91 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (38 lines)
+    - tool: load_skill
+      title: load_skill
+    - tool: run_code
+      title: python (66 lines)
+    - tool: run_code
+      title: python (40 lines)
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 74244c27a59ce9e69e115938924557fc
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/74244c27a59ce9e69e115938924557fc

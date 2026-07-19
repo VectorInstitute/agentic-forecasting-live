@@ -1,0 +1,61 @@
+as_of: '2026-04-20T00:00:00'
+wall_time_s: 107.33497616701061
+predictions:
+- predictor_id: agent_predictor_tsx_analyst_news_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-18T10:32:50.044598'
+  as_of: '2026-04-20T00:00:00'
+  forecast_date: '2026-04-27T00:00:00'
+  payload:
+    point_forecast: 0.0018
+    quantiles:
+      '0.05': -0.035
+      '0.1': -0.0269
+      '0.2': -0.0171
+      '0.3': -0.0099
+      '0.4': -0.0039
+      '0.5': 0.0018
+      '0.6': 0.0075
+      '0.7': 0.0135
+      '0.8': 0.0207
+      '0.9': 0.0305
+      '0.95': 0.0386
+  metadata:
+    rationale: This model generates calibrated probabilistic forecasts for S&P/TSX
+      Composite 5-day log returns as of April 20, 2026. The point forecast (+0.18%)
+      reflects a cautiously optimistic outlook driven by elevated oil and gold commodity
+      prices supporting key Canadian index weights, offset by soft domestic GDP, rising
+      yield curves, and U.S. trade policy headwinds. Quantiles are mapped using a
+      normal distribution matched to the trailing 63-day standard deviation of 2.24%.
+    horizon_rationale: As of April 20, 2026, the Bank of Canada (BoC) has maintained
+      its target overnight rate at 2.25% in a data-dependent pause, balancing slow
+      domestic growth against rising headline CPI inflation (which ticked up to 2.4%
+      in March driven by Middle East gasoline price spikes). Labour markets remain
+      soft with 6.7% unemployment and substantial job losses in Jan-Feb. Geopolitical
+      disruptions in the Strait of Hormuz keep oil and safe-haven gold prices elevated,
+      which provides a sector-specific tailwind to the TSX energy and materials giants.
+      Meanwhile, US tariff and trade policies (CUSMA review) are placing a drag on
+      the broader growth path. The Canadian dollar remains steady near 0.73 USD, and
+      GoC bond yields exhibit a bearish flattening. The 5-day cumulative log return
+      is modeled with a mild positive expected drift of +0.0018, with the distribution
+      calibrated around a 2.24% trailing standard deviation.
+    tool_calls:
+    - tool: search_web
+      title: Bank of Canada policy rate decision and forward guidance April 2026
+    - tool: search_web
+      title: '"Bank of Canada" rate decision April 2026'
+    - tool: search_web
+      title: S&P/TSX Composite index performance April 2026
+    - tool: search_web
+      title: S&P/TSX Composite index "April 2026" or "April 17, 2026" or "April 20,
+        2026" level
+    - tool: search_web
+      title: '"Bank of Canada" "overnight rate" "2026"'
+    - tool: search_web
+      title: '"S&P/TSX" April 2026 news'
+    - tool: search_web
+      title: '"S&P/TSX Composite" close "April 2026" or "April 20, 2026"'
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 6806921630bc4a3a1158d23f6061dbdc
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/6806921630bc4a3a1158d23f6061dbdc

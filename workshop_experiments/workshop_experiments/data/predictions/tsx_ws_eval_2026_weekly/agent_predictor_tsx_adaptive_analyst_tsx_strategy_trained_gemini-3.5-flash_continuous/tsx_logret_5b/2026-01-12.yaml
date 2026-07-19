@@ -1,0 +1,87 @@
+as_of: '2026-01-12T00:00:00'
+wall_time_s: 154.48738820792641
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T18:31:31.098059'
+  as_of: '2026-01-12T00:00:00'
+  forecast_date: '2026-01-19T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.027847
+      '0.1': -0.021697
+      '0.2': -0.014249
+      '0.3': -0.008878
+      '0.4': -0.004289
+      '0.5': 0.0
+      '0.6': 0.004289
+      '0.7': 0.008878
+      '0.8': 0.014249
+      '0.9': 0.021697
+      '0.95': 0.027847
+  metadata:
+    rationale: The S&P/TSX Composite is classified as being in a LOW volatility regime
+      (9.317% annualized) and currently sits at all-time highs. However, physical
+      gold's weekly return of +3.70% triggers our commodity shock threshold (>= +3.5%),
+      signaling potential volatility spillover. Applying active calibration correction
+      hyp-002, we expand our prediction intervals by 29% across the 5bd horizon to
+      maintain adequate probabilistic coverage. We maintain a martingale median point
+      forecast of 0.00% in accordance with our non-stationarity findings on directional
+      drifts.
+    horizon_rationale: At the 5-business-day horizon, the forecast is anchored to
+      a martingale prior of 0.0% cumulative log return as the TSX sits at all-time
+      highs (drawdown = 0.0%). The current realized volatility regime is LOW (annualized
+      realized vol = 9.317% < 10.0%), and we detect a trailing 5-day commodity shock
+      where physical gold weekly returns rose to +3.70% (>= 3.5%). Under active correction
+      hyp-002, we widen our base standard-normal prediction intervals by 29% (multiplier
+      of 1.29) to protect against immediate volatility and shock propagation across
+      the energy- and materials-heavy index. The resulting intervals are well-calibrated
+      and robust.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (8 lines)
+    - tool: run_code
+      title: python (42 lines)
+    - tool: run_code
+      title: python (22 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (25 lines)
+    - tool: run_code
+      title: python (48 lines)
+    - tool: run_code
+      title: python (5 lines)
+    - tool: search_web
+      title: S&P TSX Composite January 12 2026 news
+    - tool: search_web
+      title: Bank of Canada rate decision January 2026
+    - tool: run_code
+      title: python (43 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 73a9cbe38e63b3520927d24802a5940d
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/73a9cbe38e63b3520927d24802a5940d

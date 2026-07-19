@@ -1,0 +1,77 @@
+as_of: '2026-03-30T00:00:00'
+wall_time_s: 123.54310400004033
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T17:58:32.285806'
+  as_of: '2026-03-30T00:00:00'
+  forecast_date: '2026-03-31T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.02140543029277807
+      '0.1': -0.016677570729322327
+      '0.2': -0.010952503221551639
+      '0.3': -0.006824326758529386
+      '0.4': -0.0032969521829741564
+      '0.5': 0.0
+      '0.6': 0.0032969521829741564
+      '0.7': 0.006824326758529384
+      '0.8': 0.01095250322155164
+      '0.9': 0.016677570729322327
+      '0.95': 0.021405430292778062
+  metadata:
+    rationale: The S&P/TSX Composite is classified in an ELEVATED volatility regime,
+      with a 21-day annualized realized volatility of 17.91%. Following our quantitative
+      pipeline, we detect no daily return anomalies (z-score of -0.0776 is well within
+      bounds) and confirm that today is not a Canadian Holiday Catch-Up day. Since
+      the regime is ELEVATED and there is no shifting anomaly, we select a 10-day
+      dispersion window (daily sigma of 0.013014, annualized equivalent of 20.66%)
+      to calibrate our prediction intervals. Under the Gaussian Core insight (Correction
+      hyp-007), the daily return distribution is highly Gaussian in elevated regimes,
+      meaning no fat-tailed scaling or Student's t adjustments are required. The forecast
+      is centered at 0.0 using a martingale prior, keeping the distribution tight
+      and symmetric at the 1bd horizon.
+    horizon_rationale: Base standard-normal projection for elevated volatility regime
+      with 10-day dispersion window. No active calibration corrections apply for 1bd.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (53 lines)
+    - tool: run_code
+      title: python (58 lines)
+    - tool: run_code
+      title: python (27 lines)
+    - tool: run_code
+      title: python (23 lines)
+    - tool: search_web
+      title: TSX "S&P/TSX" March 2026 market news
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (33 lines)
+    - tool: run_code
+      title: python (35 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (25 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 4cf04ea6e855cc26d9dc78f135836bc1
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/4cf04ea6e855cc26d9dc78f135836bc1

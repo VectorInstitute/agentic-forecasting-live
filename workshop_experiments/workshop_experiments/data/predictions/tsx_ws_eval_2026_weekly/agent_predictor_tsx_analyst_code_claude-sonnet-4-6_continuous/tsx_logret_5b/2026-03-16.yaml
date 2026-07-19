@@ -1,0 +1,89 @@
+as_of: '2026-03-16T00:00:00'
+wall_time_s: 1260.3136579580023
+predictions:
+- predictor_id: agent_predictor_tsx_analyst_code_claude-sonnet-4-6_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T04:18:39.821036'
+  as_of: '2026-03-16T00:00:00'
+  forecast_date: '2026-03-23T00:00:00'
+  payload:
+    point_forecast: -0.004
+    quantiles:
+      '0.05': -0.075
+      '0.1': -0.057
+      '0.2': -0.038
+      '0.3': -0.022
+      '0.4': -0.012
+      '0.5': -0.004
+      '0.6': 0.006
+      '0.7': 0.016
+      '0.8': 0.03
+      '0.9': 0.05
+      '0.95': 0.067
+  metadata:
+    rationale: "Overall forecast grounded in: (1) empirical 5BD return distribution\
+      \ implied by trailing 63d vol (~0.042 annualised to 5BD); (2) negative short-term\
+      \ momentum (TSX down persistently in March 2026); (3) macro headwinds \u2014\
+      \ BoC on hold, soft Canadian economy (shallow recession, unemployment 6.5-7%),\
+      \ US tariffs (10% global effective Feb 24, 2026), rising GoC yields; (4) partial\
+      \ commodity offsets \u2014 high oil prices support energy sector (~20% of TSX),\
+      \ gold safe-haven demand supports materials; (5) slight negative median bias\
+      \ (-0.004) with fat-tailed symmetric-ish distribution widened modestly for elevated\
+      \ uncertainty. The 5th\u201395th percentile range of -0.075 to +0.067 captures\
+      \ the realistic tail risk consistent with observed extreme 5BD moves in the\
+      \ history series."
+    horizon_rationale: "Horizon: 5 business days (one calendar week) from 2026-03-16.\
+      \ Volatility anchor: trailing 63-day daily std of 0.01874 implies a 5BD annualised\
+      \ std of ~0.0419 (= 0.01874 \xD7 \u221A5). This is slightly above the long-run\
+      \ TSX average of ~0.035, consistent with elevated macro uncertainty. Distribution\
+      \ shape: moderately fat-tailed (t-like) given ongoing geopolitical and trade\
+      \ risks. Median set at -0.004 (slightly negative): (1) strong negative daily-return\
+      \ momentum throughout March 2026 \u2014 the last ~10 daily observations are\
+      \ consistently -0.01 to -0.04; (2) BoC on hold at 2.25% with a neutral-to-cautious\
+      \ bias amid a shallow technical recession and unemployment at 6.5-7%; (3) US\
+      \ 10% global tariff enacted Feb 24, 2026, creating persistent headwinds for\
+      \ Canadian export sectors (steel, aluminium, lumber, autos); (4) GoC 10yr yield\
+      \ has risen sharply to ~3.47% from 3.12%, a valuation headwind; (5) partial\
+      \ offset from elevated oil prices (energy sector benefit) and gold safe-haven\
+      \ demand supporting the materials sector. Tail asymmetry: left tail slightly\
+      \ fatter than right (downside risks from trade escalation, growth slowdown),\
+      \ but right tail not negligible given commodity-price upside and possible trade-deal\
+      \ relief. Quantile spread reflects the current above-average vol regime."
+    tool_calls:
+    - tool: search_web
+      title: Bank of Canada policy rate decision and forward guidance for Canadian
+        equities
+    - tool: search_web
+      title: oil and gold commodity price outlook impact on TSX energy and materials
+        sectors
+    - tool: search_web
+      title: US Federal Reserve policy and tariff trade spillovers into Canadian stocks
+        2026
+    - tool: search_web
+      title: USD CAD Canadian dollar Government of Canada bond yield March 2026
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: c5f8cd22b90a95bb69b78b57c8b43159
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/c5f8cd22b90a95bb69b78b57c8b43159

@@ -1,0 +1,121 @@
+as_of: '2026-01-05T00:00:00'
+wall_time_s: 311.7149634170346
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T15:11:45.730807'
+  as_of: '2026-01-05T00:00:00'
+  forecast_date: '2026-02-03T00:00:00'
+  payload:
+    point_forecast: 0.008
+    quantiles:
+      '0.05': -0.034618
+      '0.1': -0.025205
+      '0.2': -0.013806
+      '0.3': -0.005587
+      '0.4': 0.001436
+      '0.5': 0.008
+      '0.6': 0.014564
+      '0.7': 0.021587
+      '0.8': 0.029806
+      '0.9': 0.041205
+      '0.95': 0.050618
+  metadata:
+    rationale: We generate a calibrated probabilistic forecast for the 21-business-day
+      horizon on the S&P/TSX Composite. Our pipeline classifies the index in a Low
+      Volatility Regime (annualized realized vol of 8.98%) and scales the interval
+      widths using a 21-day dispersion window (sigma_21 = 0.025910). To capture robust
+      trend-continuation behavior that historically follows high-return years on the
+      TSX, we center our forecast at a positive drift of 0.0080 (0.8% expected log
+      return). This setting is mathematically optimized via walk-forward CRPS grid
+      search and is macro-grounded in the Bank of Canada's transition to a stable
+      interest rate hold of 2.25%.
+    horizon_rationale: Forecast for the 21-business-day horizon cumulative log return
+      is constructed via a calibrated parametric distribution centered at a trend-adjusted
+      drift of 0.0080. The 21-day rolling realized volatility of the S&P/TSX Composite
+      stands at 8.98%, placing the index in a Low Volatility Regime (<10%). No return
+      anomalies are detected (latest daily return z-score is 1.14), dictating a standard
+      21-day dispersion window. The resulting daily sigma of 0.005654 scales to 0.025910
+      over the 21-business-day horizon. While a pure martingale prior puts the median
+      at 0.0, historical backtesting and cross-validation of low-volatility periods
+      preceded by high annual returns (such as the TSX's 28% gain in 2025) reveal
+      strong trend-continuation/momentum. A grid search on these historical periods
+      identifies an optimal median of 0.0080 (0.8% return) that minimizes out-of-sample
+      CRPS. This drift-adjusted model is supported by a stable macro backdrop following
+      the Bank of Canada's decision to hold interest rates at 2.25% in late December
+      2025, even as we maintain a conservative spread to account for potential US
+      trade tariff uncertainty and a slightly cooling domestic labour market (unemployment
+      at 6.8%).
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (23 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (7 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (82 lines)
+    - tool: run_code
+      title: python (5 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: search_web
+      title: TSX market review performance December 2025 January 2026 Bank of Canada
+    - tool: search_web
+      title: gold price oil price TSX commodity January 2026 December 2025
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (78 lines)
+    - tool: run_code
+      title: python (57 lines)
+    - tool: run_code
+      title: python (6 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (51 lines)
+    - tool: run_code
+      title: python (7 lines)
+    - tool: run_code
+      title: python (10 lines)
+    - tool: run_code
+      title: python (67 lines)
+    - tool: search_web
+      title: US tariff Canada December 2025 January 2026 Trump threat
+    - tool: run_code
+      title: python (58 lines)
+    - tool: run_code
+      title: python (6 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (38 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: d0c4e180447898f7c406a8e0af1eaaa5
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/d0c4e180447898f7c406a8e0af1eaaa5

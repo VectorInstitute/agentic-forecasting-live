@@ -1,0 +1,108 @@
+as_of: '2026-04-06T00:00:00'
+wall_time_s: 332.13210816693027
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T20:59:50.978084'
+  as_of: '2026-04-06T00:00:00'
+  forecast_date: '2026-05-05T00:00:00'
+  payload:
+    point_forecast: 0.0032
+    quantiles:
+      '0.05': -0.094515
+      '0.1': -0.072933
+      '0.2': -0.040277
+      '0.3': -0.02389
+      '0.4': -0.009887
+      '0.5': 0.0032
+      '0.6': 0.016287
+      '0.7': 0.03029
+      '0.8': 0.046677
+      '0.9': 0.069402
+      '0.95': 0.088166
+  metadata:
+    rationale: TSX Composite cumulative log return projection over 21 business days
+      from April 6, 2026. The volatility regime is classified as Elevated (19.01%),
+      utilizing an adaptive 10-day daily dispersion window. Point forecast is centered
+      on +0.32% to account for shallow drawdown recovery and a strong Oil+/Gold+ commodity
+      environment. The lower-tail quantiles are shifted downward to protect against
+      documented 21bd downside asymmetry in this regime.
+    horizon_rationale: Forecast for the 21-day horizon based on an elevated realized
+      volatility regime (19.01% annualised), which dictates a 10-day dispersion window.
+      Incorporates a shallow drawdown recovery premium (+0.32% drift) and a positive
+      commodity backdrop (Oil+/Gold+). Applies a downward shift of 15% to the 5% and
+      10% lower-tail quantiles to protect against asymmetric left-tail risk.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (16 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (12 lines)
+    - tool: run_code
+      title: python (9 lines)
+    - tool: run_code
+      title: python (83 lines)
+    - tool: run_code
+      title: python (32 lines)
+    - tool: run_code
+      title: python (8 lines)
+    - tool: search_web
+      title: '"hyp-013" TSX "lower tail quantiles" "downward"'
+    - tool: search_web
+      title: '"Calibrate asymmetric tail risk at the 21bd horizon" TSX'
+    - tool: load_skill
+      title: load_skill
+    - tool: run_code
+      title: python (6 lines)
+    - tool: run_code
+      title: python (4 lines)
+    - tool: run_code
+      title: python (51 lines)
+    - tool: run_code
+      title: python (49 lines)
+    - tool: run_code
+      title: python (60 lines)
+    - tool: run_code
+      title: python (6 lines)
+    - tool: run_code
+      title: python (9 lines)
+    - tool: run_code
+      title: python (11 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: search_web
+      title: '"Bank of Canada" rate decision April 2026 OR "Macklem" April 2026'
+    - tool: search_web
+      title: Bank of Canada rate decision "April 2026" OR "Macklem" OR "inflation"
+        OR "rate"
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (4 lines)
+    - tool: run_code
+      title: python (12 lines)
+    - tool: run_code
+      title: python (28 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: a122ee0c560590c3930456302fbc10fb
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/a122ee0c560590c3930456302fbc10fb

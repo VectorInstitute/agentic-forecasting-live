@@ -1,0 +1,88 @@
+as_of: '2026-05-18T00:00:00'
+wall_time_s: 2680.0403616669355
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T17:12:17.035661'
+  as_of: '2026-05-18T00:00:00'
+  forecast_date: '2026-06-16T00:00:00'
+  payload:
+    point_forecast: 0.003
+    quantiles:
+      '0.05': -0.059985
+      '0.1': -0.046073
+      '0.2': -0.029227
+      '0.3': -0.01708
+      '0.4': -0.006701
+      '0.5': 0.003
+      '0.6': 0.012701
+      '0.7': 0.02308
+      '0.8': 0.035227
+      '0.9': 0.052073
+      '0.95': 0.065985
+  metadata:
+    rationale: The S&P/TSX Composite is classified in a 'normal' volatility regime
+      with a trailing 21-day annualized realized volatility of 13.26% and no significant
+      recent daily anomalies (Z-score is -1.37). In line with the normal-volatility
+      baseline and our forecasting strategy, we project the 21-business-day cumulative
+      log return starting from a small positive drift of +0.3% (+0.0030), which is
+      the historical mean for similar volatility environments. The interval width
+      is calibrated symmetrically using standard normal quantiles scaled by the 21-day
+      daily standard deviation, capturing a balanced view of the current commodity-led
+      tailwinds and macroeconomic uncertainties.
+    horizon_rationale: Calculated using a trailing 21-day daily realized volatility
+      of 0.008356 (annualized 13.26%) projected over a 21-business-day horizon (sigma_21
+      = 0.038292), which closely aligns with the trailing 63-day standard deviation
+      of 0.038078. A mild positive drift of +0.0030 is applied to the median, reflecting
+      supportive Bank of Canada overnight policy rates (2.25%) and surging energy
+      prices (WTI crude oil > $105/bbl) that act as a tailwind for the energy-heavy
+      TSX, balanced against sluggish domestic growth and trade/tariff headwinds.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (60 lines)
+    - tool: run_code
+      title: python (43 lines)
+    - tool: load_skill
+      title: load_skill
+    - tool: search_web
+      title: '"S&P/TSX" OR "TSX" OR "Canada" "May 2026" market news OR BoC OR economy'
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (43 lines)
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (75 lines)
+    - tool: run_code
+      title: python (67 lines)
+    - tool: run_code
+      title: python (25 lines)
+    - tool: run_code
+      title: python (57 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (30 lines)
+    - tool: run_code
+      title: python (32 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: f229986f2db67a3b9e9a47515eb86eec
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/f229986f2db67a3b9e9a47515eb86eec

@@ -1,0 +1,70 @@
+as_of: '2026-03-30T00:00:00'
+wall_time_s: 71.51846641697921
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T12:55:36.833854'
+  as_of: '2026-03-30T00:00:00'
+  forecast_date: '2026-03-31T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.023974
+      '0.1': -0.018679
+      '0.2': -0.012267
+      '0.3': -0.007643
+      '0.4': -0.003693
+      '0.5': 0.0
+      '0.6': 0.003693
+      '0.7': 0.007643
+      '0.8': 0.012267
+      '0.9': 0.018679
+      '0.95': 0.023974
+  metadata:
+    rationale: Our quantitative pipeline classifies the S&P/TSX Composite index as
+      being in an 'elevated' volatility regime (21-day realized vol of 17.91%). This
+      dictates a 10-day historical dispersion window and a 1.12 interval-widening
+      factor. With no scheduled Bank of Canada decisions or key macroeconomic releases
+      on the immediate 1-day horizon, the forecast is centered symmetrically at 0.0
+      (martingale prior). High-stress macro conditions, such as the US VIX exceeding
+      30 and elevated oil/gold markets, further validate the widened distribution
+      to fully capture tail risks.
+    horizon_rationale: "For the 1-business-day horizon, the cumulative log return\
+      \ forecast is centered at 0.0 under a martingale prior. The current 21-day annualized\
+      \ realized volatility is 17.91%, placing the S&P/TSX Composite in an 'elevated'\
+      \ volatility regime. Following our vol-regime guidelines, we select a shorter\
+      \ 10-day dispersion window to reflect the current market state, resulting in\
+      \ a daily standard deviation of 0.013014 (~20.66% annualized). To account for\
+      \ heightened global and domestic risk\u2014highlighted by a high US VIX of 30.61\
+      \ and elevated commodity drivers (WTI crude oil at $102.88 and gold at $4,526)\u2014\
+      we apply a calibration widening factor of 1.12 to the base intervals, producing\
+      \ a robust and symmetric quantile distribution around the median."
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: run_code
+      title: python (38 lines)
+    - tool: search_web
+      title: TSX stock market Canada March 2026 Bank of Canada oil gold
+    - tool: run_code
+      title: python (76 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 3fb6ff94542b4f41c4901c47dc420111
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/3fb6ff94542b4f41c4901c47dc420111

@@ -1,0 +1,95 @@
+as_of: '2026-04-20T00:00:00'
+wall_time_s: 191.70894637494348
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T19:24:18.570054'
+  as_of: '2026-04-20T00:00:00'
+  forecast_date: '2026-04-27T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.01864
+      '0.1': -0.014523
+      '0.2': -0.009538
+      '0.3': -0.005943
+      '0.4': -0.002871
+      '0.5': 0.0
+      '0.6': 0.002871
+      '0.7': 0.005943
+      '0.8': 0.009538
+      '0.9': 0.014523
+      '0.95': 0.01864
+  metadata:
+    rationale: This forecast is produced using the standard-normal pipeline with a
+      10-day dispersion window chosen dynamically based on the GSPTSE's elevated volatility
+      regime on April 20, 2026. This dynamic window is empirically validated to maximize
+      calibration on the TSX. The martingale prior anchors the point forecast to 0.0,
+      as any directional adjustments are highly non-stationary and statistically fragile.
+    horizon_rationale: 'As of April 20, 2026, the S&P/TSX Composite (GSPTSE) is classified
+      in the elevated volatility regime with a trailing 21-day annualised realised
+      volatility of 15.26% (thresholds: elevated between 15% and 22%). Following the
+      vol-regime and trend-projection pipeline for elevated regimes, we select a shorter
+      dispersion window of 10 trading days to capture localized price dynamics. The
+      daily return standard deviation over this window is 0.005068 (annualised 8.05%),
+      reflecting smooth upward price action over the past two weeks. Under our strategy,
+      prediction intervals in normal/elevated regimes are projected using a standard-normal
+      Gaussian distribution. Extensive decadal backtests (2005-2025) confirm that
+      this 10-day dispersion window in the elevated regime achieves highly optimal
+      coverage for the 5-day cumulative return (80.23% for the 80% interval and 88.81%
+      for the 90% interval). In line with the martingale prior, the point forecast
+      (0.50 quantile) is set to 0.0. While WTI oil experienced a sharp trailing 5-day
+      commodity shock (-10.04% return, below the -8.5% threshold), no directional
+      drift adjustments are applied as our historical backtests show that post-commodity-shock
+      drift is highly non-stationary and prone to decadal sign-flips.'
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (71 lines)
+    - tool: run_code
+      title: python (39 lines)
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (11 lines)
+    - tool: run_code
+      title: python (24 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (8 lines)
+    - tool: search_web
+      title: '"TSX" "April 2026" or "Toronto Stock Exchange" "April 2026"'
+    - tool: run_code
+      title: python (9 lines)
+    - tool: run_code
+      title: python (29 lines)
+    - tool: run_code
+      title: python (88 lines)
+    - tool: run_code
+      title: python (12 lines)
+    - tool: search_web
+      title: '"Bank of Canada" "April 2026" interest rate decision'
+    - tool: run_code
+      title: python (56 lines)
+    - tool: run_code
+      title: python (51 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 3b14189f2b87411dda39c74130d6bf51
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/3b14189f2b87411dda39c74130d6bf51

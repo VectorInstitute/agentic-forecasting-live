@@ -1,0 +1,88 @@
+as_of: '2026-02-09T00:00:00'
+wall_time_s: 166.810130207974
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T12:40:52.105773'
+  as_of: '2026-02-09T00:00:00'
+  forecast_date: '2026-02-10T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.02525344
+      '0.1': -0.01967566
+      '0.2': -0.01292141
+      '0.3': -0.00805112
+      '0.4': -0.00388964
+      '0.5': 0.0
+      '0.6': 0.00388964
+      '0.7': 0.00805112
+      '0.8': 0.01292141
+      '0.9': 0.01967566
+      '0.95': 0.02525344
+  metadata:
+    rationale: The S&P/TSX Composite Index was characterized by heightened volatility
+      in early February 2026. A sharp correction of -3.31% on January 30, driven by
+      U.S. trade policy and tariff uncertainty, was followed by a robust cyclical
+      rebound, culminating in a +1.69% daily log return on February 9. The trailing
+      21-day annualised realised volatility of 17.22% represents an 'elevated' regime,
+      prompting the adaptive pipeline to utilize a shortened 10-day dispersion window.
+      This window measures a daily return standard deviation of 0.015353, which is
+      used to calibrate a symmetric quantile grid around a martingale-based median
+      of 0.000000. This adaptive scaling ensures that the model remains highly responsive
+      to the current high-volatility environment without over-widening.
+    horizon_rationale: At the 1-business-day horizon, the S&P/TSX Composite close-to-close
+      return is modeled using a martingale prior centered at 0.000000. The market
+      is in an elevated volatility regime, with 21-day annualised realised volatility
+      at 17.22%. Using the adaptive 10-day dispersion window, the daily standard deviation
+      is calibrated to 0.015353 (24.37% annualised), reflecting the turbulent environment
+      (e.g., the -3.31% correction on Jan 30 and the strong +1.69% rebound on Feb
+      9). The symmetric quantiles reflect this wide dispersion to ensure robust calibration
+      without unnecessary directional bias.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (12 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: run_code
+      title: python (81 lines)
+    - tool: run_code
+      title: python (27 lines)
+    - tool: run_code
+      title: python (7 lines)
+    - tool: run_code
+      title: python (5 lines)
+    - tool: run_code
+      title: python (78 lines)
+    - tool: run_code
+      title: python (11 lines)
+    - tool: search_web
+      title: '"S&P/TSX" OR "Toronto stock" news February 2026'
+    - tool: search_web
+      title: TSX "January 30 2026" OR "Jan 30 2026"
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (64 lines)
+    - tool: run_code
+      title: python (8 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 55ab9b080c0e4d555829204b116764a3
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/55ab9b080c0e4d555829204b116764a3

@@ -1,0 +1,91 @@
+as_of: '2026-05-18T00:00:00'
+wall_time_s: 172.2987684579566
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T14:47:03.773222'
+  as_of: '2026-05-18T00:00:00'
+  forecast_date: '2026-05-25T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.030733
+      '0.1': -0.023945
+      '0.2': -0.015725
+      '0.3': -0.009798
+      '0.4': -0.004734
+      '0.5': 0.0
+      '0.6': 0.004734
+      '0.7': 0.009798
+      '0.8': 0.015725
+      '0.9': 0.023945
+      '0.95': 0.030733
+  metadata:
+    rationale: 'Statistical analysis of the S&P/TSX Composite Index (^GSPTSE) as of
+      the May 18, 2026 temporal cutoff indicates a normal volatility regime (realised
+      volatility of 13.26%) without daily anomalies. This dictates a 21-day dispersion
+      window (daily standard deviation of 0.008356). Scaled by the square root of
+      5, the 5-business-day standard deviation is 0.018684. News-grounded context
+      reveals a balanced environment: high energy and materials prices are offset
+      by hawkish macro and interest rate concerns ahead of CPI data. We therefore
+      maintain a symmetric, martingale-prior forecast centered at 0.0.'
+    horizon_rationale: The S&P/TSX Composite Index is in a normal volatility regime,
+      with trailing 21-day realised volatility at 13.26% (within the 10-15% normal
+      band) and no recent daily return anomalies (latest return Z-score of -1.37).
+      Based on these conditions, a 21-day dispersion window is selected, giving a
+      daily standard deviation of 0.008356. For the 5-business-day horizon, this daily
+      standard deviation is scaled by the square root of the horizon to 0.018684.
+      The martingale prior of exactly 0.0 median is maintained, as the positive catalyst
+      of strong commodities (WTI crude oil at $105.42/bbl and Gold at $4555.80/oz)
+      is balanced by hawkish interest rate expectations and the market anticipating
+      a potentially hot April CPI inflation print. Gaussian intervals around the zero-median
+      martingale prior are shown by backtests to be highly calibrated in this regime.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (25 lines)
+    - tool: run_code
+      title: python (39 lines)
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (54 lines)
+    - tool: run_code
+      title: python (54 lines)
+    - tool: search_web
+      title: Canada market news TSX oil gold Bank of Canada May 15 2026 May 18 2026
+    - tool: search_web
+      title: '"S&P/TSX" OR "TSX" "May 15 2026" OR "May 14 2026" OR "May 13 2026"'
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (43 lines)
+    - tool: run_code
+      title: python (58 lines)
+    - tool: run_code
+      title: python (59 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (11 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 69fd91ac4b307f28d4d65d4c6b55114c
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/69fd91ac4b307f28d4d65d4c6b55114c

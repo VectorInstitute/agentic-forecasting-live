@@ -1,0 +1,98 @@
+as_of: '2026-02-23T00:00:00'
+wall_time_s: 178.13664945890196
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T18:57:58.169013'
+  as_of: '2026-02-23T00:00:00'
+  forecast_date: '2026-03-02T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.046405
+      '0.1': -0.036156
+      '0.2': -0.023744
+      '0.3': -0.014795
+      '0.4': -0.007148
+      '0.5': 0.0
+      '0.6': 0.007148
+      '0.7': 0.014795
+      '0.8': 0.023744
+      '0.9': 0.036156
+      '0.95': 0.046405
+  metadata:
+    rationale: Overall probabilistic forecast for the 5-business-day forward cumulative
+      log return of the S&P/TSX Composite index as of February 23, 2026. The 21-day
+      trailing realized volatility is 20.76%, classifying the index in the ELEVATED
+      (15%-22%) volatility regime. Under our adaptive strategy, this triggers a 10-day
+      dispersion window to capture the most recent local volatility of 0.012617 daily.
+      Since the daily return structure is highly Gaussian during normal and elevated
+      regimes, prediction intervals are projected using standard normal quantiles
+      with no extra widening, as no low-volatility or negative return anomaly corrections
+      are active. Commodity markets have seen a positive gold weekly return of +3.57%,
+      representing a gold shock; however, the TSX-native realized volatility pipeline
+      perfectly self-calibrates to this, with no manual adjustments required.
+    horizon_rationale: At the 5-business-day horizon, the forecast is centered strictly
+      at 0.0 as log returns on the TSX are highly close to a martingale. Volatility
+      is calibrated based on a 10-day dispersion window of daily log returns (selected
+      because the 21d realized vol of 20.76% is in the ELEVATED regime). The base
+      daily volatility is 0.012617 (approx 20.03% annualized), projected across the
+      5bd horizon with a standard-normal Gaussian distribution. Daily returns are
+      highly Gaussian during elevated volatility regimes, making a standard normal
+      model optimal. No calendar or day-of-the-week adjustments are applied since
+      these anomalies have completely decayed.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (22 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (41 lines)
+    - tool: run_code
+      title: python (47 lines)
+    - tool: run_code
+      title: python (81 lines)
+    - tool: run_code
+      title: python (75 lines)
+    - tool: search_web
+      title: TSX February 2026 market news Bank of Canada
+    - tool: search_web
+      title: TSX February 17-23 2026 market news close
+    - tool: run_code
+      title: python (3 lines)
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (29 lines)
+    - tool: run_code
+      title: python (11 lines)
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (41 lines)
+    - tool: run_code
+      title: python (7 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 2dcd9de05c9d85233350600e4cc23225
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/2dcd9de05c9d85233350600e4cc23225

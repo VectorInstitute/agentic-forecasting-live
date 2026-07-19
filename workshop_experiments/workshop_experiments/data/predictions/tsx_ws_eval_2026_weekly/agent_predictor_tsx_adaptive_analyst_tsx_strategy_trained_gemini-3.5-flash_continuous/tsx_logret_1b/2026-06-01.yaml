@@ -1,0 +1,79 @@
+as_of: '2026-06-01T00:00:00'
+wall_time_s: 134.88208516698796
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T18:20:35.937832'
+  as_of: '2026-06-01T00:00:00'
+  forecast_date: '2026-06-02T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.011142
+      '0.1': -0.008681
+      '0.2': -0.005701
+      '0.3': -0.003552
+      '0.4': -0.001716
+      '0.5': 0.0
+      '0.6': 0.001716
+      '0.7': 0.003552
+      '0.8': 0.005701
+      '0.9': 0.008681
+      '0.95': 0.011142
+  metadata:
+    rationale: S&P/TSX Composite 1-business-day forecast as of June 1, 2026. The trailing
+      21-day annualized realized volatility of GSPTSE is 10.75%, placing the market
+      in a NORMAL volatility regime. Since the regime is Normal and there is no return
+      anomaly, the dispersion window is selected as 21 trading days (yielding a daily
+      sigma of 0.006774). Following the active corrections in tsx-strategy-trained,
+      standard-normal Gaussian projection is used for interval projection with no
+      manual fat-tail or shock-widening adjustments, as the joint commodity-shock
+      widening is only active in Low volatility regimes. The point forecast is kept
+      at 0.0 under the martingale prior.
+    horizon_rationale: As of June 1, 2026, the S&P/TSX Composite (GSPTSE) is classified
+      in a NORMAL volatility regime, with 21-day annualized realized volatility calculated
+      at 10.75% (inside the 10%-15% band). The daily standard deviation over this
+      21-day dispersion window is 0.006774. No return anomalies were detected (the
+      latest daily return z-score is -0.11). Under the active calibration rules of
+      the forecasting strategy (Correction hyp-007), the return distribution in Normal
+      and Elevated regimes is highly Gaussian, making a standard-normal projection
+      without fat-tailed scaling optimal. Point forecast is centered around 0.0 following
+      a close-to-close martingale prior, with no calendar or day-of-the-week drift
+      adjustments.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (51 lines)
+    - tool: search_web
+      title: US Canadian holiday May 25 2026 June 1 2026
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (67 lines)
+    - tool: search_web
+      title: Bank of Canada rate decision June 2026
+    - tool: run_code
+      title: python (56 lines)
+    - tool: run_code
+      title: python (54 lines)
+    - tool: run_code
+      title: python (25 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 1c5816b87edd0252e39bac5f636c2a3f
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/1c5816b87edd0252e39bac5f636c2a3f

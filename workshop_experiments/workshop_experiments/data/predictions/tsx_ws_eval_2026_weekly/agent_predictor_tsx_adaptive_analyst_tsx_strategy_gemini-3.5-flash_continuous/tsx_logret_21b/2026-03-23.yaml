@@ -1,0 +1,93 @@
+as_of: '2026-03-23T00:00:00'
+wall_time_s: 192.38689812505618
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T15:59:04.247954'
+  as_of: '2026-03-23T00:00:00'
+  forecast_date: '2026-04-21T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.101493
+      '0.1': -0.079076
+      '0.2': -0.051931
+      '0.3': -0.032357
+      '0.4': -0.015632
+      '0.5': 0.0
+      '0.6': 0.015632
+      '0.7': 0.032357
+      '0.8': 0.051931
+      '0.9': 0.079076
+      '0.95': 0.101493
+  metadata:
+    rationale: Comprehensive 21-day horizon projection under an elevated volatility
+      regime. Trailing realised volatility of 17.37% dictates the use of a 10-day
+      dispersion window. Applying a 1.12 widening correction is crucial as realised
+      dispersion often runs too narrow during geopolitical and commodity shocks (WTI
+      and gold are highly volatile). Point forecast is set to 0.0 in accordance with
+      the martingale prior.
+    horizon_rationale: 'The S&P/TSX Composite is classified in an elevated volatility
+      regime (realised annualised volatility of 17.37% over the last 21 trading days).
+      Geopolitical tensions in the Middle East and accompanying energy-market volatility
+      have led to sharp recent swings. A 10-day dispersion window is used to reflect
+      the heightened volatility (sigma_daily of 0.01202), and a 1.12 widening factor
+      is applied to account for the elevated risk regime and US trade-policy uncertainty.
+      The median forecast remains anchored at 0.0 under the martingale prior, as there
+      are competing forces: record gold prices and resilient financial sector earnings
+      vs. a softening domestic labour market and trade policy frictions.'
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (11 lines)
+    - tool: run_code
+      title: python (85 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (7 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: search_web
+      title: S&P TSX Composite Index March 2026 news
+    - tool: search_web
+      title: S&P TSX Composite Index March 2026 volatility Bank of Canada oil
+    - tool: run_code
+      title: python (93 lines)
+    - tool: search_web
+      title: tsx index march 23 2026 oil gold boctariffs
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (61 lines)
+    - tool: run_code
+      title: python (32 lines)
+    - tool: run_code
+      title: python (41 lines)
+    - tool: run_code
+      title: python (45 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: b5f9946ea3d7f62889fb12e6ed194816
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/b5f9946ea3d7f62889fb12e6ed194816

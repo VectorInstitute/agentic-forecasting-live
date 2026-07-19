@@ -1,0 +1,93 @@
+as_of: '2026-05-11T00:00:00'
+wall_time_s: 190.12067837500945
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T19:37:09.319949'
+  as_of: '2026-05-11T00:00:00'
+  forecast_date: '2026-05-18T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.028423
+      '0.1': -0.022145
+      '0.2': -0.014543
+      '0.3': -0.009062
+      '0.4': -0.004378
+      '0.5': 0.0
+      '0.6': 0.004378
+      '0.7': 0.009062
+      '0.8': 0.014543
+      '0.9': 0.022145
+      '0.95': 0.028423
+  metadata:
+    rationale: Calibrated probabilistic forecast of the S&P/TSX Composite cumulative
+      log returns for a 5-business-day horizon (as_of 2026-05-11). Trailing 21-day
+      realized volatility of 12.27% places the market in a NORMAL regime, making standard-normal
+      Gaussian projection optimal without fat-tailed or Student's t adjustments. The
+      daily sigma of 0.007728 is scaled by sqrt(5) to derive the 5-day return dispersion
+      of 0.017280. No active widening corrections are triggered as the regime is not
+      low and there is no negative daily return anomaly.
+    horizon_rationale: Forecast generated using standard-normal Gaussian projection
+      under a NORMAL volatility regime. S&P/TSX Composite trailing 21d realized volatility
+      is calculated to be 12.27% (annualized), which falls cleanly into the 10-15%
+      normal band. No return anomalies were detected as the daily return on 2026-05-11
+      (0.001791) has a z-score of only 0.0679 relative to the trailing 63-day window,
+      justifying a standard 21-day dispersion window. Physical gold experienced a
+      +4.41% weekly shock, serving as a leading macro risk indicator of future volatility;
+      however, under the NORMAL regime, the native realized-volatility pipeline is
+      highly optimal and no manual widening corrections are required. The forecast
+      is centered at a martingale prior of 0.0 as the macroeconomic backdrop is balanced,
+      with the Bank of Canada in a wait-and-see posture (overnight rate 2.25%) following
+      a rise in April CPI to 2.8% and soft labour conditions.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: search_web
+      title: S&P/TSX Composite May 2026 market news BoC rate oil gold
+    - tool: run_code
+      title: python (36 lines)
+    - tool: run_code
+      title: python (5 lines)
+    - tool: run_code
+      title: python (114 lines)
+    - tool: run_code
+      title: python (8 lines)
+    - tool: run_code
+      title: python (104 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (26 lines)
+    - tool: run_code
+      title: python (9 lines)
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (98 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 15cc0c047447092a37c969a599f96f70
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/15cc0c047447092a37c969a599f96f70

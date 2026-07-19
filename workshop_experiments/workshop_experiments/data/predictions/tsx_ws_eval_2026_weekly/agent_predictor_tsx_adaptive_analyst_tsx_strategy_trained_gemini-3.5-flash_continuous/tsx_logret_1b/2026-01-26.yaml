@@ -1,0 +1,81 @@
+as_of: '2026-01-26T00:00:00'
+wall_time_s: 146.31993516697548
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T17:34:41.920107'
+  as_of: '2026-01-26T00:00:00'
+  forecast_date: '2026-01-27T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.011435006952942545
+      '0.1': -0.008909334437081345
+      '0.2': -0.005850942904559304
+      '0.3': -0.0036456274349814808
+      '0.4': -0.0017612666795373104
+      '0.5': 0.0
+      '0.6': 0.0017612666795373104
+      '0.7': 0.003645627434981479
+      '0.8': 0.005850942904559305
+      '0.9': 0.008909334437081345
+      '0.95': 0.01143500695294254
+  metadata:
+    rationale: Probabilistic 1bd forecast for the S&P/TSX Composite. Our pipeline
+      classifies the index in a LOW realized volatility regime (8.55% annualized)
+      coupled with a massive physical Gold surge (+10.17% trailing 5d log return).
+      This triggers a systematic joint-risk correction from our learned tsx-strategy-trained
+      skill, instructing us to widen prediction intervals by 29% relative to standard-normal
+      projection to handle volatility mean-reversion and immediate shock transmission.
+      The point forecast is centered at 0.0 to reflect the short-term index martingale
+      prior.
+    horizon_rationale: Cumulative 1-business-day log return forecast for the S&P/TSX
+      Composite index as of January 26, 2026. The TSX is currently in a LOW realized
+      volatility regime (8.55% annualized 21d realized vol). A strong physical gold
+      price rally (+10.17% weekly log return) triggers the trailing 5-day commodity
+      shock condition. Following our active strategy rules, the 1bd prediction intervals
+      are widened by 29% relative to the standard-normal projection to protect against
+      immediate shock propagation and volatility mean-reversion from low levels. The
+      point forecast (median) is kept at 0.0 in accordance with the 1bd index martingale
+      prior.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (77 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (52 lines)
+    - tool: run_code
+      title: python (118 lines)
+    - tool: search_web
+      title: '"S&P/TSX Composite" gold commodity market January 2026 news'
+    - tool: run_code
+      title: python (63 lines)
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (42 lines)
+    - tool: search_web
+      title: '"Bank of Canada" interest rate January 2026 announcement'
+    - tool: run_code
+      title: python (35 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 3a72f7f3404842aab84a097cccc9a840
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/3a72f7f3404842aab84a097cccc9a840

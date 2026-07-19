@@ -1,0 +1,102 @@
+as_of: '2026-03-30T00:00:00'
+wall_time_s: 238.58344112499617
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T20:54:18.830303'
+  as_of: '2026-03-30T00:00:00'
+  forecast_date: '2026-04-28T00:00:00'
+  payload:
+    point_forecast: 0.0149
+    quantiles:
+      '0.05': -0.095
+      '0.1': -0.0615
+      '0.2': -0.0343
+      '0.3': -0.0099
+      '0.4': 0.0035
+      '0.5': 0.0149
+      '0.6': 0.0276
+      '0.7': 0.04
+      '0.8': 0.0504
+      '0.9': 0.0618
+      '0.95': 0.0716
+  metadata:
+    rationale: 'On March 30, 2026, the S&P/TSX Composite Index is in an ELEVATED volatility
+      regime (21-day annualized realized volatility of 17.91%). The index faces high
+      global risk premium backdrop (US VIX at 30.61) and a moderate drawdown of -7.55%
+      from its running peak. Our statistical pipeline chooses a 10-business-day dispersion
+      window (daily standard deviation of 1.30%) due to recent daily volatility propagation.
+      The macroeconomic environment provides a strong positive drift for the Canadian
+      resource-heavy index: physical WTI Crude Oil has surged +15.48% (closing at
+      $102.88) and Gold is up +2.77% over the past 5 days due to Middle East geopolitical
+      tensions (Oil+/Gold+ joint state). Domestically, the Bank of Canada held its
+      policy rate steady at 2.25% on March 18, adopting a wait-and-see approach, while
+      a weak labor market (shedding 84,000 jobs in February, unemployment at 6.7%)
+      and cooling inflation (1.8%) signal subsequent rate cuts, characteristic of
+      a domestic easing bull regime. We project a positive 21-day forward return with
+      a point forecast of +1.49%, backed by asymmetric tails that shift the left-tail
+      risk downward to protect against crash probability while capping the right-tail
+      risk below +10%.'
+    horizon_rationale: "For the 21-day forecasting horizon, we have calibrated our\
+      \ projection using a highly focused conditional nearest-neighbor empirical distribution.\
+      \ By filtering the historical TSX and macro data since 2000 for days that match\
+      \ the current regime characteristics\u2014namely, elevated TSX realized volatility\
+      \ (15-22%), moderate drawdown (-5% to -15%), and high global risk premium /\
+      \ US VIX stress (>25)\u2014we identify 165 matched days. This conditional empirical\
+      \ distribution perfectly captures the structural characteristics of the current\
+      \ market state. The point forecast (0.50 quantile) of +1.49% reflects the powerful\
+      \ positive drift dictated by the Drawdown Recovery Playbook (average of +0.51%\
+      \ and median of +1.44% in deep recoveries) and the highly bullish Oil+/Gold+\
+      \ commodity joint state (WTI up 15.48% and Gold up 2.77% over trailing 5 days).\
+      \ The interval tails are calibrated asymmetrically: the lower tail quantiles\
+      \ (5% and 10%) are shifted downward (-9.50% and -6.15% respectively) to protect\
+      \ against systemic downside risk, while the upper tail quantiles are compressed\
+      \ (+7.16% at the 95% level), reflecting that massive positive surges (>= +10%)\
+      \ are structurally impossible in this regime."
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (42 lines)
+    - tool: run_code
+      title: python (12 lines)
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (70 lines)
+    - tool: search_web
+      title: S&P/TSX Composite market news March 2026
+    - tool: run_code
+      title: python (52 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: load_skill
+      title: load_skill
+    - tool: run_code
+      title: python (60 lines)
+    - tool: run_code
+      title: python (67 lines)
+    - tool: run_code
+      title: python (80 lines)
+    - tool: run_code
+      title: python (90 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: c177eebe52b6a42633c191b912bf19b6
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/c177eebe52b6a42633c191b912bf19b6

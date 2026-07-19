@@ -1,0 +1,74 @@
+as_of: '2026-05-11T00:00:00'
+wall_time_s: 98.38312145799864
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T13:10:42.128995'
+  as_of: '2026-05-11T00:00:00'
+  forecast_date: '2026-05-12T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.0127119
+      '0.1': -0.0099042
+      '0.2': -0.00650429
+      '0.3': -0.00405272
+      '0.4': -0.00195794
+      '0.5': 0.0
+      '0.6': 0.00195794
+      '0.7': 0.00405272
+      '0.8': 0.00650429
+      '0.9': 0.0099042
+      '0.95': 0.0127119
+  metadata:
+    rationale: Comprehensive 1-business-day probabilistic forecast for the S&P/TSX
+      Composite log returns as of May 11, 2026. The statistical pipeline classifies
+      the volatility regime as normal, and there are no strong micro-level directional
+      catalysts to override the martingale prior. Standard normal quantiles are scaled
+      using a 21-day dispersion window daily standard deviation of 0.7728%.
+    horizon_rationale: 1-day cumulative log-return projection for the S&P/TSX Composite.
+      The 21-day annualized realized volatility of the TSX index is 12.27%, which
+      lies within the normal volatility regime (10% - 15%). Without any recent return
+      anomaly (the z-score of the latest return is 0.12), we use the 21-day trailing
+      standard deviation window, yielding a daily sigma of 0.007728. For the 1-business-day
+      horizon, we apply a martingale prior centered at 0.0 and construct standard
+      normal quantiles scaled by daily sigma, in alignment with a calm macro backdrop
+      characterized by the Bank of Canada holding rates at 2.25% and TSX trading near
+      record highs supported by commodities.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (34 lines)
+    - tool: run_code
+      title: python (7 lines)
+    - tool: run_code
+      title: python (42 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: search_web
+      title: S&P/TSX Composite stock market news May 2026 Canada
+    - tool: search_web
+      title: '"TSX" "May 11, 2026" OR "May 8, 2026"'
+    - tool: run_code
+      title: python (19 lines)
+    - tool: load_skill
+      title: load_skill
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 08e3c34087f5f1b5d8678066cad90e8d
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/08e3c34087f5f1b5d8678066cad90e8d

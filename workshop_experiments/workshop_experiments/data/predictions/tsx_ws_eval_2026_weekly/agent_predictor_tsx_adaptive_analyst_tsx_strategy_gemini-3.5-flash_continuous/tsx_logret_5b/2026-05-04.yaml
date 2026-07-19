@@ -1,0 +1,108 @@
+as_of: '2026-05-04T00:00:00'
+wall_time_s: 252.19056204205845
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T14:41:27.715059'
+  as_of: '2026-05-04T00:00:00'
+  forecast_date: '2026-05-11T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.028193
+      '0.1': -0.021966
+      '0.2': -0.014425
+      '0.3': -0.008988
+      '0.4': -0.004342
+      '0.5': 0.0
+      '0.6': 0.004342
+      '0.7': 0.008988
+      '0.8': 0.014425
+      '0.9': 0.021966
+      '0.95': 0.028193
+  metadata:
+    rationale: The S&P/TSX Composite Index is classified under a normal volatility
+      regime as of May 4, 2026. Cumulative log returns over the next 5 business days
+      are modeled using standard-normal quantiles scaled by the trailing 21-day daily
+      dispersion (sigma_daily = 0.007665) and the square root of the horizon (sqrt(5)).
+      No calibration corrections are active, and the distribution is kept symmetric
+      about 0.0 in accordance with martingale expectations.
+    horizon_rationale: Statistical analysis of daily log returns over the trailing
+      21-day dispersion window indicates a normal volatility regime (annualised realised
+      vol of 12.17%). No anomalous moves were observed in the latest return (z-score
+      of -0.77), which justifies a standard 21-day dispersion window (sigma_daily
+      = 0.007665). Scaling this dispersion to the 5-business-day horizon yields a
+      scale of 0.01714. In line with the martingale prior and in the absence of an
+      overriding directional catalyst (the recent surge in crude oil to $106.42/bbl
+      provides a sector-specific tailwind but is balanced by soft domestic growth
+      and high interest rate concerns), the median forecast is centered at 0.0.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (99 lines)
+    - tool: run_code
+      title: python (9 lines)
+    - tool: run_code
+      title: python (16 lines)
+    - tool: run_code
+      title: python (6 lines)
+    - tool: run_code
+      title: python (4 lines)
+    - tool: run_code
+      title: python (5 lines)
+    - tool: run_code
+      title: python (8 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (22 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (9 lines)
+    - tool: run_code
+      title: python (23 lines)
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: search_web
+      title: '"S&P/TSX" OR "TSX" OR "Bank of Canada" OR "Canada economy" news May
+        2026'
+    - tool: run_code
+      title: python (24 lines)
+    - tool: run_code
+      title: python (34 lines)
+    - tool: run_code
+      title: python (12 lines)
+    - tool: search_web
+      title: '"S&P/TSX" OR "TSX" OR "Canada" stock market news May 1 2026 to May 4
+        2026'
+    - tool: search_web
+      title: '"S&P/TSX" OR "TSX" "May 4, 2026" OR "May 4 2026"'
+    - tool: search_web
+      title: Canada economic calendar "May 4" to "May 8" 2026 OR "Labour Force Survey"
+        May 2026
+    - tool: run_code
+      title: python (47 lines)
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 4451a7cd898274292714966d9a64f3f2
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/4451a7cd898274292714966d9a64f3f2

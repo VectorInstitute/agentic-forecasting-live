@@ -1,0 +1,131 @@
+as_of: '2026-03-23T00:00:00'
+wall_time_s: 293.28576433309354
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T20:50:20.220874'
+  as_of: '2026-03-23T00:00:00'
+  forecast_date: '2026-04-21T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.096
+      '0.1': -0.075
+      '0.2': -0.046
+      '0.3': -0.029
+      '0.4': -0.014
+      '0.5': 0.0
+      '0.6': 0.014
+      '0.7': 0.029
+      '0.8': 0.046
+      '0.9': 0.063
+      '0.95': 0.073
+  metadata:
+    rationale: Statistical analysis of the S&P/TSX Composite up to March 23, 2026,
+      classifies the volatility regime as elevated (17.37% annualized), using an adaptive
+      10-day dispersion window. In accordance with the trained TSX strategy, we apply
+      an asymmetric tail-risk shift to the 21-business-day horizon projection to reflect
+      historical downside skewness and upper-tail truncation. The martingale prior
+      of 0.00 is maintained as a robust anchor, balancing competing forces of moderate
+      drawdown recovery and recent bearish joint-commodity shocks (WTI crude oil and
+      gold both down).
+    horizon_rationale: 'S&P/TSX Composite (GSPTSE) is in an elevated volatility regime
+      (annualised realized volatility of 17.37% over the last 21 days), prompting
+      the use of an adaptive 10-day dispersion window. The trailing 10-day daily standard
+      deviation is 0.012017, translating to a baseline 21-day standard deviation of
+      0.055068. Under our trained forecasting strategy, we apply the asymmetric tail
+      risk correction for elevated regimes at the 21-day horizon: we shift the lower
+      tail quantiles (5% and 10%) downward (more negative, to -0.096 and -0.075 respectively)
+      to protect against downside crash risks (the structural downside skewness typical
+      of the TSX). Simultaneously, we compress the upper tail quantiles (90% and 95%)
+      downward (less positive, to 0.063 and 0.073 respectively) because massive positive
+      surges are historically rare/unlikely in this state. The point forecast (median)
+      remains centered at 0.000 to respect the martingale prior, which represents
+      a balanced trade-off between positive drawdown recovery expectations (+0.51%
+      historical average for GSPTSE in a moderate -7.69% drawdown) and immediate bearish
+      energy and gold shocks (joint Oil-/Gold- state) observed on March 23, 2026.'
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (10 lines)
+    - tool: run_code
+      title: python (52 lines)
+    - tool: load_skill
+      title: load_skill
+    - tool: run_code
+      title: python (4 lines)
+    - tool: run_code
+      title: python (55 lines)
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (6 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (12 lines)
+    - tool: run_code
+      title: python (8 lines)
+    - tool: run_code
+      title: python (28 lines)
+    - tool: search_web
+      title: '"Shift the lower tail quantiles (5% and 10%) downward"'
+    - tool: search_web
+      title: '"Calibrate asymmetric tail risk" "TSX"'
+    - tool: search_web
+      title: '"expect structural downside skewness where severe crash probabilities"'
+    - tool: run_code
+      title: python (74 lines)
+    - tool: run_code
+      title: python (28 lines)
+    - tool: run_code
+      title: python (11 lines)
+    - tool: run_code
+      title: python (22 lines)
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: search_web
+      title: Canada market news March 2026
+    - tool: run_code
+      title: python (8 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (4 lines)
+    - tool: run_code
+      title: python (33 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: run_code
+      title: python (42 lines)
+    - tool: run_code
+      title: python (33 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: run_code
+      title: python (40 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: a646e210320f0e948d408eb19683969e
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/a646e210320f0e948d408eb19683969e

@@ -1,0 +1,95 @@
+as_of: '2026-06-01T00:00:00'
+wall_time_s: 192.73286074999487
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T13:21:21.261415'
+  as_of: '2026-06-01T00:00:00'
+  forecast_date: '2026-06-02T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.011143
+      '0.1': -0.008682
+      '0.2': -0.005702
+      '0.3': -0.003553
+      '0.4': -0.001716
+      '0.5': 0.0
+      '0.6': 0.001716
+      '0.7': 0.003553
+      '0.8': 0.005702
+      '0.9': 0.008682
+      '0.95': 0.011143
+  metadata:
+    rationale: A comprehensive analysis of the S&P/TSX Composite index (^GSPTSE) was
+      conducted using the standard forecasting pipeline as of June 1, 2026. Data was
+      sourced from Yahoo Finance and verified to match the provided target history
+      exactly (trailing 63-day standard deviation matches at 0.009460). Based on the
+      21-day realised volatility of 10.75%, the market is classified as being in a
+      'normal' volatility regime. With no active return anomalies or US cross-market
+      risk stress (VIX at 16.05), a 21-day dispersion window was chosen. The daily
+      standard deviation of 0.006774 was used to calibrate the 11-point quantile grid
+      under a martingale prior (median = 0.0). No active strategy corrections or directional
+      leans are warranted for the 1-day horizon.
+    horizon_rationale: The 1-business-day forward cumulative log return of the S&P/TSX
+      Composite is projected using a martingale prior centered at 0.0. Realized annualised
+      volatility over the last 21 trading days is 10.75%, placing the TSX in a 'normal'
+      volatility regime (10% - 15%). The US VIX remains non-stressed at 16.05, and
+      there are no recent return anomalies (the z-score for the return on June 1,
+      2026, is -0.11). Based on the adaptive strategy, we use a 21-day dispersion
+      window which yields a daily standard deviation of 0.006774. Although WTI crude
+      oil surged by 5.5% to $92.16 on June 1 due to Middle East tensions, and the
+      Canadian labor market posted strong job gains (+88k) in May, daily return direction
+      is highly noisy. We maintain a tight, symmetric interval around 0.0 with no
+      additional calibration widening.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (5 lines)
+    - tool: search_web
+      title: S&P/TSX Composite index news May 2026 June 2026
+    - tool: search_web
+      title: Bank of Canada interest rate decision May June 2026
+    - tool: search_web
+      title: WTI crude oil price June 1 2026
+    - tool: run_code
+      title: python (80 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: search_web
+      title: crude oil price June 1 2026 news
+    - tool: run_code
+      title: python (81 lines)
+    - tool: run_code
+      title: python (3 lines)
+    - tool: run_code
+      title: python (4 lines)
+    - tool: run_code
+      title: python (73 lines)
+    - tool: run_code
+      title: python (5 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (8 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 35ac494f5af6c591539502b8674f928b
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/35ac494f5af6c591539502b8674f928b

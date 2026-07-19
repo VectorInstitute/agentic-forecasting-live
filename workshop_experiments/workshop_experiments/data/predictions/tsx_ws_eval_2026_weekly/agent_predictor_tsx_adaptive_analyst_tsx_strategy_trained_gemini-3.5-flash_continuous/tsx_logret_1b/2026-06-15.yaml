@@ -1,0 +1,80 @@
+as_of: '2026-06-15T00:00:00'
+wall_time_s: 142.02621549996547
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T18:25:45.249028'
+  as_of: '2026-06-15T00:00:00'
+  forecast_date: '2026-06-16T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.020219
+      '0.1': -0.015753
+      '0.2': -0.010345
+      '0.3': -0.006446
+      '0.4': -0.003114
+      '0.5': 0.0
+      '0.6': 0.003114
+      '0.7': 0.006446
+      '0.8': 0.010345
+      '0.9': 0.015753
+      '0.95': 0.020219
+  metadata:
+    rationale: Analysis of the S&P/TSX Composite and global commodities up to June
+      15, 2026, reveals that the index is in an elevated volatility regime (21-day
+      annualised realised volatility of 15.44%). This triggers the use of a 10-day
+      dispersion window (daily standard deviation of 0.012292) to reflect the recent
+      rise in turbulence. The latest TSX daily return (0.0096) is not a statistical
+      anomaly (z-score of +0.89). While WTI crude oil has experienced a severe weekly
+      price crash of -12.28% (representing a global commodity/equity crash regime
+      when combined with our realised vol > 15%), the active calibration corrections
+      state that the TSX-native realized-volatility pipeline perfectly self-calibrates
+      to these energy shocks without manual interval widening in normal or elevated
+      regimes. Following correction hyp-007, a standard-normal Gaussian distribution
+      is highly optimal here because daily returns remain highly Gaussian during elevated
+      regimes. No holiday-related catch-up effects or calendar drift adjustments apply.
+    horizon_rationale: Base 1bd cumulative log return forecast. The S&P/TSX Composite
+      is in an elevated volatility regime (21-day annualised realised vol of 15.44%),
+      and therefore a 10-day dispersion window is selected (sigma_daily = 0.012292).
+      Under this regime, returns are remarkably Gaussian, so prediction intervals
+      are projected using a standard-normal Gaussian distribution (widen = 1.0, with
+      no fat-tailed scaling or Student's t adjustments). The point forecast is centered
+      at 0.0, in accordance with the martingale prior.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (33 lines)
+    - tool: run_code
+      title: python (64 lines)
+    - tool: run_code
+      title: python (57 lines)
+    - tool: search_web
+      title: S&P/TSX Composite index market news June 15 2026
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (17 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: bc6c5794bdf26974028a6966cbc29fc3
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/bc6c5794bdf26974028a6966cbc29fc3

@@ -1,0 +1,103 @@
+as_of: '2026-03-23T00:00:00'
+wall_time_s: 219.8026769590797
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T19:12:09.043371'
+  as_of: '2026-03-23T00:00:00'
+  forecast_date: '2026-03-30T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.044199
+      '0.1': -0.034437
+      '0.2': -0.022615
+      '0.3': -0.014091
+      '0.4': -0.006808
+      '0.5': 0.0
+      '0.6': 0.006808
+      '0.7': 0.014091
+      '0.8': 0.022615
+      '0.9': 0.034437
+      '0.95': 0.044199
+  metadata:
+    rationale: Comprehensive probabilistic 5-business-day cumulative log return forecast
+      for the S&P/TSX Composite as of March 23, 2026. Realized volatility is currently
+      ELEVATED at 17.37%, prompting an adaptive transition to a 10-day dispersion
+      window (daily volatility of 1.20%, or 2.69% over the 5bd horizon). In this regime,
+      returns are remarkably Gaussian (Correction hyp-007), so prediction intervals
+      are constructed using a standard-normal Gaussian distribution. The forecast
+      is centered at 0.0 per the martingale prior. This aligns with fundamental market
+      context, including the Bank of Canada's decision on March 18 to hold the policy
+      rate steady at 2.25% amid concerns over a softening labour market (February
+      decline of 84,000 jobs, unemployment rising to 6.7%) and energy-driven inflation
+      risks (February CPI at +0.5% MoM).
+    horizon_rationale: 'As of March 23, 2026, the S&P/TSX Composite is classified
+      in an ELEVATED volatility regime, with a trailing 21-day annualized close-to-close
+      realized volatility of 17.37% (within the 15% to 22% band). Following our adaptive
+      forecasting strategy, an elevated volatility regime triggers the selection of
+      a shorter 10-day dispersion window to compute daily standard deviation. This
+      yields a daily standard deviation (sigma_daily) of 0.012017 (annualized: 19.08%),
+      which effectively captures recent market turbulence. For the 5-business-day
+      horizon (h=5), this maps to a 5bd standard deviation (sigma_5d) of 0.026871.
+      In terms of calibration corrections: (1) Per our strategy (Correction hyp-007),
+      return distributions in the elevated regime are highly Gaussian, so a standard-normal
+      distribution is optimal for interval projection with a widen multiplier of 1.0.
+      (2) Although we detected a massive trailing 5-day Gold shock of -12.57%, the
+      low-regime commodity-shock widening correction (hyp-002) is not active because
+      the base regime is elevated, not low. No daily return anomaly was detected on
+      March 23 (latest return z-score is +1.67, within the normal range). (3) The
+      forecast is centered at 0.0 cumulative log return, adhering strictly to the
+      martingale prior, as no modern day-of-the-week or Turn-of-the-Month drift adjustments
+      are statistically valid. The resulting symmetric 11-point quantile grid properly
+      accounts for the currently heightened volatility backdrop without being over-extended
+      by fat-tailed parameters.'
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: search_web
+      title: S&P/TSX Composite March 23 2026 OR TSX March 2026 market news
+    - tool: run_code
+      title: python (90 lines)
+    - tool: run_code
+      title: python (10 lines)
+    - tool: run_code
+      title: python (54 lines)
+    - tool: run_code
+      title: python (28 lines)
+    - tool: run_code
+      title: python (33 lines)
+    - tool: run_code
+      title: python (188 lines)
+    - tool: run_code
+      title: python (178 lines)
+    - tool: run_code
+      title: python (145 lines)
+    - tool: run_code
+      title: python (29 lines)
+    - tool: run_code
+      title: python (65 lines)
+    - tool: run_code
+      title: python (43 lines)
+    - tool: run_code
+      title: python (45 lines)
+    - tool: run_code
+      title: python (12 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 3796c1e2087ee83c69d63bd5d4cc60ed
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/3796c1e2087ee83c69d63bd5d4cc60ed

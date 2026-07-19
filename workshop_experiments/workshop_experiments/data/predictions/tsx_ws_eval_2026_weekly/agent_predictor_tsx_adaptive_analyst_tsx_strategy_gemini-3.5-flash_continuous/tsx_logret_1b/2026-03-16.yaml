@@ -1,0 +1,74 @@
+as_of: '2026-03-16T00:00:00'
+wall_time_s: 132.93784324999433
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T12:52:00.526857'
+  as_of: '2026-03-16T00:00:00'
+  forecast_date: '2026-03-17T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.018535
+      '0.1': -0.014441
+      '0.2': -0.009484
+      '0.3': -0.005909
+      '0.4': -0.002855
+      '0.5': 0.0
+      '0.6': 0.002855
+      '0.7': 0.005909
+      '0.8': 0.009484
+      '0.9': 0.014441
+      '0.95': 0.018535
+  metadata:
+    rationale: The S&P/TSX Composite is in an elevated realised volatility regime
+      (16.09% annualised). US VIX is elevated at 27.19, and WTI oil is high at $98.71
+      due to geopolitical tensions in the Middle East. With the daily martingale prior,
+      the point forecast is set to 0.0. To reflect the elevated risks and prevent
+      under-dispersion, intervals are based on a 10-day dispersion window and scaled
+      by a widening factor of 1.12.
+    horizon_rationale: 1-day log return forecast under elevated regime. Daily sigma
+      of 0.010061 is derived from a 10-day dispersion window. An empirical widening
+      factor of 1.12 is applied to account for the heightened risk environment (VIX
+      at 27.19 and WTI oil at $98.71).
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (61 lines)
+    - tool: search_web
+      title: TSX market news March 2026
+    - tool: run_code
+      title: python (11 lines)
+    - tool: run_code
+      title: python (45 lines)
+    - tool: run_code
+      title: python (25 lines)
+    - tool: run_code
+      title: python (12 lines)
+    - tool: run_code
+      title: python (8 lines)
+    - tool: run_code
+      title: python (10 lines)
+    - tool: search_web
+      title: Canada stock market March 16 2026
+    - tool: run_code
+      title: python (31 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 14507da3c899ff04a1e1d38bc97f7ac3
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/14507da3c899ff04a1e1d38bc97f7ac3

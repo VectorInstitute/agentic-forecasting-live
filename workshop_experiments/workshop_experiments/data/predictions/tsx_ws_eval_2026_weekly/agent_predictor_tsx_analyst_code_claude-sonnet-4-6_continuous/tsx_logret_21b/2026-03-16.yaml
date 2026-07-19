@@ -1,0 +1,84 @@
+as_of: '2026-03-16T00:00:00'
+wall_time_s: 1437.0420780419954
+predictions:
+- predictor_id: agent_predictor_tsx_analyst_code_claude-sonnet-4-6_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T13:34:54.622904'
+  as_of: '2026-03-16T00:00:00'
+  forecast_date: '2026-04-14T00:00:00'
+  payload:
+    point_forecast: 0.005
+    quantiles:
+      '0.05': -0.14
+      '0.1': -0.108
+      '0.2': -0.068
+      '0.3': -0.038
+      '0.4': -0.015
+      '0.5': 0.005
+      '0.6': 0.025
+      '0.7': 0.048
+      '0.8': 0.075
+      '0.9': 0.112
+      '0.95': 0.142
+  metadata:
+    rationale: "Overall approach: combined empirical volatility scaling (trailing\
+      \ 63d std = 1.923%/day \u2192 21d sigma \u2248 8.8%) with fundamental macro\
+      \ overlay. Key assumptions: BoC holds at 2.25%, oil prices elevated (Middle\
+      \ East geopolitical risk), gold supportive, CAD sensitive to trade uncertainty,\
+      \ soft domestic labour market, US tariff/CUSMA headwinds persist. Net bias is\
+      \ marginally positive (energy/materials tailwind) but with meaningful left-tail\
+      \ risks from trade escalation and recession dynamics. Quantile spacing is near-normal\
+      \ with slight negative skew and fat-tail inflation at extremes."
+    horizon_rationale: "21-business-day (\u22481 calendar month) cumulative log-return\
+      \ forecast as of 2026-03-16. Trailing 63-day realised vol = 1.923%/day implies\
+      \ a 21-day window sigma of ~8.8% (=0.01923\xD7\u221A21). The median is set at\
+      \ +0.005 (modestly positive), reflecting: (1) BoC on hold at 2.25% neutral rate\
+      \ \u2014 no imminent policy catalyst in either direction; (2) TSX retreated\
+      \ from early-March record highs, partially recovering on the as-of date (last\
+      \ log-return +0.0126); (3) elevated oil prices from Strait of Hormuz tensions\
+      \ benefit Canada's large energy sector but act as an inflationary headwind;\
+      \ (4) gold safe-haven demand supports materials sector; (5) Canada's soft labour\
+      \ market (6.5-7% unemployment) and near-technical-recession backdrop, plus CUSMA/US\
+      \ tariff uncertainty, create a meaningful left-tail risk; (6) recent return\
+      \ momentum turning slightly negative over the prior weeks. The distribution\
+      \ is slightly left-skewed relative to a symmetric normal: the 5th percentile\
+      \ is set wider on the downside (-0.140) than the 95th on the upside (+0.142),\
+      \ reflecting asymmetric macro risks. The spread from Q05 to Q95 of ~28.2% is\
+      \ consistent with the empirical ~8.8% sigma scaled by \xB11.65 with fat-tail\
+      \ adjustment."
+    tool_calls:
+    - tool: search_web
+      title: Bank of Canada policy rate decision and forward guidance for Canadian
+        equities
+    - tool: search_web
+      title: oil and gold commodity price outlook impact on TSX energy and materials
+        sectors
+    - tool: search_web
+      title: US Federal Reserve policy and tariff trade spillovers into Canadian stocks
+        2026
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: a41ce9bb9891429dae65628b5e447941
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/a41ce9bb9891429dae65628b5e447941

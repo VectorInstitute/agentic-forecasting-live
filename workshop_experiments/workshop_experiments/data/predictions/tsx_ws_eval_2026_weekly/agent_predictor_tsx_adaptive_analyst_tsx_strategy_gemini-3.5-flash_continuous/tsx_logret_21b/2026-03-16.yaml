@@ -1,0 +1,86 @@
+as_of: '2026-03-16T00:00:00'
+wall_time_s: 142.8157367919339
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T15:55:51.734451'
+  as_of: '2026-03-16T00:00:00'
+  forecast_date: '2026-04-14T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.084939
+      '0.1': -0.066179
+      '0.2': -0.043461
+      '0.3': -0.02708
+      '0.4': -0.013083
+      '0.5': 0.0
+      '0.6': 0.013083
+      '0.7': 0.02708
+      '0.8': 0.043461
+      '0.9': 0.066179
+      '0.95': 0.084939
+  metadata:
+    rationale: 'The S&P/TSX Composite is under conflicting forces: supportive commodity
+      prices (crude oil and gold) vs. weak domestic GDP growth, labour market challenges,
+      and tariff-related risks. Statistical analysis suggests an elevated volatility
+      regime, prompting an adaptive dispersion window of 10 days and an interval widening
+      factor of 1.12. The cumulative log return over the 21-business-day horizon is
+      projected using a zero-centered martingale prior, with intervals calibrated
+      to historical realized volatility and expanded to reflect the elevated risk
+      environment.'
+    horizon_rationale: S&P/TSX Composite is in an elevated volatility regime (annualised
+      realized volatility is 16.09%, which is above the 15% threshold). A shorter
+      dispersion window of 10 days is used to capture recent market developments,
+      resulting in a daily standard deviation of 0.010061. Under this elevated regime,
+      we apply a widening factor of 1.12 over the 21-business-day horizon to reflect
+      increased risk. Despite strong commodity tailwinds (WTI Crude oil at $93.5 and
+      Gold at $4994.0), the Canadian economy faces a weak Q4 2025 GDP contraction
+      (-0.2%), weak employment numbers, and ongoing concerns regarding US tariffs.
+      These conflicting factors justify maintaining a balanced, martingale prior centered
+      at 0.0.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (34 lines)
+    - tool: run_code
+      title: python (46 lines)
+    - tool: run_code
+      title: python (71 lines)
+    - tool: run_code
+      title: python (11 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (2 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (34 lines)
+    - tool: search_web
+      title: '"TSX" OR "S&P/TSX" AND "March 2026"'
+    - tool: search_web
+      title: '"Bank of Canada" "March 2026" OR "GDP" OR "interest rate"'
+    - tool: run_code
+      title: python (47 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: d2a427f4a659b36d100cdbf453ea74e0
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/d2a427f4a659b36d100cdbf453ea74e0

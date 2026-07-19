@@ -1,0 +1,141 @@
+as_of: '2026-04-20T00:00:00'
+wall_time_s: 454.9575663750293
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T21:12:31.557549'
+  as_of: '2026-04-20T00:00:00'
+  forecast_date: '2026-05-19T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.08332
+      '0.1': -0.06492
+      '0.2': -0.03707
+      '0.3': -0.0231
+      '0.4': -0.01116
+      '0.5': 0.0
+      '0.6': 0.01116
+      '0.7': 0.0231
+      '0.8': 0.03707
+      '0.9': 0.05645
+      '0.95': 0.07245
+  metadata:
+    rationale: Overall S&P/TSX Composite forecasting process for 2026-04-20. The index's
+      21-day annualised realized volatility is 15.26% (elevated regime). We utilize
+      a robust 21-day daily volatility window (0.009612) instead of the temporary
+      10-day calm (which would lead to severe under-coverage) to project baseline
+      intervals. We then apply our active tail-risk correction to shift the lower
+      5% and 10% quantiles downward by 1.15x, protecting against the structural downside
+      skewness typical of this regime, especially given the trailing -10.05% WTI crude
+      negative energy shock. The point forecast centers at 0.00 to align with the
+      martingale prior, reflecting a cautious economic backdrop with rising inflation
+      (2.4% in March) and a neutral Bank of Canada policy rate of 2.25%.
+    horizon_rationale: 'Calibrated probabilistic forecast of S&P/TSX Composite 21bd
+      cumulative log returns, incorporating: (1) Volatility Regime: Broad TSX annualised
+      realised volatility is 15.26%, placing the index in the ''elevated'' regime
+      (15-22%). (2) Transition State & Dispersion Window: While the default pipeline
+      uses a 10-day window during elevated regimes, our empirical backtests prove
+      that when the 21d vol is elevated but the 10d vol is low (8.05%), standard 10d
+      intervals run severely under-covered (80% coverage collapses to 67.39%). Thus,
+      we robustly utilize the 21-day daily volatility (0.009612) to project baseline
+      intervals. (3) Trailing Commodity Shock: WTI crude oil has experienced a major
+      -10.05% trailing 5-day decline, exceeding our -8.5% shock threshold and indicating
+      substantial energy-sector headwind. (4) Asymmetric Tail Correction: In low and
+      elevated regimes, broad TSX returns exhibit severe downside tail risk (1.7%
+      crash probability at 21bd) while massive positive surges are structurally impossible.
+      To protect against this left-tail risk, we apply our active strategy correction,
+      shifting the 5% and 10% quantiles downward by a multiplier of 1.15. (5) Martingale
+      Prior: The point forecast is kept at 0.00, balanced by the Bank of Canada maintaining
+      a stable 2.25% policy rate in a ''wait-and-see'' stance.'
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (81 lines)
+    - tool: run_code
+      title: python (6 lines)
+    - tool: run_code
+      title: python (57 lines)
+    - tool: run_code
+      title: python (8 lines)
+    - tool: run_code
+      title: python (56 lines)
+    - tool: run_code
+      title: python (5 lines)
+    - tool: search_web
+      title: '"Shift the lower tail quantiles (5% and 10%) downward to protect against
+        this asymmetric left-tail risk"'
+    - tool: load_skill
+      title: load_skill
+    - tool: run_code
+      title: python (10 lines)
+    - tool: run_code
+      title: python (4 lines)
+    - tool: run_code
+      title: python (5 lines)
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (40 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (117 lines)
+    - tool: run_code
+      title: python (30 lines)
+    - tool: run_code
+      title: python (30 lines)
+    - tool: search_web
+      title: '"Calibrate asymmetric tail risk at the 21bd horizon"'
+    - tool: search_web
+      title: '"Shift the lower tail quantiles" "downward" "tsx"'
+    - tool: search_web
+      title: '"Shift the lower tail quantiles"'
+    - tool: run_code
+      title: python (55 lines)
+    - tool: run_code
+      title: python (50 lines)
+    - tool: search_web
+      title: '"Shift the lower tail quantiles (5% and 10%) downward to protect against
+        this asymmetric left-tail risk"'
+    - tool: run_code
+      title: python (15 lines)
+    - tool: run_code
+      title: python (8 lines)
+    - tool: run_code
+      title: python (12 lines)
+    - tool: run_code
+      title: python (55 lines)
+    - tool: run_code
+      title: python (25 lines)
+    - tool: run_code
+      title: python (39 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: run_code
+      title: python (36 lines)
+    - tool: run_code
+      title: python (19 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: f6b1e0d0a61e2da2b867c9f96cf266ce
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/f6b1e0d0a61e2da2b867c9f96cf266ce

@@ -1,0 +1,59 @@
+as_of: '2026-04-06T00:00:00'
+wall_time_s: 102.53367754101055
+predictions:
+- predictor_id: agent_predictor_tsx_analyst_news_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-18T09:47:22.106148'
+  as_of: '2026-04-06T00:00:00'
+  forecast_date: '2026-04-07T00:00:00'
+  payload:
+    point_forecast: 0.0002
+    quantiles:
+      '0.05': -0.01775
+      '0.1': -0.01295
+      '0.2': -0.008
+      '0.3': -0.00478
+      '0.4': -0.00218
+      '0.5': 0.0002
+      '0.6': 0.00258
+      '0.7': 0.00518
+      '0.8': 0.0084
+      '0.9': 0.01335
+      '0.95': 0.01815
+  metadata:
+    rationale: Calibrated 1-day-ahead probabilistic return forecast for the S&P/TSX
+      Composite Index, integrating Bank of Canada monetary policy guidance, rising
+      energy-driven CPI, a soft domestic labor market, US spillover headwinds, and
+      a Student-t distribution adapted to current high-volatility commodity and trade
+      environments.
+    horizon_rationale: As of April 6, 2026, the S&P/TSX Composite is navigating a
+      period of heightened geopolitical risk in the Middle East and its subsequent
+      impact on global energy prices. The Bank of Canada maintained its target for
+      the overnight rate at 2.25% in its March 18, 2026 announcement, adopting a cautious
+      wait-and-see stance. Headline inflation for March surged to 2.4% due to rising
+      gasoline prices, while core measures remained contained. Canadian labour market
+      conditions are soft, with unemployment hovering in the 6.5% to 7.0% range. Commodities
+      (crude oil and gold) have experienced significant volatility but provide some
+      sector-level support to the TSX energy and materials giants. Meanwhile, Canadian
+      stocks are pressured by rising US Treasury yields, trade policy/tariff concerns,
+      and interest rate differentials. To model the 1-business-day-ahead return distribution,
+      we use a slightly elevated daily standard deviation of 1.15% (reflecting the
+      1.11% historical 63-day volatility with a small geopolitical risk premium) and
+      fit a Student-t distribution with 5 degrees of freedom to capture the fat-tailed
+      return dynamics. The point forecast (median) is set to a slight positive drift
+      of 0.0002.
+    tool_calls:
+    - tool: search_web
+      title: Bank of Canada policy rate decision and forward guidance April 2026
+    - tool: search_web
+      title: S&P TSX Composite stock market news late March early April 2026
+    - tool: search_web
+      title: S&P TSX Composite April 6 2026 market news
+    - tool: search_web
+      title: Bank of Canada rate decision April 2026 date
+    - tool: search_web
+      title: Bank of Canada schedule 2026 announcement dates
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 5c9b538ad7c74cb43b902f47785f73a8
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/5c9b538ad7c74cb43b902f47785f73a8

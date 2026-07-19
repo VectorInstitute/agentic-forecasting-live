@@ -1,0 +1,107 @@
+as_of: '2026-04-13T00:00:00'
+wall_time_s: 259.08027974993456
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T16:12:26.687738'
+  as_of: '2026-04-13T00:00:00'
+  forecast_date: '2026-05-12T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.098034
+      '0.1': -0.076381
+      '0.2': -0.050161
+      '0.3': -0.031255
+      '0.4': -0.0151
+      '0.5': 0.0
+      '0.6': 0.0151
+      '0.7': 0.031255
+      '0.8': 0.050161
+      '0.9': 0.076381
+      '0.95': 0.098034
+  metadata:
+    rationale: The S&P/TSX Composite's 21-day realized volatility of 18.43% places
+      it in an elevated vol regime. Despite a temporary calm in daily returns over
+      the last 10 days, high-stakes external drivers (Middle East geopolitical conflict,
+      crude oil price shock, and US trade policy headwinds) and a scheduled Bank of
+      Canada interest rate decision on April 29, 2026, demand a robust and conservative
+      calibration of our forecasting intervals. We apply the elevated-regime widening
+      factor of 1.12 to the 21-day realized dispersion window to construct a resilient
+      11-point quantile grid centered at a martingale median of 0.0.
+    horizon_rationale: Forecast for the 21-business-day S&P/TSX Composite cumulative
+      log return is anchored around a martingale prior of 0.0. The market has recently
+      experienced a strong rally (+6.00% over the past 10 days) driven by surging
+      crude oil (peaking at $112.95 before returning to $99.08) and gold ($4,742.40)
+      amid geopolitical tension in the Middle East. However, because commodity prices
+      are showing signs of stabilization and the index has already priced in these
+      moves, we do not extrapolate the short-term uptrend. Realized volatility of
+      the index over the past 21 days is elevated at 18.43%, and a critical Bank of
+      Canada policy meeting is scheduled for April 29, 2026. Therefore, we calibrate
+      the interval widths using the trailing 21-day realized dispersion window (daily
+      std of 0.011612) and apply a 1.12 widening factor to properly account for the
+      heightened geopolitical and macro risks, yielding a 90% confidence range of
+      [-9.80%, +9.80%].
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: run_code
+      title: python (10 lines)
+    - tool: run_code
+      title: python (100 lines)
+    - tool: run_code
+      title: python (135 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: search_web
+      title: S&P/TSX Composite index Canadian stock market news April 2026
+    - tool: run_code
+      title: python (16 lines)
+    - tool: run_code
+      title: python (48 lines)
+    - tool: run_code
+      title: python (27 lines)
+    - tool: run_code
+      title: python (4 lines)
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (56 lines)
+    - tool: search_web
+      title: Canada CPI March 2026 Bank of Canada April 2026
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (3 lines)
+    - tool: run_code
+      title: python (11 lines)
+    - tool: run_code
+      title: python (59 lines)
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (33 lines)
+    - tool: run_code
+      title: python (53 lines)
+    - tool: run_code
+      title: python (37 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 4d10f5b3d01d80fc6f066e9acca988ae
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/4d10f5b3d01d80fc6f066e9acca988ae

@@ -1,0 +1,87 @@
+as_of: '2026-02-23T00:00:00'
+wall_time_s: 188.88712708302774
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T15:44:59.200788'
+  as_of: '2026-02-23T00:00:00'
+  forecast_date: '2026-03-24T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.106515
+      '0.1': -0.082989
+      '0.2': -0.0545
+      '0.3': -0.033958
+      '0.4': -0.016406
+      '0.5': 0.0
+      '0.6': 0.016406
+      '0.7': 0.033958
+      '0.8': 0.0545
+      '0.9': 0.082989
+      '0.95': 0.106515
+  metadata:
+    rationale: Calibrated probabilistic forecast for the 21-day S&P/TSX Composite
+      log return. The model uses an adaptive dispersion window of 10 days because
+      the realised volatility is elevated at 20.76%. Base intervals are scaled by
+      sqrt(21) and widened by 1.12 to adjust for tail risk under high volatility.
+      The point forecast remains at 0.0 to respect the martingale prior, given mixed
+      macro headwinds (trade uncertainty, Bank of Canada wait-and-see stance) and
+      tailwinds (strong financials and gold miner performance).
+    horizon_rationale: Base forecast is centered at 0.0 following the martingale prior.
+      The trailing 21-day annualised realised volatility is 20.76%, classifying the
+      TSX in an elevated regime. To capture recent daily fluctuations, we use a 10-day
+      dispersion window (daily sigma of 0.012617), which yields a 21-day sigma of
+      0.057818. Applying a 1.12 widening factor to account for fat tails and elevated
+      regime risk increases the 21-day standard deviation to 0.064756. This wide band
+      accounts for geopolitical tensions (VIX at 21.01) and trade policy uncertainties,
+      balanced by a strong rally in gold (soaring over $5,200) and financials.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (10 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: search_web
+      title: TSX Composite stock market news February 2026 Bank of Canada
+    - tool: search_web
+      title: WTI crude oil gold prices VIX February 2026
+    - tool: run_code
+      title: python (78 lines)
+    - tool: run_code
+      title: python (44 lines)
+    - tool: run_code
+      title: python (23 lines)
+    - tool: run_code
+      title: python (24 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: run_code
+      title: python (17 lines)
+    - tool: run_code
+      title: python (28 lines)
+    - tool: run_code
+      title: python (61 lines)
+    - tool: run_code
+      title: python (20 lines)
+    - tool: run_code
+      title: python (15 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: e835d81906c62fe799407355ad42a479
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/e835d81906c62fe799407355ad42a479

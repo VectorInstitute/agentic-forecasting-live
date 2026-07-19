@@ -1,0 +1,85 @@
+as_of: '2026-03-30T00:00:00'
+wall_time_s: 161.64496537507512
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_5b
+  issued_at: '2026-07-19T19:14:50.689415'
+  as_of: '2026-03-30T00:00:00'
+  forecast_date: '2026-04-06T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.047865
+      '0.1': -0.037293
+      '0.2': -0.024491
+      '0.3': -0.01526
+      '0.4': -0.007372
+      '0.5': 0.0
+      '0.6': 0.007372
+      '0.7': 0.01526
+      '0.8': 0.024491
+      '0.9': 0.037293
+      '0.95': 0.047865
+  metadata:
+    rationale: S&P/TSX Composite return distribution is projected for the 5-business-day
+      horizon starting from March 30, 2026. The 21-day annualized close-to-close realized
+      volatility is 17.91%, placing the index in the elevated volatility regime. In
+      accordance with our learned strategy, we employ an adaptive 10-day dispersion
+      window (daily standard deviation of 0.013014) to capture the current market
+      turbulence. Daily returns are modeled using a standard-normal Gaussian distribution,
+      as the TSX daily return distribution exhibits low excess kurtosis in this regime.
+      Although a strong trailing 5-day commodity shock is present in WTI crude oil
+      (+15.48%), no manual interval widening is applied because our commodity-shock
+      correction is designed only for low volatility regimes (<10%), while the elevated
+      regime's trailing volatility already expands to naturally accommodate this risk.
+      The point forecast is centered at 0.0.
+    horizon_rationale: Projected using a standard-normal Gaussian distribution, which
+      has been shown to be highly optimal and well-calibrated for the normal and elevated
+      volatility regimes on the TSX. The close-to-close 21-day realized volatility
+      is classified as elevated at 17.91% as of March 30, 2026, prompting an adaptive
+      10-day dispersion window. This yields an exact daily return standard deviation
+      of 0.013014. The point forecast (0.50 quantile) is set to 0.0 under a martingale
+      prior. The interval half-widths are scaled by the square root of the 5-day horizon.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (14 lines)
+    - tool: run_code
+      title: python (4 lines)
+    - tool: run_code
+      title: python (29 lines)
+    - tool: run_code
+      title: python (9 lines)
+    - tool: search_web
+      title: '"S&P/TSX Composite" March 2026 news'
+    - tool: run_code
+      title: python (80 lines)
+    - tool: run_code
+      title: python (18 lines)
+    - tool: run_code
+      title: python (48 lines)
+    - tool: run_code
+      title: python (21 lines)
+    - tool: run_code
+      title: python (30 lines)
+    - tool: run_code
+      title: python (40 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 724181fd05685c200e8eac65cfdc1544
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/724181fd05685c200e8eac65cfdc1544

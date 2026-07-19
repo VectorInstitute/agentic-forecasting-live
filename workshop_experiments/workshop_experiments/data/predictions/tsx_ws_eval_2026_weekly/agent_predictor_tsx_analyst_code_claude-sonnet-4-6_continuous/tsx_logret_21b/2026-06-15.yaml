@@ -1,0 +1,82 @@
+as_of: '2026-06-15T00:00:00'
+wall_time_s: 509.7940869589802
+predictions:
+- predictor_id: agent_predictor_tsx_analyst_code_claude-sonnet-4-6_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T18:09:18.179539'
+  as_of: '2026-06-15T00:00:00'
+  forecast_date: '2026-07-14T00:00:00'
+  payload:
+    point_forecast: 0.0193
+    quantiles:
+      '0.05': -0.0476
+      '0.1': -0.0338
+      '0.2': -0.0101
+      '0.3': 0.0028
+      '0.4': 0.0103
+      '0.5': 0.0193
+      '0.6': 0.0253
+      '0.7': 0.0349
+      '0.8': 0.0457
+      '0.9': 0.0604
+      '0.95': 0.074
+  metadata:
+    rationale: 'Forecast for the S&P/TSX Composite 21-business-day cumulative log
+      return from 2026-06-15. Key macro assumptions: Bank of Canada policy rate at
+      2.25% (on hold, 5th consecutive hold); headline CPI 3.2% (energy-driven, core
+      ~2%); unemployment 6.6% (slack labour market); oil prices easing post-Middle-East
+      spike (mild positive for non-energy TSX sectors); gold elevated (safe-haven
+      bid, materials tailwind); US Fed maintaining restrictive stance with ongoing
+      tariff/CUSMA uncertainty weighing on Canadian exports. TSX is in a consolidation
+      phase after recovering from a March-April 2026 drawdown (-0.08 trough reached
+      2026-03-27). Trailing 21-bd return of +0.03 provides mild positive momentum
+      signal. Methodology: 70% parametric mixture (60% t(5) / 40% Normal, drift=0.019,
+      scale=0.037) blended with 30% empirical recent quantiles. The model produces
+      a moderately left-skewed distribution consistent with the asymmetric tail risk
+      environment.'
+    horizon_rationale: "21-business-day forward log return forecast anchored to three\
+      \ inputs: (1) Empirical historical distribution: full-series unconditional median\
+      \ = 0.02, recent 2025+ median = 0.02, with skewness of -0.74 and excess kurtosis\
+      \ of ~1.0 indicating a fat left tail. (2) Parametric model: a 60/40 mixture\
+      \ of t(df=5) and Normal distributions centred on drift=0.019 and scale=0.037\
+      \ (the trailing 63-day standard deviation of 21-bd returns). (3) Conditional\
+      \ momentum anchor: with the prior 21-bd return at +0.03 (above median), empirical\
+      \ conditional-on-positive quantiles are also folded in (30% weight). Drift set\
+      \ at 0.019 \u2014 above the recent 2025\u20132026 mean of 0.014\u20130.017 but\
+      \ below the long-run 0.022 \u2014 reflecting: (a) Bank of Canada on hold at\
+      \ 2.25% (5th consecutive hold, no rate shock); (b) headline CPI at 3.2% but\
+      \ core near 2%, so no forced hawkish pivot; (c) soft labour market (unemployment\
+      \ 6.6%) limiting aggressive policy tightening; (d) oil prices easing after Middle-East-driven\
+      \ spike \u2014 mild positive for TSX financials and consumer sectors; (e) gold\
+      \ elevated on safe-haven demand, supporting materials sector; (f) US tariff\
+      \ and CUSMA uncertainty remaining a structural headwind, contributing asymmetric\
+      \ left tail risk. The distribution is left-skewed: the Q05\u2013Q50 gap (-0.067)\
+      \ is wider than the Q50\u2013Q95 gap (+0.055), consistent with historical TSX\
+      \ fat left tails and the current geopolitical/trade risk backdrop. Trailing\
+      \ volatility at 0.037 is slightly above the long-run average, warranting a modestly\
+      \ wider distribution than the unconditional historical spread."
+    tool_calls:
+    - tool: search_web
+      title: Bank of Canada policy rate decision and forward guidance for Canadian
+        equities 2026
+    - tool: search_web
+      title: oil and gold commodity price outlook impact on TSX energy materials sectors
+        June 2026
+    - tool: search_web
+      title: US Federal Reserve policy tariff trade spillovers Canadian stocks 2026
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python (239 lines)
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python (108 lines)
+    - tool: run_code
+      title: python (72 lines)
+    - tool: run_code
+      title: python (62 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: c8b5a4a6ff52129b0195bb8e1c1b7609
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/c8b5a4a6ff52129b0195bb8e1c1b7609

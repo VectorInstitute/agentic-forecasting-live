@@ -1,0 +1,91 @@
+as_of: '2026-04-20T00:00:00'
+wall_time_s: 1387.4906723329332
+predictions:
+- predictor_id: agent_predictor_tsx_analyst_code_claude-sonnet-4-6_continuous
+  task_id: tsx_logret_21b
+  issued_at: '2026-07-19T15:37:32.502043'
+  as_of: '2026-04-20T00:00:00'
+  forecast_date: '2026-05-19T00:00:00'
+  payload:
+    point_forecast: 0.012
+    quantiles:
+      '0.05': -0.0508
+      '0.1': -0.035
+      '0.2': -0.0163
+      '0.3': -0.0055
+      '0.4': 0.0036
+      '0.5': 0.012
+      '0.6': 0.0204
+      '0.7': 0.0295
+      '0.8': 0.0403
+      '0.9': 0.056
+      '0.95': 0.0698
+  metadata:
+    rationale: "Single-horizon (21bd) forecast for S&P/TSX Composite cumulative log\
+      \ return. The index has rebounded sharply (+7.6% over the trailing 21 business\
+      \ days) from a March 2026 drawdown. The forward distribution is centred at +1.2%\
+      \ with sigma ~3.6%, reflecting: stable BoC policy (2.25%), commodity price support\
+      \ from Middle East geopolitical tensions (energy/gold positive for TSX), contained\
+      \ core inflation, offset by soft Canadian labour market and persistent US trade/tariff\
+      \ uncertainty. A 50/50 Normal\u2013t(df=6) mixture captures realistic fat-tail\
+      \ risk. Lower quantiles are modestly skewed negative to reflect asymmetric downside\
+      \ from trade escalation or commodity reversal scenarios."
+    horizon_rationale: "Forecast origin: 2026-04-20. The trailing 21bd cumulative\
+      \ log return stands at +7.57% \u2014 near the historical 95th percentile \u2014\
+      \ reflecting a sharp rebound from the March 2026 trough (\u22120.08). Key macro\
+      \ inputs: (1) Bank of Canada holds at 2.25% (Oct 2025 cut, then steady), neutral\
+      \ forward guidance \u2014 no rate catalyst in either direction. (2) Canadian\
+      \ CPI headline at ~2.4% (March 2026), driven by energy/gasoline, but core ~2%\
+      \ \u2014 inflation contained, no urgency to tighten. (3) Labour market soft\
+      \ (unemployment 6.5\u20137%), slight demand drag. (4) Geopolitical tensions\
+      \ (Middle East) pushing oil and gold higher, providing support for TSX energy\
+      \ and materials sectors. (5) US tariff/trade uncertainty (CUSMA negotiations)\
+      \ is an ongoing headwind for business investment and sentiment. (6) GoC 10yr\
+      \ in mid-3% range, USD/CAD ~1.3704 \u2014 moderate yield and currency pressures.\
+      \ Parametric model: 50% Normal + 50% t(df=6) mixture with mu=0.012 and sigma=0.0358\
+      \ (matching trailing_63d_std). Central drift set at +1.2%: above long-run mean\
+      \ (~0.15%) but below recent 12-month mean (+1.9%), reflecting a modest mean-reversion\
+      \ pull from the elevated current reading, partially offset by commodity tailwinds\
+      \ and BoC stability. Lower tail (Q0.05, Q0.10) widened by 50\u201330bps to capture\
+      \ geopolitical/trade shock risk. The distribution is modestly right-skewed relative\
+      \ to the full history but anchored by the recent low-volatility regime (recent\
+      \ 12m std ~3.05%). Monotonicity verified."
+    tool_calls:
+    - tool: search_web
+      title: Bank of Canada policy rate decision and forward guidance for Canadian
+        equities
+    - tool: search_web
+      title: oil and gold commodity price outlook impact on the TSX energy and materials
+        sectors
+    - tool: search_web
+      title: US Federal Reserve policy and tariff trade spillovers into Canadian stocks
+        2026
+    - tool: search_web
+      title: USD/CAD Canadian dollar Government of Canada 10-year bond yield April
+        2026
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python (222 lines)
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python (113 lines)
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python (1438 lines)
+    - tool: run_code
+      title: python (102 lines)
+    - tool: run_code
+      title: python (44 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: c49aa4cd1bb602e957b1bc9700ecdd88
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/c49aa4cd1bb602e957b1bc9700ecdd88

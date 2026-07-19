@@ -1,0 +1,82 @@
+as_of: '2026-06-15T00:00:00'
+wall_time_s: 297.9762788749649
+predictions:
+- predictor_id: agent_predictor_tsx_analyst_code_claude-sonnet-4-6_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T00:22:37.712237'
+  as_of: '2026-06-15T00:00:00'
+  forecast_date: '2026-06-16T00:00:00'
+  payload:
+    point_forecast: -0.000536
+    quantiles:
+      '0.05': -0.019167
+      '0.1': -0.01434
+      '0.2': -0.00922
+      '0.3': -0.005842
+      '0.4': -0.003075
+      '0.5': -0.000536
+      '0.6': 0.002003
+      '0.7': 0.00477
+      '0.8': 0.008148
+      '0.9': 0.013268
+      '0.95': 0.018095
+  metadata:
+    rationale: "Overall approach: parametric t-distribution (df=6) centred on the\
+      \ autocorrelation-adjusted conditional mean (\u22120.054%), scaled by the trailing\
+      \ 63-day realised volatility (0.9588%). The distribution is symmetric around\
+      \ the conditional mean with fat tails appropriate for the current regime of\
+      \ Middle East geopolitical uncertainty, BoC policy hold, and moderate CPI pressure.\
+      \ Empirical historical quantiles (Q5=\u22121%, Q95=+1% at 2dp rounding) are\
+      \ broadly consistent with the parametric output, though the parametric model\
+      \ provides finer granularity. The point forecast equals the Q50 value of \u2212\
+      0.0536%, reflecting a slight mean-reversion pull after today's strong +0.962%\
+      \ gain."
+    horizon_rationale: "1-day ahead forecast for the S&P/TSX Composite log return\
+      \ as of 2026-06-15. Key inputs and assumptions: (1) Volatility regime: trailing\
+      \ 63-day daily std = 0.9588%, annualised ~15.2% \u2014 moderate, consistent\
+      \ with a market navigating geopolitical and macro uncertainty but not in acute\
+      \ crisis. (2) Momentum/autocorrelation: Today's return was +0.962%, a strong\
+      \ positive day. The empirical lag-1 autocorrelation of the recent daily series\
+      \ is approximately -0.087, implying a slight mean-reversion pull. Conditional\
+      \ mean = base drift (0.03%) + autocorr \xD7 last_ret (\u22120.087 \xD7 0.962%)\
+      \ \u2248 \u22120.054%. (3) Distribution shape: A Student-t with df=6 (moderate\
+      \ fat tails, consistent with the fitted df~7.78 but rounded down for prudence\
+      \ given geopolitical tail risks) centred on \u22120.054% and scaled by the trailing\
+      \ std. This accommodates the observed negative skewness (\u22120.42) and kurtosis\
+      \ in recent returns. (4) Macro context: Bank of Canada held at 2.25% on 2026-06-10\
+      \ \u2014 policy stability is marginally supportive for equities. CPI at 3.2%\
+      \ in May 2026 (mainly gasoline/Middle East supply shock) adds inflation uncertainty\
+      \ but core is near 2%. Labour market soft (UR 6.5\u20137%), creating economic\
+      \ slack. (5) Commodities: Oil elevated due to Middle East supply disruptions\
+      \ \u2014 TSX energy sector tailwind; gold supported by safe-haven demand \u2014\
+      \ materials sector positive. These effects introduce two-sided fat tails. (6)\
+      \ USD/CAD and GoC yields: US-Canada rate differential and Fed's firm stance\
+      \ exert modest CAD depreciation pressure, which is broadly neutral-to-positive\
+      \ for TSX exporters. (7) Sector composition: Financial sector (bank capital\
+      \ buffer reduction viewed positively), energy (elevated oil), and materials\
+      \ (strong gold) provide balanced support; trade/tariff uncertainty from CUSMA\
+      \ review is a headwind for industrials/autos. Net effect: marginal negative\
+      \ conditional mean from autocorr, symmetric fat tails capturing commodity and\
+      \ geopolitical event risk."
+    tool_calls:
+    - tool: search_web
+      title: Bank of Canada policy rate decision and forward guidance for Canadian
+        equities
+    - tool: search_web
+      title: oil and gold commodity price outlook impact on TSX energy and materials
+        sectors
+    - tool: search_web
+      title: US Federal Reserve policy and tariff trade spillovers into Canadian stocks
+        2026
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python (418 lines)
+    - tool: run_code
+      title: python (75 lines)
+    - tool: run_code
+      title: python (71 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: cf7e75d0e99e821f6d6781e4923110b2
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/cf7e75d0e99e821f6d6781e4923110b2

@@ -1,0 +1,85 @@
+as_of: '2026-04-06T00:00:00'
+wall_time_s: 104.4148482499877
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_trained_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T18:00:16.734751'
+  as_of: '2026-04-06T00:00:00'
+  forecast_date: '2026-04-07T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.018542
+      '0.1': -0.014447
+      '0.2': -0.009487
+      '0.3': -0.005911
+      '0.4': -0.002856
+      '0.5': 0.0
+      '0.6': 0.002856
+      '0.7': 0.005911
+      '0.8': 0.009487
+      '0.9': 0.014447
+      '0.95': 0.018542
+  metadata:
+    rationale: Overall probabilistic forecast for the S&P/TSX Composite index on a
+      1-business-day horizon as of April 6, 2026. Realized volatility of 19.01% places
+      the market in the 'elevated' regime, prompting the use of a 10-business-day
+      dispersion window (daily standard deviation of 0.011273). Since the volatility
+      is elevated but returns show highly Gaussian behavior (excess kurtosis < 0.6)
+      and no active return anomalies or catch-up holiday effects are present, the
+      prediction intervals are projected using standard-normal quantiles with a martingale
+      median of 0.0, capturing current market uncertainty with high calibration.
+    horizon_rationale: The S&P/TSX Composite's 1-business-day forecast is built using
+      our standard-normal Gaussian projection framework, calibrated specifically to
+      the elevated volatility regime. The 21-day rolling realized volatility of ^GSPTSE
+      is 19.01%, which falls squarely in the 'elevated' regime (15-22%). Following
+      our adaptive dispersion-window policy, we select a shorter 10-day window (rather
+      than the default 21 days) to track fast-moving volatility dynamics, yielding
+      a daily standard deviation of 0.011273. The last daily return (+0.22%) has a
+      neutral z-score of 0.16 relative to its 63-day trailing distribution, confirming
+      that no negative return anomalies are active. Furthermore, while we observe
+      a powerful joint commodity shock (WTI 5-day return of +12.06% and physical Gold
+      5-day return of +3.60%), representing an Oil+/Gold+ environment, our strategy
+      establishes that the native realized-volatility pipeline perfectly self-calibrates
+      without manual volatility adjustments. Today is not a TSX catch-up day since
+      both TSX and U.S. markets were closed on Good Friday, so no holiday widening
+      is applied. Under a martingale prior, the point forecast and 0.50 quantile sit
+      at exactly 0.0, and the intervals are symmetrically mapped using the standard-normal
+      distribution.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (82 lines)
+    - tool: run_code
+      title: python (30 lines)
+    - tool: run_code
+      title: python (80 lines)
+    - tool: run_code
+      title: python (49 lines)
+    - tool: search_web
+      title: Canada market news TSX S&P/TSX April 2026
+    - tool: run_code
+      title: python (7 lines)
+    - tool: run_code
+      title: python (17 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 7c5bb660fbd82340af4937d2d443cbff
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/7c5bb660fbd82340af4937d2d443cbff

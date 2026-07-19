@@ -1,0 +1,79 @@
+as_of: '2026-04-06T00:00:00'
+wall_time_s: 427.46148737496696
+predictions:
+- predictor_id: agent_predictor_tsx_analyst_code_claude-sonnet-4-6_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-18T22:58:39.158081'
+  as_of: '2026-04-06T00:00:00'
+  forecast_date: '2026-04-07T00:00:00'
+  payload:
+    point_forecast: -0.0001
+    quantiles:
+      '0.05': -0.017641
+      '0.1': -0.013097
+      '0.2': -0.008276
+      '0.3': -0.005095
+      '0.4': -0.002491
+      '0.5': -0.0001
+      '0.6': 0.002291
+      '0.7': 0.004895
+      '0.8': 0.008076
+      '0.9': 0.012897
+      '0.95': 0.017441
+  metadata:
+    rationale: "Forecast built on: (a) parametric Student-t(df=6) distribution centred\
+      \ at \u03BC=\u22120.0001 with \u03C3=0.011056 (given trailing 63-day vol); (b)\
+      \ web intelligence confirming BoC on pause at 2.25%, soft Canadian labour market,\
+      \ US trade/tariff spillovers, elevated commodity volatility (oil/gold from Middle\
+      \ East tensions); (c) empirical quantile cross-check against recent 63-day daily\
+      \ return distribution confirming plausible range; (d) monotonicity enforced.\
+      \ The near-zero median reflects balanced risks: commodity-driven TSX resilience\
+      \ vs. macro/geopolitical headwinds."
+    horizon_rationale: "1-day ahead S&P/TSX Composite log-return forecast for 2026-04-06\
+      \ \u2192 2026-04-07. Key inputs and assumptions: (1) VOLATILITY REGIME: The\
+      \ given trailing 63-day realised vol of \u03C3=0.011056 is moderately elevated\
+      \ vs. the long-run daily std of ~0.010, consistent with a higher-volatility\
+      \ regime driven by trade uncertainty and geopolitical risks. Recent 20-day std\
+      \ is even higher (~0.0124). I anchor \u03C3 to the 63-day figure. (2) DRIFT/LOCATION:\
+      \ Near-zero with a tiny negative tilt (\u03BC=\u22120.0001). The last close\
+      \ return was +0.0022, suggesting modest positive near-term momentum, but the\
+      \ recent 20-day mean is \u22120.0005 and the macro backdrop is cautious \u2014\
+      \ BoC on prolonged pause at 2.25%, soft Canadian labour market (unemployment\
+      \ 6.5\u20137%), US tariff spillovers still a headwind, geopolitical energy-price\
+      \ volatility. TSX resilience from commodity exposure (oil/gold) provides partial\
+      \ offset. Net: essentially flat drift with a minimal bear tilt. (3) TAIL SHAPE:\
+      \ Fitted a Student-t (df=6) to capture mild fat tails consistent with observed\
+      \ excess kurtosis (~0.23) and slight negative skew (\u22120.35). The t-distribution\
+      \ scale is adjusted to preserve the target \u03C3=0.011056, so the tails are\
+      \ slightly heavier than normal. (4) MACRO CONTEXT: BoC held at 2.25% through\
+      \ Q1-2026 with 'wait-and-see' guidance; CPI pressure from energy costs; US tariff\
+      \ overhang weighing on business investment; TSX benefiting from energy/gold\
+      \ commodity tail but facing headwinds in non-resource sectors. Geopolitical\
+      \ risk in Middle East supports oil prices but adds uncertainty to broader risk\
+      \ appetite. (5) The 5th/95th percentile spread (~\xB11.76%) reflects the elevated\
+      \ vol regime while remaining consistent with the empirical distribution of single-day\
+      \ moves."
+    tool_calls:
+    - tool: search_web
+      title: Bank of Canada policy rate decision and forward guidance for Canadian
+        equities
+    - tool: search_web
+      title: oil and gold commodity price outlook impact on TSX energy and materials
+        sectors
+    - tool: search_web
+      title: US Federal Reserve policy tariff trade war spillovers Canadian stocks
+        2026
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python (178 lines)
+    - tool: run_code
+      title: python (68 lines)
+    - tool: run_code
+      title: python (32 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: f99303fb9ecc2774bef2a3634101bb77
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/f99303fb9ecc2774bef2a3634101bb77

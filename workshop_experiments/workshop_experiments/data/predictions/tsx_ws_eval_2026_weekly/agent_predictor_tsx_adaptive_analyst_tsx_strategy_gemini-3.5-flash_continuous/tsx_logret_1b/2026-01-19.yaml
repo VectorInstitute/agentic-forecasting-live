@@ -1,0 +1,75 @@
+as_of: '2026-01-19T00:00:00'
+wall_time_s: 137.08189866598696
+predictions:
+- predictor_id: agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-19T12:33:52.970433'
+  as_of: '2026-01-19T00:00:00'
+  forecast_date: '2026-01-20T00:00:00'
+  payload:
+    point_forecast: 0.0
+    quantiles:
+      '0.05': -0.008348411919144262
+      '0.1': -0.006504481729854358
+      '0.2': -0.004271626740907751
+      '0.3': -0.0026615812002743814
+      '0.4': -0.001285856650612462
+      '0.5': 0.0
+      '0.6': 0.001285856650612462
+      '0.7': 0.00266158120027438
+      '0.8': 0.0042716267409077515
+      '0.9': 0.006504481729854358
+      '0.95': 0.008348411919144259
+  metadata:
+    rationale: S&P/TSX Composite is currently in a very calm, low-volatility regime.
+      Realised volatility has dropped to 8.06%. With no significant near-term catalysts
+      expected on January 20, 2026, and after-the-fact December inflation already
+      digested, the point forecast is centered at 0.0 and intervals are scaled by
+      a 21-day trailing standard deviation of 0.005075.
+    horizon_rationale: 1-business-day ahead forecast based on low volatility regime
+      (21-day annualised realised vol of 8.06%). Daily sigma over 21-day window is
+      0.005075. Martingale prior assumed with median return at 0.0.
+    tool_calls:
+    - tool: list_skills
+      title: list_skills
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: load_skill
+      title: load_skill
+    - tool: load_skill_resource
+      title: load_skill_resource
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (29 lines)
+    - tool: run_code
+      title: python (85 lines)
+    - tool: run_code
+      title: python (16 lines)
+    - tool: run_code
+      title: python (73 lines)
+    - tool: search_web
+      title: TSX Composite news "January 2026"
+    - tool: search_web
+      title: '"Bank of Canada" rate decision "January 2026" OR "Canada CPI" "January
+        2026"'
+    - tool: run_code
+      title: python (30 lines)
+    - tool: run_code
+      title: python (3 lines)
+    - tool: run_code
+      title: python (13 lines)
+    - tool: run_code
+      title: python (43 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 6f042bb9dfd59c2fed00aeea01fa18e0
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/6f042bb9dfd59c2fed00aeea01fa18e0
