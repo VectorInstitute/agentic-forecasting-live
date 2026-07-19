@@ -241,7 +241,19 @@ result.*
 
 One problem, one series, one referee — from a naive floor to a frozen LLM to an
 agent that reads the news, every method answered the same question the same way,
-and each rung taught something the last couldn't. If you're starting tomorrow:
+and each rung taught something the last couldn't.
+
+It's worth saying plainly why the margins in this series are so thin: we chose
+one of the hardest forecasting problems there is, on purpose. A major equity
+index is the output of a market whose entire job is to price new information
+before you can — millions of participants compressing the news into the close,
+every day. When an agent reads a headline, it is racing the very mechanism that
+generates its target. That an agent finds *any* conditional edge here is
+notable; that the edge is small is the problem talking, not the paradigm. The
+same ladder, the same referee, and the same agents pointed at a series no
+efficient market prices — a demand curve, an operational load, a policy-linked
+quantity — is where this machinery has real room, and that transfer is exactly
+what the harness was built to make cheap. If you're starting tomorrow:
 
 - **Begin with the naive floor and the classical methods.** They are nearly free,
   fully interpretable, and genuinely hard to beat — the honest bar everything else
