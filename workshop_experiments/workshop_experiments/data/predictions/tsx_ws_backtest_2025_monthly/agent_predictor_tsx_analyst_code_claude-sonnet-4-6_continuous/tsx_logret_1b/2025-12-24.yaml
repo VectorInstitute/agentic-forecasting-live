@@ -1,0 +1,79 @@
+as_of: '2025-12-24T00:00:00'
+wall_time_s: 928.8308627920342
+predictions:
+- predictor_id: agent_predictor_tsx_analyst_code_claude-sonnet-4-6_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-18T13:08:19.482201'
+  as_of: '2025-12-24T00:00:00'
+  forecast_date: '2025-12-25T00:00:00'
+  payload:
+    point_forecast: 0.0002
+    quantiles:
+      '0.05': -0.01625
+      '0.1': -0.01185
+      '0.2': -0.00731
+      '0.3': -0.00437
+      '0.4': -0.00198
+      '0.5': 0.0002
+      '0.6': 0.00238
+      '0.7': 0.00477
+      '0.8': 0.00771
+      '0.9': 0.01225
+      '0.95': 0.01665
+  metadata:
+    rationale: 'Overall 1-day TSX log-return forecast for 2025-12-29 (first post-holiday
+      trading day) is centred essentially at zero with a slight positive tilt (+0.02%),
+      using a fat-tailed t(5) distribution scaled to the trailing 63-day daily volatility
+      of 0.816%. Key macro backdrop: BoC on hold at 2.25%, US Fed easing, gold supportive,
+      oil soft, bank earnings strong, year-end seasonal tailwinds, but thin volume
+      and trade uncertainty are modest headwinds. The distribution is calibrated conservatively:
+      no regime shift is assumed, and the holiday gap introduces no additional variance
+      beyond the normal daily process.'
+    horizon_rationale: "Forecast origin is Christmas Eve 2025-12-24; the next TSX\
+      \ trading day is 2025-12-29 (Dec 25 Christmas Day + Dec 26 Boxing Day are statutory\
+      \ TSX holidays). Key macro inputs: (1) Bank of Canada held at 2.25% on Dec 10\
+      \ (end of 2025 rate-cutting cycle), diverging from the US Fed which cut 25 bp\
+      \ to 3.50\u20133.75% range in December. (2) WTI crude oil weak (~$56/bbl), adding\
+      \ headwinds to the large TSX energy sector; gold prices trending higher, supportive\
+      \ for materials. (3) Canadian big-bank Q4 2025 earnings beat estimates on strong\
+      \ capital markets activity \u2014 positive for the dominant financials sector.\
+      \ (4) Year-end trade-uncertainty overhang (US tariffs on steel, aluminium, autos)\
+      \ persists, but TSX finished 2025 near record highs. (5) Recent December 2025\
+      \ daily returns average ~+0.17% with mild positive momentum. Statistical model:\
+      \ Student-t(df=5) distribution to capture fat tails appropriate for 1-day equity\
+      \ returns. Drift \u03BC = +0.0002 (slight positive year-end seasonality bias,\
+      \ partially offset by holiday-thin trading and energy drag). Scale \u03C3 =\
+      \ 0.00816 (trailing 63-day realised volatility from payload, unadjusted \u2014\
+      \ holiday thin markets cut both ways). Median/point forecast = +0.0002. The\
+      \ 5th\u201395th percentile span is \xB11.6%, consistent with a ~0.8% daily sigma\
+      \ and fat-tailed distribution. Quantiles are strictly monotone by construction."
+    tool_calls:
+    - tool: search_web
+      title: Bank of Canada policy rate decision and forward guidance for Canadian
+        equities December 2025
+    - tool: search_web
+      title: oil and gold commodity price outlook impact on the TSX energy and materials
+        sectors December 2025
+    - tool: search_web
+      title: US Federal Reserve policy and tariff trade spillovers into Canadian stocks
+        December 2025
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python (119 lines)
+    - tool: run_code
+      title: python (164 lines)
+    - tool: run_code
+      title: python (51 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: 10bd898e571deb504ff5902f45f209c4
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/10bd898e571deb504ff5902f45f209c4

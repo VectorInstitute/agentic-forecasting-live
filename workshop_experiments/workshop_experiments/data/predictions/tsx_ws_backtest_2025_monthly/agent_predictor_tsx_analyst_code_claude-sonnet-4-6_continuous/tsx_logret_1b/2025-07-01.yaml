@@ -1,0 +1,81 @@
+as_of: '2025-07-01T00:00:00'
+wall_time_s: 653.7471639160067
+predictions:
+- predictor_id: agent_predictor_tsx_analyst_code_claude-sonnet-4-6_continuous
+  task_id: tsx_logret_1b
+  issued_at: '2026-07-18T11:43:18.870722'
+  as_of: '2025-07-01T00:00:00'
+  forecast_date: '2025-07-02T00:00:00'
+  payload:
+    point_forecast: 0.0003
+    quantiles:
+      '0.05': -0.016653
+      '0.1': -0.012117
+      '0.2': -0.007436
+      '0.3': -0.004407
+      '0.4': -0.001948
+      '0.5': 0.0003
+      '0.6': 0.002548
+      '0.7': 0.005007
+      '0.8': 0.008036
+      '0.9': 0.012717
+      '0.95': 0.017253
+  metadata:
+    rationale: "Overall approach: Student-t(5) distribution centred at +0.03% daily\
+      \ drift with \u03C3 = 1.086% (blended 63d trailing vol with recent-calm adjustment).\
+      \ Key macro drivers as of 2025-07-01: (1) Bank of Canada on hold at 2.75%, data-dependent,\
+      \ with market pricing further cuts later in 2025; (2) Canadian labour market\
+      \ soft (unemployment ~6.5-7%), creating BoC easing pressure; (3) Energy sector\
+      \ benefiting from OPEC+ discipline/oil prices, gold/materials sector lifted\
+      \ by safe-haven demand; (4) USD/CAD ~1.36, relatively stable; (5) US tariff/trade\
+      \ uncertainty persists but acute panic from April 2025 has subsided; (6) TSX\
+      \ outperformed US indices in June 2025 on diversification flows. The 1-BD horizon\
+      \ lands on July 2 (post-Canada Day), introducing modest holiday-gap uncertainty\
+      \ from US July 1 trading activity."
+    horizon_rationale: "Forecast for 1 business day ahead from June 30, 2025. Key\
+      \ structural note: July 1 is Canada Day (TSX closed), so the 1-BD return realises\
+      \ on July 2, 2025, incorporating any US market moves on July 1 as a gap risk.\
+      \ Volatility anchor: trailing 63-day \u03C3 = 1.278% (includes the April 2025\
+      \ tariff-shock episode); recent 20-day \u03C3 \u2248 0.38% (June calm regime).\
+      \ Applied a 15% haircut to the 63-day \u03C3 to reflect the calm June regime,\
+      \ yielding \u03C3_final \u2248 1.086%. Distribution: Student-t with df=5 to\
+      \ capture moderate fat tails typical of daily equity returns, scaled to preserve\
+      \ variance. Drift: \u03BC = +0.03% (small positive, reflecting: BoC on hold\
+      \ at 2.75% with easing bias, positive TSX June momentum, energy sector support\
+      \ from oil, gold-driven materials strength; partially offset by US trade-policy\
+      \ uncertainty and soft Canadian labour market). The holiday gap adds modest\
+      \ distributional widening (July 2 opening can incorporate US Jul 1 price discovery).\
+      \ Macro context: BoC held on June 4 with data-dependent stance; CAD stable ~1.36/USD;\
+      \ GoC 10Y yields ranged with limited moves; TSX positive in June across all\
+      \ cap segments led by energy/materials; post-April tariff recovery is intact\
+      \ but trade uncertainty persists as a tail risk. The 5th\u201395th percentile\
+      \ range of [-1.67%, +1.73%] is appropriate for a post-holiday 1-day horizon\
+      \ at current volatility."
+    tool_calls:
+    - tool: search_web
+      title: Bank of Canada policy rate decision and forward guidance for Canadian
+        equities
+    - tool: search_web
+      title: oil and gold commodity price outlook impact on the TSX energy and materials
+        sectors
+    - tool: search_web
+      title: US Federal Reserve policy and tariff trade spillovers into Canadian stocks
+    - tool: run_code
+      title: python
+    - tool: search_web
+      title: USD/CAD Canadian dollar and Government of Canada 10-year bond yield moves
+        June 2025
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python
+    - tool: run_code
+      title: python (512 lines)
+    - tool: run_code
+      title: python (104 lines)
+    - tool: run_code
+      title: python (50 lines)
+    - tool: set_model_response
+      title: set_model_response
+    langfuse_trace_id: f2450447730c7fb71efdce5711409473
+    langfuse_trace_url: https://us.cloud.langfuse.com/project/cmobssx3g00buad07gb4o1gh6/traces/f2450447730c7fb71efdce5711409473
