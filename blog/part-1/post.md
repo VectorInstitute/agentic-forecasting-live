@@ -146,7 +146,7 @@ the backtest order.*
 
 In the 2025 backtest, plain LightGBM tops the h=1 column at CRPS 0.0038. In the
 protected 2026 window that lead does not survive: LightGBM-with-covariates takes
-h=1 at 0.00500, a frozen LLM (more on it below) is essentially tied at 0.00501 —
+h=1 at 0.00497, a frozen LLM (more on it below) is essentially tied at 0.00501 —
 indistinguishable — and plain LightGBM slips to the middle of the pack. This is
 exactly what the cutoff section warned about: a backtest ranking is a hypothesis,
 and the protected window is where it gets tested. At h=5 and h=21 the ordering
@@ -193,7 +193,7 @@ The result that matters is that this works at all. A frozen, general-purpose
 model, prompted with a column of numbers, emits a genuine predictive
 distribution — calibrated enough to compete. In the protected 2026 window at
 h=1, an LLMP forecast from a lightweight model (Gemini flash-lite) ties
-LightGBM-with-covariates at the top of the board — 0.00501 against 0.00500.
+LightGBM-with-covariates at the top of the board — 0.00501 against 0.00497.
 Across the model matrix — several frontier and lightweight models, with and
 without covariates — the LLMP forecasts land throughout the leaderboard,
 sometimes leading a horizon, sometimes mid-pack, never obviously broken. At the
