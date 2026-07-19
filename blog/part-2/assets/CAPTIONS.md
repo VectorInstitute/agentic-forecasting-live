@@ -170,6 +170,105 @@ hyp-009). The script pins all six horizon means, both war-window cuts, the
 reference mean, and the three win counts, and asserts its recompute reproduces
 them to 1e-5 before writing the PNG.
 
+## fig5 — `fig5_combined_leaderboard.png`
+
+The full protected-eval scoreboard: **all 21 methods × 3 horizons** (h = 1, 5,
+21), read straight from the final `leaderboard.csv`. One panel per horizon; within
+each panel the 21 rungs are ranked by mean CRPS (best on top) and drawn as a dot
+on a **zoomed** value axis, so the tight ordering at the top of the ladder stays
+legible — at h=1 every non-floor method sits within ~7% of the leader. The three
+far-worse floors are flagged off-scale at the right margin with their true value
+rather than compressing the axis: **naive** at every horizon (9.28 / 23.30 /
+42.33 ×10⁻³) and **ETS** at h=5 & h=21 (16.21 / 32.57).
+
+Dots are colour-coded by method family, identical to the Part-1 fig-3 legend —
+naive floor grey, classical green (aqua), LightGBM blue, LLM-Process purple
+(violet), LLM-Process +covariates pink (magenta) — and the five **AGENTS** (news
+gemini-3.5, news sonnet-4.6, code sonnet-4.6, adaptive pre-study, adaptive
+post-study) get a distinct **orange** highlight (haloed dot + bold label).
+
+Anchor facts (all reproduce from the CSV; asserted in-script before render):
+
+| Horizon | Reads |
+|---|---|
+| **h = 1** | Leader `darts_lightgbm_cov` **4.975**; **code agent 2nd 4.991**; then LLMP flash-lite 5.012. Everything except the naive floor clusters inside 4.98–5.34. |
+| **h = 5** | Top five all LLM-based — four LLMP rungs (11.76 / 11.79 / 11.92 / 11.94) plus the **adaptive-trained agent 4th (11.93)**; both LightGBMs sink to **14th (12.41)** and **17th (12.67)**. |
+| **h = 21** | Leader `darts_lightgbm_cov` **17.18**; **news-gemini 3rd 17.59**; **three agents in the top seven** (news-gemini 3rd, adaptive-pre 5th 18.57, adaptive-post 7th 18.76). |
+
+Headline: **no family owns every horizon.** The trees win the two ends they were
+built for (h=1 point-ish accuracy, h=21 mean reversion); the LLM family owns the
+5-day horizon; the agents mix in with the leaders at h=1 and h=21 but are
+mid-pack at h=5. Values are mean CRPS ×10⁻³ over the resolved weekly origins
+(`n_scores` = 24 / 22 / 24).
+
+**Source:** `results/tsx_ws_eval_2026_weekly/leaderboard.csv` — the `mean_crps`
+column per `model` × `horizon` (21 rungs each). No recompute needed (the CSV is
+the authoritative scoreboard); the script asserts the anchor ranks/values above
+before writing the PNG. Family colours and palette from Part-1 `_blogdata.py`.
+
+## fig6 — `fig6_where_agents_earn.png`
+
+Two panels isolating **where the agent's judgement pays and where it doesn't**
+(h = 21 throughout).
+
+**Left — war window vs quiet weeks.** Grouped bars of mean CRPS for the gemini
+news agent (`..._analyst_news_gemini-3.5-flash_continuous`) vs `darts_lightgbm_cov`,
+split by regime over the **24 common resolved origins** (both rungs resolved):
+
+| Regime | n | News agent | LightGBM +cov | Agent vs tree |
+|---|---|---|---|---|
+| War window (as_of 2026-02-09 → 04-13) | **10** | **0.02178** | **0.02449** | **−11%** (agent better) |
+| Quiet weeks | **14** | **0.01460** | **0.01196** | **+22%** (agent worse) |
+
+Through the regime break the agent beats the tree by **11%**; in the calm it
+loses to the same tree by **22%**. The agent's read-the-news edge is real but it
+is paid for by carrying wider intervals into quiet weeks where the tree's tight
+climatology wins.
+
+**Right — does agency help the same model?** Paired dumbbells from a **frozen
+LLM-Process rung** to the agent built on the **same base model**; arrow direction
+and colour encode improvement (green) vs regression (red), flat in grey. All
+values are the leaderboard h=21 means:
+
+| Frozen base | Agent arm | Base → arm | Δ | Paired result |
+|---|---|---|---|---|
+| LLMP gemini-3.5 (0.01826) | News agent (gemini-3.5) | → **0.01759** | −4% | 14/24 origins, n.s. |
+| LLMP gemini-3.5 (0.01826) | Adaptive agent (pre-study) | → **0.01857** | +2% | worse, n.s. |
+| LLMP gemini-3.5 (0.01826) | Adaptive agent (post-study) | → **0.01876** | +3% | worse, n.s. |
+| LLMP sonnet-4.6 (0.02099) | News agent (sonnet-4.6) | → **0.02099** | flat | 14/24, n.s. |
+| LLMP sonnet-4.6 (0.02099) | Code agent (sonnet-4.6) | → **0.02035** | −3% | **18/24 origins, one-sided sign test p ≈ 0.01** |
+
+Only one of the five arms is statistically distinguishable from its frozen base —
+the **sonnet-4.6 code agent** (18 of 24 origins beat the frozen rung; one-sided
+sign test p ≈ 0.011). Everything else, including **both adaptive arms** (whose
+base is the same gemini-3.5 model), is within noise, and the two adaptive arms
+actually **regress** off their base. Wrapping a model in an agent scaffold is not
+a free lunch: mostly it does nothing measurable, and it can hurt.
+
+**Caveats (flagged on the figure and here):** **n ≤ 24 origins** at every cut;
+the war/quiet split is **one regime event sampled weekly — not ten independent
+breaks** (the 10 war-window origins are overlapping weekly reads of a single
+2026 drawdown, so the −11% is one event's worth of evidence, not a law); and the
+dumbbells are **horizon-mean deltas**, not per-origin paired tests except where a
+win count / p-value is stated.
+
+**Source:** `predictions/tsx_ws_eval_2026_weekly/`, `tsx_logret_21b/<origin>.yaml`.
+Per-origin CRPS via `properscoring.crps_ensemble` on the sorted 11-point quantile
+grid vs the realised value (`_blogdata.realized`), resolved origins only. **Left**
+recomputed over the 24 common resolved origins of the two rungs, split on the
+war-window dates. **Right** uses the leaderboard h=21 means (each reproduced by
+the recompute); the code-agent win count and one-sided sign test (`scipy.stats.
+binomtest(18, 24, alternative="greater")` = 0.0113) are recomputed per origin. The
+script pins the war/quiet means (agent 0.02178 / 0.01460, tree 0.02449 / 0.01196),
+all seven dumbbell means, and the 18/24 code-agent count, and asserts its
+recompute reproduces them (means to 1e-5) before writing the PNG.
+
+**Note on the quiet-week numbers vs the exploratory draft:** an earlier pass used
+a 22-origin common set (quiet n=12, agent +17%). The refreshed store now resolves
+**24** common origins, so quiet is **n=14** and the agent's quiet-week penalty is
+**+22%**; the war window is unchanged (n=10, agent 0.02178 vs tree 0.02449, −11%).
+The 24-origin figures above are authoritative.
+
 ---
 
 ### Regenerating
@@ -182,6 +281,8 @@ uv run python blog/part-2/assets/fig1_agent_anatomy.py
 uv run python blog/part-2/assets/fig2_scenario_card.py
 uv run python blog/part-2/assets/fig3_divergence_sentinel.py
 uv run python blog/part-2/assets/fig4_adaptive_prepost.py
+uv run python blog/part-2/assets/fig5_combined_leaderboard.py
+uv run python blog/part-2/assets/fig6_where_agents_earn.py
 ```
 
 Each writes its PNG (220 dpi) beside the script. Omit `BLOG_WS_DATA_ROOT` to use
