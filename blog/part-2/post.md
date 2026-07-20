@@ -239,8 +239,7 @@ The honest destination is the one ForecastBench pointed at in Part 1's opening:
 **live evaluation** — scoring forecasts whose answers do not exist yet. When the
 outcome hasn't happened, leakage is not a guard you hope holds; it is
 structurally impossible. That is the only setting in which an agent's news-reading
-skill can be measured without an asterisk. We're moving the TSX experiment in
-exactly that direction — stay tuned.
+skill can be measured without an asterisk. We come back to that at the end.
 
 ## The adaptive agent — pre/post on the TSX
 
@@ -302,7 +301,7 @@ horizon (with the war-window cut), and an excerpt of the strategy file the
 study produced — including a graduated correction and a recorded negative
 result.*
 
-## Coda
+## What's next
 
 One problem, one series, one referee — from a naive floor to a frozen LLM to an
 agent that reads the news, every method answered the same question the same way,
@@ -327,6 +326,20 @@ what the harness was built to make cheap. If you're starting tomorrow:
   the panel that helps at one horizon can add noise at another.
 - **Reach for agents to read the world, not to shave a decimal** — and evaluate
   them accordingly: judge the artifact, not just the score.
+
+But the findings we care about most are the ones this retrospective could only
+*raise*, not settle. The agent earned its keep at the regime break and signalled
+it by widening its intervals — yet with roughly one such break a year, two dozen
+origins can suggest that edge without ever confirming it, and no offline protocol
+can fully firewall a model that reads the open web from the future it is scored
+against. The honest way to answer the questions we've raised is to stop grading
+forecasts against a past the models may already know, and start scoring them
+against a future that does not yet exist — where leakage is not a guard you hope
+holds but a physical impossibility, and where "divergence is an alarm" and
+"agents pay at the breaks" become predictions you commit to *before* the outcome
+rather than patterns you notice after. That is the destination ForecastBench
+pointed at in Part 1's opening, and it is where we are taking the S&P/TSX
+experiment next.
 
 The full harness, data pipeline, and methods behind this series are open at
 [github.com/VectorInstitute/agentic-forecasting](https://github.com/VectorInstitute/agentic-forecasting).
