@@ -113,20 +113,30 @@ model — while showing none of the news agent's break-window advantage: it
 computes from the same history the trees see, and it fails where they fail.
 What an agent *reads* determines where it wins.
 
-Ranks, though, still average over the thing that matters. Split the h=21
-origins into the ten inside the war window and the fourteen quiet ones, and the
-news agent's third place decomposes into two opposite results: at the break it
-is ~11% *better* than LightGBM-with-covariates — largely by sidestepping the
-tree's worst blowups — and on quiet weeks it is ~22% *worse*, paying an
-LLM-noise tax whenever there is nothing to read. The trees win the average
-because averages are mostly quiet weeks; the agent earns its fee precisely at
-the moments Part 1 showed the numbers-only ladder to be blind. And the paired,
-same-model comparisons say agency itself — not just model scale — is doing
-work: the code agent beats its own frozen base at eighteen of twenty-four
-origins, the strongest paired result in the study, while the news agent's gain
-over its base is positive but within noise. With one regime event per year, no
-retrospective can grade these conditional claims properly — an honest limit we
-return to below.
+Ranks, though, still average over the thing that matters. Split the h=21 origins
+into the ten inside the war window and the fourteen quiet ones and the news
+agent's third place decomposes into two opposite averages: at the break it comes
+out ~11% *better* than LightGBM-with-covariates, and on quiet weeks ~22%
+*worse*, as though it pays an LLM-noise tax whenever there is nothing to read.
+
+That is a tidy story, and we should immediately complicate it, because it does
+not survive being pushed on. The break-window average is carried almost entirely
+by a single origin, where the tree blew up and the agent did not — remove that
+one week and the 11% edge shrinks to 2%. Across the ten break origins the agent
+actually records the *worse* score on six of them. So what the split really shows
+is one avoided blowup, not a dependable edge when the regime turns. The same
+caution applies to the paired, same-model comparisons: the code agent beats its
+own frozen base at eighteen of twenty-four origins, which sounds decisive until
+you notice the individual margins are small and the origins are not independent
+— weigh the magnitudes, or account for the overlap, and it lands comfortably
+inside noise.
+
+None of this is a defect in the methods. It is a limit of the window. Twenty-four
+weekly origins with a one-month horizon overlap so heavily that they amount to
+roughly five independent observations, containing one regime event — which is
+simply not enough to resolve differences this size, in any direction. We keep
+reporting these numbers because they are the honest ones, but they are
+observations to be checked, not results to build on.
 
 ![Where agents earn their keep: war-window vs quiet-week CRPS against
 LightGBM, and paired same-model agency deltas at
@@ -134,8 +144,10 @@ h=21.](assets/fig6_where_agents_earn.png)
 
 ***Figure 3.** Left: the news agent versus LightGBM-with-covariates at h=21,
 split into war-window and quiet origins — the average hides two opposite
-results. Right: paired same-model deltas, frozen LLMP → agent, at h=21; the code
-agent's 18-of-24 is the study's only statistically significant paired win.*
+directions, though the break-window figure rests heavily on a single origin.
+Right: paired same-model deltas, frozen LLMP → agent, at h=21. The code agent's
+18-of-24 is the largest paired count in the study; the per-origin margins behind
+it are small enough that it does not clear a stricter test.*
 
 There is one more signal hiding in the comparison, and it may matter more than
 the ranks: *when the agent disagrees with the trees*. Measure the gap between
@@ -150,15 +162,16 @@ divergences sit at the origins bracketing the 2026 war drawdown.
 (The fourth is an early-June origin where the agent sharply widened its tails
 after a correction off a record high — the sentinel fires on perceived regime
 risk, not only on breaks that confirm.) A naive rule that trusts the agent only
-when divergence runs above its median beats either method alone: CRPS 0.0169
-against 0.0172 for always-LightGBM and 0.0176 for always-agent. We report this
-as exploratory, not established: twenty-four origins, an in-sample threshold,
-and the same construction on the 2025 backtest fires at the tariff window but
-does not pay — that agent's divergent forecasts were the wrong ones. One thing
-divergence does *not* reliably do, on this window, is predict where the tree
-specifically will be wrong (ρ = 0.32, p = 0.13 — not significant). It flags that
-something is happening, not who will handle it badly. A hypothesis to test
-prospectively, not a result.
+when divergence runs above its median edges out both: CRPS 0.0169 against 0.0172
+for always-LightGBM and 0.0176 for always-agent. Before anyone reaches for that
+rule, though, we checked what it is worth, and the answer is: not much yet. The
+margin is under two percent, and if you instead pick a random half of the origins
+to route to the agent, about three times in ten you do at least as well. The rule
+is not currently distinguishable from a coin. The same construction on the 2025
+backtest fires at the tariff window but does not pay — that agent's divergent
+forecasts were the wrong ones. And divergence does not reliably tell you where
+the *tree* specifically will fail (ρ = 0.32, p = 0.13). It flags that something
+may be happening, not who will handle it badly.
 
 Decompose the divergence and the mechanism gets sharper — and more
 interesting. The gap between the two forecasters has two parts: the agent
@@ -371,8 +384,8 @@ one of the hardest forecasting problems there is, on purpose. A major equity
 index is the output of a market whose entire job is to price new information
 before you can — millions of participants compressing the news into the close,
 every day. When an agent reads a headline, it is racing the very mechanism that
-generates its target. That an agent finds *any* conditional edge here is
-notable; that the edge is small is the problem talking, not the paradigm. The
+generates its target. That the edges we can see here are small, and too small for
+this window to confirm, is the problem talking as much as the paradigm. The
 same ladder, the same referee, and the same agents pointed at a series no
 efficient market prices — a demand curve, an operational load, a policy-linked
 quantity — is where this machinery has real room, and that transfer is exactly
@@ -386,30 +399,36 @@ what the harness was built to make cheap. If you're starting tomorrow:
 - **Reach for agents to read the world, not to shave a decimal** — and evaluate
   them accordingly: judge the artifact, not just the score.
 
-But the findings we care about most are the ones this retrospective could only
-*raise*, not settle. The agent earned its keep at the regime break and signalled
-it by widening its intervals — yet with roughly one such break a year, two dozen
-origins can suggest that edge without ever confirming it, and no offline protocol
-can fully firewall a model that reads the open web from the future it is scored
-against. The honest way to answer the questions we've raised is to stop grading
-forecasts against a past the models may already know, and start scoring them
-against a future that does not yet exist — where leakage is not a guard you hope
-holds but a physical impossibility, and where "divergence is an alarm" and
-"agents pay at the breaks" become predictions you commit to *before* the outcome
-rather than patterns you notice after. That is the destination ForecastBench
-pointed at in Part 1, and it is where we think the experiment should continue.
+But the idea we find most interesting is the one this retrospective could only
+*raise*, never settle. Everything above points, softly and without proof, in the
+same direction: the agent's distinctive behaviour was not forecasting the
+direction better but reacting to context — widening when it read something
+unsettling, disagreeing with the trees exactly when the world was moving. That
+hints at a role for agentic forecasters that is not about replacing conventional
+methods at all, but complementing them: cheap, well-calibrated models carrying
+the ordinary weeks, and an agent watching for the moment they stop being
+ordinary. We want to be clear that we have not shown this works. We have seen
+one regime event through a two-dozen-origin window that behaves like five, and no
+offline protocol can fully firewall a model that reads the open web from the
+future it is scored against.
 
-If we had to reduce all of this to one practical takeaway, it would not be that
-agents forecast better. On this series they mostly do not. It is that an agent
-looks most useful as a **context-aware sentinel inside a larger forecasting
-strategy** rather than as a replacement for one — cheap, well-calibrated
-conventional models carrying the ordinary weeks, and an agent reading the world
-for the moment those weeks stop being ordinary, widening its intervals and
-flagging the disagreement when they do. For a production pipeline on something
-like a market index or a commodity price, that suggests a mix rather than a
-winner: conventional methods for the base rate, an agentic layer watching for
-the regime change. We think that is worth testing properly. That is the
-experiment we would like to run next.
+It is still, we think, the most useful thing to come out of this work — not as a
+result, but as a direction. If it holds up, the practical consequence is that a
+production forecasting pipeline for something like a market index or a commodity
+price might be built as a *mix* rather than a contest: conventional methods
+carrying the base rate, an agentic layer alongside them watching for the regime
+change and widening when it sees one. That reframes what these systems are for.
+It is also, conveniently, a claim that can be settled — which is the whole
+argument for what comes next.
+
+The honest way to settle it is to stop grading forecasts against a past the
+models may already know, and start scoring them against a future that does not
+yet exist — where leakage is not a guard you hope holds but a physical
+impossibility, and where "divergence is an alarm" and "agents pay at the breaks"
+become predictions you commit to *before* the outcome rather than patterns you
+notice after. Run it forward for long enough and the independent windows stop
+being five. That is the destination ForecastBench pointed at in Part 1, and it is
+where we think the experiment should continue.
 
 Everything behind this series — the harness, the data pipeline, the methods, the
 evaluation — is open at
