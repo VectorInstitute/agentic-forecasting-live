@@ -193,16 +193,19 @@ def main() -> None:
             ax.spines[s].set_visible(False)
         ax.set_xlabel("Mean CRPS  ×10⁻³   (lower is better)", fontsize=12.5)
         ax.set_title(f"h = {h}", fontsize=15, fontweight="bold", loc="left", pad=8)
-        # small note when floors are clipped off the right
+        # small note when floors are clipped off the right — on its own line with
+        # clear air above the "h = N" title (pad=8, ~15pt tall), so the two never
+        # collide in the narrow axes
         floors = sub[sub["crps_k"] > cap]
         if len(floors):
             names = ", ".join(f"{r.label} {r.crps_k:.1f}" for _, r in floors.iterrows())
-            ax.text(1.0, 1.028, f"off scale:  {names}", transform=ax.transAxes,
-                    ha="right", va="bottom", fontsize=11, color=bd.INK["muted"])
+            ax.annotate(f"off scale:  {names}", xy=(1.0, 1.0), xycoords="axes fraction",
+                        xytext=(0, 30), textcoords="offset points",
+                        ha="right", va="baseline", fontsize=11, color=bd.INK["muted"])
 
     # ---- Title + legend ----------------------------------------------------
     fig.suptitle("The protected-eval scoreboard: 21 methods, three horizons",
-                 x=0.085, y=0.980, ha="left", fontsize=20, fontweight="bold",
+                 x=0.085, y=0.988, ha="left", fontsize=20, fontweight="bold",
                  color=bd.INK["primary"])
     fig.text(0.085, 0.958,
              "Mean CRPS on the leak-safe 2026 S&P/TSX eval, ranked within each horizon. No family owns every\n"

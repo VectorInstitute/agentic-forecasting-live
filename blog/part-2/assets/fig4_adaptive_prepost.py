@@ -243,8 +243,8 @@ def main() -> None:
              ha="left", va="center", fontsize=10.5, color=bd.INK["secondary"],
              linespacing=1.32)
 
-    # Footnote wrapped to the LEFT panel-block width only (x 0.06 .. ~0.60) so it
-    # never runs horizontally under the right-hand strategy cards / yellow box.
+    # Footnote wrapped to fill the LEFT panel-block width (x 0.06 .. ~0.60) so it
+    # spans all three subplots but never runs under the right-hand cards.
     _foot = (
         "Source: predictions/tsx_ws_eval_2026_weekly/ — seed rung "
         "agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous "
@@ -255,7 +255,7 @@ def main() -> None:
         "adaptive/skills_tsx/tsx-strategy-trained/skill_state.yaml."
     )
     fig.text(
-        0.06, 0.055, _wrap(_foot, 92),
+        0.06, 0.055, _wrap(_foot, 116),
         fontsize=9.5, color=bd.INK["muted"], ha="left", va="top", linespacing=1.4,
     )
 

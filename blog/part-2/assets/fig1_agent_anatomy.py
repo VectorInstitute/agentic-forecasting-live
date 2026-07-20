@@ -201,13 +201,6 @@ def main() -> None:
               ha="center", va="bottom", fontsize=12.5, fontweight="bold",
               color=bd.INK["primary"], linespacing=1.25)
 
-    # ---- Flow arrows between panels ----------------------------------------
-    for x in (0.345, 0.665):
-        fig.patches.append(plt.matplotlib.patches.FancyArrow(
-            x, 0.44, 0.012, 0, width=0.004, head_width=0.02, head_length=0.008,
-            length_includes_head=True, transform=fig.transFigure,
-            color=bd.INK["axis"], zorder=20))
-
     fig.text(0.015, 0.015,
              "Source: predictions/tsx_ws_eval_2026_weekly/agent_predictor_tsx_analyst_news_claude-sonnet-4-6_continuous/tsx_logret_21b/\n"
              "2026-03-30.yaml (tool_calls, rationale, quantiles). Quantiles and realised are 21-day log returns; realised +5.1% is the\n"

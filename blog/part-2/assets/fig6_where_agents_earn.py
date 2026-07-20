@@ -161,8 +161,8 @@ def main() -> None:
     axl.grid(axis="x", visible=False)
     axl.margins(x=0.12)
     axl.set_title("The agent earns its keep in the break —\nand gives it back in the calm",
-                  fontsize=13.5, fontweight="bold", loc="left", pad=34, linespacing=1.2)
-    axl.text(0.0, 1.015, "News agent (gemini-3.5) vs LightGBM +cov, mean CRPS by regime",
+                  fontsize=13.5, fontweight="bold", loc="left", pad=46, linespacing=1.2)
+    axl.text(0.0, 1.035, "News agent (gemini-3.5) vs LightGBM +cov, mean CRPS by regime",
              transform=axl.transAxes, fontsize=11.5, color=bd.INK["muted"], ha="left", va="bottom")
     axl.legend(loc="upper right", fontsize=12, handlelength=1.1,
                bbox_to_anchor=(0.995, 0.99), borderaxespad=0.0)
@@ -243,8 +243,8 @@ def main() -> None:
     axr.set_axisbelow(True)
     axr.spines["left"].set_visible(False)
     axr.set_title("Does agency help the same model?\nSometimes — once significantly.",
-                  fontsize=13.5, fontweight="bold", loc="left", pad=34, linespacing=1.2)
-    axr.text(0.0, 1.015, "Frozen LLM-Process rung  to  agent on the same base model (h = 21 means)",
+                  fontsize=13.5, fontweight="bold", loc="left", pad=46, linespacing=1.2)
+    axr.text(0.0, 1.075, "Frozen LLM-Process rung  to  agent on the same base model (h = 21 means)",
              transform=axr.transAxes, fontsize=11.5, color=bd.INK["muted"], ha="left", va="bottom")
 
     handles = [
@@ -259,8 +259,8 @@ def main() -> None:
                frameon=False, handletextpad=0.4, columnspacing=1.2, borderaxespad=0.3,
                bbox_to_anchor=(0.01, 0.02))
 
-    # caveat, tucked below the right-panel title
-    axr.text(0.0, 0.972, "n ≤ 24 origins; one regime event in the window.",
+    # caveat, stacked under the subtitle — above the chart frame, not inside it
+    axr.text(0.0, 1.035, "n ≤ 24 origins; one regime event in the window.",
              transform=axr.transAxes, ha="left", va="bottom", fontsize=10.5,
              color=bd.INK["muted"], style="italic")
 
