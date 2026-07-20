@@ -338,8 +338,7 @@ against a future that does not yet exist — where leakage is not a guard you ho
 holds but a physical impossibility, and where "divergence is an alarm" and
 "agents pay at the breaks" become predictions you commit to *before* the outcome
 rather than patterns you notice after. That is the destination ForecastBench
-pointed at in Part 1's opening, and it is where we are taking the S&P/TSX
-experiment next.
+pointed at in Part 1, and it is where we think the experiment should continue.
 
 The full harness, data pipeline, and methods behind this series are open at
 [github.com/VectorInstitute/agentic-forecasting](https://github.com/VectorInstitute/agentic-forecasting).
