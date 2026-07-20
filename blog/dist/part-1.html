@@ -306,7 +306,8 @@ footer.post-footer {
 </head>
 <body>
 <header class="post-header"><h1>An honest
-scoreboard for market forecasting</h1><p class="byline"><strong>By the Vector AI Engineering team</strong></p><p class="byline kicker"><em>Part 1 of two.</em></p></header>
+scoreboard for market forecasting</h1><p class="byline"><strong>Ethan Jackson, Ali Kore, Behnoosh Zamanlooy &amp; Shayaan
+Mehdi</strong></p><p class="byline kicker"><em>Part 1 of two.</em></p></header>
 <article>
 
 <h2 id="can-models-forecast-a-series-you-actually-care-about">Can models
@@ -330,7 +331,7 @@ the frontier has climbed steadily toward the human-superforecaster
 reference line. Source: <a
 href="https://www.forecastbench.org/explore/">ForecastBench</a>.</em></figcaption></figure>
 <p>This two-part series accompanies Vector’s Agentic Forecasting
-bootcamp; the full code, data pipeline, and evaluation harness are open
+Bootcamp; the full code, data pipeline, and evaluation harness are open
 at <a
 href="https://github.com/VectorInstitute/agentic-forecasting">github.com/VectorInstitute/agentic-forecasting</a>.
 In Part 1 we build the scoreboard for one concrete series and run the
@@ -422,10 +423,10 @@ keeping should beat it by a clear margin. At h=1 in the protected window
 it scores CRPS 0.0093, and the best method roughly halves that.</p>
 <p>Next, the <strong>classical statistical methods</strong> — ETS, a
 Kalman-filter local model, and AutoARIMA. These are decades-refined,
-fully interpretable, and free to run: they fit a few parameters to the
-series’ own autocorrelation and emit a calibrated distribution. On the
-TSX they clear the naive floor comfortably and, at the short horizon,
-land within a hair of far heavier machinery.</p>
+fully interpretable, and near-free to run: they fit a few parameters to
+the series’ own autocorrelation and emit a calibrated distribution. On
+the TSX they clear the naive floor comfortably and, at the short
+horizon, land within a hair of far heavier machinery.</p>
 <p>Then <strong>LightGBM</strong> — gradient-boosted trees — with and
 without a covariate panel: a Canadian macro-financial set spanning the
 Bank of Canada policy rate, StatCan CPI and unemployment, WTI oil, gold,
