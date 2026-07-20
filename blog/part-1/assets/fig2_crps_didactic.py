@@ -68,7 +68,7 @@ def main() -> None:
     )
 
     ax.set_title(
-        "CRPS rewards a sharp forecast -- when it is also right",
+        "CRPS rewards a sharp forecast — when it is also right",
         fontsize=13,
         fontweight="bold",
         pad=12,

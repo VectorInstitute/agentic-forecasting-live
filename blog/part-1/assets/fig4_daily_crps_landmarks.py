@@ -5,8 +5,9 @@ the free conventional methods plus the lite LLM-Process. The landmark windows ar
 shaded; the point is that every method's error spikes at the same moments -- they
 are all blind to the same regime breaks.
 
-lightgbm_cov is intentionally incomplete on the daily grid (h=1: 369 origins,
-h=5: 226, h=21: none); it is drawn where present and flagged in the caption.
+All five methods now resolve on the full daily grid (h=1/5/21 ~= 365/365/364
+origins each), including lightgbm_cov, which was backfilled in the refreshed
+store; every series is drawn across all three horizons.
 
 Run: ``python blog/part-1/assets/fig4_daily_crps_landmarks.py``
 """
@@ -77,7 +78,7 @@ def main() -> None:
         0.035,
         "Source: daily prediction store (tsx_ws_daily_2025_2026), CRPS per origin via "
         "properscoring.crps_ensemble. Shaded: TSX landmark windows (red = drawdown, green = rebound; "
-        "identities in fig. 1). LightGBM +cov is incomplete on the daily grid and absent at h=21.",
+        "identities in fig. 1). All five methods resolve across the full daily grid (~365 origins each).",
         fontsize=7.5,
         color=bd.INK["muted"],
         ha="left",

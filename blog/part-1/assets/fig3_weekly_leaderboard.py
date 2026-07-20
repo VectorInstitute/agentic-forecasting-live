@@ -1,8 +1,10 @@
 """fig3: weekly leaderboards -- 2025 backtest vs 2026 protected eval.
 
 Mean CRPS by predictor x horizon for the two weekly rolling-origin runs. Every
-cell is recomputed from the persisted prediction store (so the news agent, which
-is absent from the eval ``leaderboard.csv``, is scored here too). Rows are
+cell is recomputed from the persisted prediction store so the values reproduce
+``leaderboard.csv`` exactly. This is a Part-1 figure: it shows the numbers-only
+ladder (naive / classical / LightGBM) plus the LLM-Process rungs only -- the news
+and code agents are Part-2 material and are deliberately excluded here. Rows are
 ordered by mean backtest rank; cell shading encodes within-column rank (darker =
 better), so the eval columns visibly reshuffle the backtest order -- the findable
 story. Cell text is the mean CRPS.
@@ -37,7 +39,6 @@ MODELS = [
     ("llmp_quantile_grid_tsx_ws_cov[gpt-5.4]", "LLMP gpt-5.4 +cov", "llmp_cov"),
     ("llmp_quantile_grid_tsx_ws_cov[claude-sonnet-4-6]", "LLMP sonnet-4.6 +cov", "llmp_cov"),
     ("llmp_quantile_grid_tsx_ws_cov[claude-sonnet-5]", "LLMP sonnet-5 +cov", "llmp_cov"),
-    ("agent_predictor_tsx_analyst_news_claude-sonnet-4-6_continuous", "News agent (sonnet-4.6)", "agent"),
 ]
 
 FAMILY_COLOR = {
@@ -46,7 +47,6 @@ FAMILY_COLOR = {
     "gbm": bd.CAT["blue"],
     "llmp": bd.CAT["violet"],
     "llmp_cov": bd.CAT["magenta"],
-    "agent": bd.CAT["orange"],
 }
 FAMILY_LABEL = {
     "naive": "Naive floor",
@@ -54,7 +54,6 @@ FAMILY_LABEL = {
     "gbm": "LightGBM",
     "llmp": "LLM-Process",
     "llmp_cov": "LLM-Process +covariates",
-    "agent": "News agent",
 }
 
 SPECS = [
@@ -179,7 +178,7 @@ def main() -> None:
         0.005,
         "Mean CRPS ×10⁻³ (lower = better); shading = within-column rank (darker = better). "
         "Recomputed from the prediction store with properscoring.crps_ensemble (reproduces "
-        "leaderboard.csv). 'n/a' = one degenerate origin gave a non-finite score.",
+        "leaderboard.csv).",
         fontsize=7.5,
         color=bd.INK["muted"],
         ha="center",

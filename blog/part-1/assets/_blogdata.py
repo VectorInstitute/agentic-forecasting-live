@@ -20,6 +20,7 @@ reproduce ``leaderboard.csv`` to the printed precision.
 from __future__ import annotations
 
 import glob
+import os
 from functools import lru_cache
 from pathlib import Path
 
@@ -35,8 +36,16 @@ import yaml
 _THIS = Path(__file__).resolve()
 REPO_ROOT = _THIS.parents[3]
 WS = REPO_ROOT / "workshop_experiments" / "workshop_experiments"
-PRED_DIR = WS / "data" / "predictions"
-RESULTS_DIR = WS / "data" / "results"
+
+# Optional overrides so the figures can be re-rendered against a data root other
+# than this checkout (e.g. a live runner clone holding refreshed leaderboards and
+# prediction stores). Defaults preserve the in-repo behaviour.
+#   BLOG_WS_DATA_ROOT -> dir that contains predictions/ and results/
+#   BLOG_YF_CACHE     -> yfinance cache dir (holds gsptse_adj_close_1d.parquet, ...)
+_WS_DATA_ROOT = Path(os.environ["BLOG_WS_DATA_ROOT"]) if os.environ.get("BLOG_WS_DATA_ROOT") else WS / "data"
+_YF_CACHE = Path(os.environ["BLOG_YF_CACHE"]) if os.environ.get("BLOG_YF_CACHE") else REPO_ROOT / "data" / "yfinance"
+PRED_DIR = _WS_DATA_ROOT / "predictions"
+RESULTS_DIR = _WS_DATA_ROOT / "results"
 ASSETS_DIR = _THIS.parent
 
 TARGETS = ["tsx_logret_1b", "tsx_logret_5b", "tsx_logret_21b"]
@@ -51,7 +60,8 @@ def _service():
     from workshop_experiments.data_tsx import build_tsx_workshop_service
 
     # Covariate-free build: the forecast targets resolve either way and no macro
-    # panel is needed to score. refresh=False -> use the local Yahoo cache.
+    # panel is needed to score. refresh=False -> use the local Yahoo cache
+    # (resolved by the data service from REPO_ROOT/data/yfinance).
     return build_tsx_workshop_service(include_covariates=False, refresh=False)
 
 
@@ -73,7 +83,7 @@ def tsx_close() -> pd.Series:
     data-service returns keeps the figure regenerable without the raw parquet.
     """
     r1 = realized("tsx_logret_1b")
-    close_cache = REPO_ROOT / "data" / "yfinance" / "gsptse_adj_close_1d.parquet"
+    close_cache = _YF_CACHE / "gsptse_adj_close_1d.parquet"
     if close_cache.exists():
         raw = pd.read_parquet(close_cache)
         s = raw.set_index("timestamp")["value"].sort_index()

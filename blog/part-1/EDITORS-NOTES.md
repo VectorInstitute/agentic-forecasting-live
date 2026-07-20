@@ -21,15 +21,15 @@ all landmark % moves and the two didactic CRPS values are from `assets/CAPTIONS.
 | "~50 resolved per horizon" (backtest) | 51/47/51 | BT `n_scores` (naive ref) |
 | "~24 per horizon" (protected eval) | 24/22/24 | EV `n_scores` |
 | naive floor h=1 eval CRPS 0.0093 | 0.009275 | EV `last_value_naive` h=1 |
-| "best method roughly halves that" | 0.004996 / 0.009275 ≈ 0.54× | EV lightgbm_cov h=1 vs naive |
+| "best method roughly halves that" | 0.004975 / 0.009275 ≈ 0.54× | EV lightgbm_cov h=1 vs naive |
 | plain LightGBM tops h=1 **backtest** at 0.0038 | 0.0038188 | BT `darts_lightgbm` h=1 (rank 1) |
-| LightGBM+cov takes h=1 eval at 0.00500 | 0.0049957 | EV `darts_lightgbm_cov` h=1 (rank 1) |
+| LightGBM+cov takes h=1 eval at 0.00497 | 0.0049747 (post calendar-fix refresh) | EV `darts_lightgbm_cov` h=1 (rank 1) |
 | flash-lite LLMP tied at 0.00501 | 0.0050115 | EV `llmp_quantile_grid_tsx_ws[gemini-3.1-flash-lite-preview]` h=1 (rank 2) |
 | plain LightGBM "middle of the pack" in eval | 0.0051603 (8th/16) | EV `darts_lightgbm` h=1 |
 | Sonnet-5 (thinking) tops h=5 and h=21 **backtest** | 0.0084581 / 0.0203576 | BT `llmp_...cov[claude-sonnet-5]` h=5, h=21 (rank 1 each) |
 | covariate panel members (BoC rate, CPI, unemployment, WTI, gold, USD/CAD, VIX, SPX) | 11 covariates | BT/EV `covariates` col on any `_cov` row |
 | fig5: market swung −4.8% to +5.3%/day; medians −0.83% to +1.37% | as stated | CAPTIONS fig5 |
-| classical methods "within a hair" at short horizon (eval) | ets 0.005211, autoarima 0.005217, kalman 0.005236 vs best 0.004996 | EV h=1 rows |
+| classical methods "within a hair" at short horizon (eval) | ets 0.005211, autoarima 0.005217, kalman 0.005236 vs best 0.004975 | EV h=1 rows |
 
 ## Claims I was tempted to make but could not source (and how I handled them)
 
@@ -41,7 +41,7 @@ all landmark % moves and the two didactic CRPS values are from `assets/CAPTIONS.
    *allowed* this one aside "if it earns it"; if comms wants zero unsourced numbers,
    cut the clause (see cut-list #1). Part 2's ~100× figure is for *agents*, not LLMP,
    so I did not borrow it here.
-2. **"Indistinguishable" for 0.00500 vs 0.00501.** Justified by magnitude, not a
+2. **"Indistinguishable" for 0.00497 vs 0.00501.** Justified by magnitude, not a
    significance test — we have no per-origin variance/CI artifact to cite, so I
    avoided any statistical-significance language and kept it to the plain-number
    comparison. If challenged, this is a descriptive claim, not an inferential one.

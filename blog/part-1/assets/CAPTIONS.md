@@ -53,10 +53,13 @@ Mean CRPS by predictor × horizon for the two weekly rolling-origin runs — 202
 backtest vs 2026 protected eval — as a rank heatmap. Cells are mean CRPS ×10⁻³;
 shading is the within-column rank (darker = better); rows are ordered by mean
 backtest rank so the eval columns visibly reshuffle it (the findable story: e.g.
-LightGBM leads the backtest but LLMP flash-lite and LightGBM +cov take h=1 in the
-protected window, and the classical/LLMP order scrambles at h=5/21). All 17
-predictors are recomputed from the store, including the news agent, which is
-absent from the eval `leaderboard.csv` but present in its prediction store.
+plain LightGBM tops the backtest at h=1 but LightGBM +cov takes the protected-eval
+h=1 at 0.00497 — roughly half the naive floor — with LLMP flash-lite a hair behind
+at 0.00501, and the classical/LLMP order scrambles at h=5/21). This is a Part-1
+figure: it shows only the numbers-only ladder (naive / classical / LightGBM) plus
+the LLM-Process rungs — **16 predictors** — and deliberately excludes the news and
+code agents, which are Part-2 material. Every cell is recomputed from the
+prediction store and reproduces `leaderboard.csv` exactly.
 **Data:** `data/predictions/tsx_ws_backtest_2025_weekly/` and
 `.../tsx_ws_eval_2026_weekly/`; leaderboards in the sibling `data/results/`.
 **n (origins resolved):** backtest h=1/5/21 = 51/47/51; eval = 24/22/24 (per
@@ -72,10 +75,11 @@ LLM-Process, with the landmark windows shaded. Every method’s error spikes at 
 same moments — the 2025 tariff crash dominates all three horizons, and the 2026
 war window lifts them again — because the cause of each regime break is exogenous
 to the series. **Data:** `data/predictions/tsx_ws_daily_2025_2026/`; CRPS per
-origin via `crps_ensemble`. **n:** ~365 resolved origins per model at h=1 (fewer
-at longer horizons as the last origins have not resolved). **Gap handled:**
-`darts_lightgbm_cov` is incomplete on the daily grid (h=1: 356 resolved, h=5:
-219, h=21: none) — it is drawn where present and simply absent at h=21.
+origin via `crps_ensemble`. **n:** all five methods now resolve across the full
+daily grid — ~365/365/364 origins at h=1/5/21 (the last few longest-horizon
+origins have not resolved). **Gap closed:** `darts_lightgbm_cov`, previously
+incomplete on the daily grid and absent at h=21, was backfilled in the refreshed
+store and is now drawn across all three horizons.
 
 ## fig5 — `fig5_quiet_vs_loud.png`
 
