@@ -119,7 +119,7 @@ def main() -> None:
     code_p = binomtest(code["wins"], code["n"], alternative="greater").pvalue
 
     fig, (axl, axr) = plt.subplots(
-        1, 2, figsize=(13.6, 6.4), gridspec_kw={"width_ratios": [1.0, 1.28], "wspace": 0.22},
+        1, 2, figsize=(13.0, 7.6), gridspec_kw={"width_ratios": [0.80, 1.30], "wspace": 0.78},
     )
 
     # ================= LEFT panel: grouped bars =============================
@@ -129,13 +129,13 @@ def main() -> None:
     agent_k = [war["agent"] * 1000, quiet["agent"] * 1000]
     tree_k = [war["tree"] * 1000, quiet["tree"] * 1000]
 
-    axl.bar(xg - bw / 2, agent_k, width=bw, color=C_AGENT, zorder=3, label="News agent (gemini-3.5)")
+    axl.bar(xg - bw / 2, agent_k, width=bw, color=C_AGENT, zorder=3, label="News agent")
     axl.bar(xg + bw / 2, tree_k, width=bw, color=C_TREE, zorder=3, label="LightGBM +cov")
     for x, v in zip(xg - bw / 2, agent_k):
-        axl.text(x, v + 0.25, f"{v:.2f}", ha="center", va="bottom", fontsize=9.0,
+        axl.text(x, v + 0.25, f"{v:.2f}", ha="center", va="bottom", fontsize=12.5,
                  fontweight="bold", color=C_AGENT)
     for x, v in zip(xg + bw / 2, tree_k):
-        axl.text(x, v + 0.25, f"{v:.2f}", ha="center", va="bottom", fontsize=9.0,
+        axl.text(x, v + 0.25, f"{v:.2f}", ha="center", va="bottom", fontsize=12.5,
                  fontweight="bold", color=C_TREE)
 
     # Delta annotations (agent vs tree), coloured by who wins.
@@ -143,32 +143,35 @@ def main() -> None:
         better = delta < 0  # agent lower CRPS = agent better
         col = C_UP if better else C_DOWN
         verb = "agent " + (f"{delta * 100:+.0f}%")
-        axl.annotate(verb, xy=(x, ytop), xytext=(x, ytop + 2.6), ha="center", va="bottom",
-                     fontsize=9.6, fontweight="bold", color=col,
+        axl.annotate(verb, xy=(x, ytop), xytext=(x, ytop + 2.9), ha="center", va="bottom",
+                     fontsize=13, fontweight="bold", color=col,
                      arrowprops=dict(arrowstyle="-", color=bd.INK["axis"], lw=0.8))
-        axl.text(x, ytop + 2.0, f"n = {n}", ha="center", va="bottom", fontsize=7.8,
+        axl.text(x, ytop + 2.2, f"n = {n}", ha="center", va="bottom", fontsize=11,
                  color=bd.INK["muted"])
 
     _delta_note(0, max(agent_k[0], tree_k[0]), war_delta, war["n"])
     _delta_note(1, max(agent_k[1], tree_k[1]), quiet_delta, quiet["n"])
 
     axl.set_xticks(xg)
-    axl.set_xticklabels(groups, fontsize=9.4)
+    axl.set_xticklabels(groups, fontsize=12.5)
     axl.tick_params(axis="x", length=0, pad=6)
     axl.set_ylim(0, 30)
-    axl.set_ylabel("Mean CRPS ×10⁻³  (h = 21, lower is better)", fontsize=9.4)
-    axl.tick_params(axis="y", labelsize=9)
+    axl.set_ylabel("Mean CRPS ×10⁻³  (h = 21, lower is better)", fontsize=13)
+    axl.tick_params(axis="y", labelsize=12)
     axl.grid(axis="x", visible=False)
     axl.margins(x=0.12)
-    axl.set_title("The agent earns its keep in the break — and gives it back in the calm",
-                  fontsize=11.6, fontweight="bold", loc="left", pad=20)
-    axl.text(0.0, 1.017, "News agent (gemini-3.5) vs LightGBM +cov, mean CRPS by regime",
-             transform=axl.transAxes, fontsize=8.8, color=bd.INK["muted"], ha="left", va="bottom")
-    axl.legend(loc="upper right", fontsize=8.6, handlelength=1.1, borderaxespad=0.4)
+    axl.set_title("The agent earns its keep in the break —\nand gives it back in the calm",
+                  fontsize=13.5, fontweight="bold", loc="left", pad=34, linespacing=1.2)
+    axl.text(0.0, 1.015, "News agent (gemini-3.5) vs LightGBM +cov, mean CRPS by regime",
+             transform=axl.transAxes, fontsize=11.5, color=bd.INK["muted"], ha="left", va="bottom")
+    axl.legend(loc="upper right", fontsize=12, handlelength=1.1,
+               bbox_to_anchor=(0.995, 0.99), borderaxespad=0.0)
 
     # ================= RIGHT panel: paired dumbbells =======================
     ny = len(dumbs)
-    axr.set_xlim(16.9, 21.9)
+    # Widen the x-window on the right so the outcome tags have clear margin and
+    # never clip; value labels are lifted well clear of the (large) markers.
+    axr.set_xlim(16.7, 23.4)
     axr.set_ylim(-0.7, ny - 0.3)
     axr.invert_yaxis()
 
@@ -183,82 +186,97 @@ def main() -> None:
         # connector with arrowhead pointing base -> arm (omitted when flat)
         if not flat:
             axr.annotate("", xy=(ax_, y), xytext=(bx, y),
-                         arrowprops=dict(arrowstyle="-|>", color=seg_col, lw=2.4,
-                                         shrinkA=6, shrinkB=6, mutation_scale=14), zorder=3)
+                         arrowprops=dict(arrowstyle="-|>", color=seg_col, lw=2.6,
+                                         shrinkA=7, shrinkB=7, mutation_scale=16), zorder=3)
         # base (frozen LLMP) marker
-        axr.plot(bx, y, marker="o", ms=9.5, color=C_LLMP, mec=bd.INK["surface"], mew=1.1, zorder=4)
+        axr.plot(bx, y, marker="o", ms=11, color=C_LLMP, mec=bd.INK["surface"], mew=1.1, zorder=4)
         # arm (agent) marker
-        axr.plot(ax_, y, marker="o", ms=11.5, color=C_AGENT, mec=bd.INK["surface"], mew=1.2, zorder=5)
+        axr.plot(ax_, y, marker="o", ms=13, color=C_AGENT, mec=bd.INK["surface"], mew=1.2, zorder=5)
 
         # arm label (left gutter) + base note
-        axr.text(-0.015, y - 0.17, d["alab"], transform=axr.get_yaxis_transform(),
-                 ha="right", va="center", fontsize=9.0, fontweight="bold", color=C_AGENT)
-        axr.text(-0.015, y + 0.19, f"from frozen {d['blab']}", transform=axr.get_yaxis_transform(),
-                 ha="right", va="center", fontsize=7.8, color=bd.INK["muted"])
+        axr.text(-0.015, y - 0.20, d["alab"], transform=axr.get_yaxis_transform(),
+                 ha="right", va="center", fontsize=12, fontweight="bold", color=C_AGENT)
+        axr.text(-0.015, y + 0.22, f"from frozen {d['blab']}", transform=axr.get_yaxis_transform(),
+                 ha="right", va="center", fontsize=10.5, color=bd.INK["muted"])
 
-        # value labels at each end (single centered label when flat/coincident)
+        # value labels, lifted clear of the markers; base above / arm below so a
+        # close pair never overlaps (single centred label when flat/coincident).
+        # When the two dots nearly coincide (adaptive rows, |Δ| ≲ 0.6 ×10⁻³), the
+        # stacked labels still merge, so split them outward on the dot line —
+        # each label on the far side of its own dot, away from the other.
+        close = (not flat) and abs(ax_ - bx) < 0.58
         if flat:
-            axr.text(ax_, y - 0.34, f"{ax_:.2f}", ha="center", va="bottom", fontsize=7.9,
+            axr.text(ax_, y - 0.42, f"{ax_:.2f}", ha="center", va="bottom", fontsize=11,
                      fontweight="bold", color=bd.INK["secondary"])
+        elif close:
+            pad = 0.14
+            if bx <= ax_:  # base is the left dot -> base label left, arm label right
+                axr.text(bx - pad, y, f"{bx:.2f}", ha="right", va="center", fontsize=11, color=C_LLMP)
+                axr.text(ax_ + pad, y, f"{ax_:.2f}", ha="left", va="center", fontsize=11,
+                         fontweight="bold", color=C_AGENT)
+            else:            # base is the right dot -> base label right, arm label left
+                axr.text(bx + pad, y, f"{bx:.2f}", ha="left", va="center", fontsize=11, color=C_LLMP)
+                axr.text(ax_ - pad, y, f"{ax_:.2f}", ha="right", va="center", fontsize=11,
+                         fontweight="bold", color=C_AGENT)
         else:
-            axr.text(bx, y - 0.34, f"{bx:.2f}", ha="center", va="bottom", fontsize=7.6, color=C_LLMP)
-            axr.text(ax_, y - 0.34, f"{ax_:.2f}", ha="center", va="bottom", fontsize=7.9,
+            axr.text(bx, y - 0.40, f"{bx:.2f}", ha="center", va="bottom", fontsize=11, color=C_LLMP)
+            axr.text(ax_, y + 0.40, f"{ax_:.2f}", ha="center", va="top", fontsize=11,
                      fontweight="bold", color=C_AGENT)
 
-        # outcome tag on the right
+        # outcome tag on the right (with right-margin padding so it never clips)
         if flat:
             tag, tcol = "flat", bd.INK["muted"]
         elif better:
             tag, tcol = f"agent {diff / d['base'] * 100:+.0f}%", C_UP
         else:
             tag, tcol = f"agent {diff / d['base'] * 100:+.0f}%", C_DOWN
-        axr.text(21.82, y, tag, ha="right", va="center", fontsize=8.8, fontweight="bold", color=tcol)
+        axr.text(23.25, y - 0.12, tag, ha="right", va="center", fontsize=12.5, fontweight="bold", color=tcol)
         if d["arm_id"] == CODE_SON:
-            axr.text(21.82, y + 0.30, f"{d['wins']}/{d['n']} origins · sign test p ≈ {code_p:.2f}",
-                     ha="right", va="center", fontsize=7.6, color=bd.INK["secondary"])
+            axr.text(23.25, y + 0.26, f"{d['wins']}/{d['n']} origins · sign test p ≈ {code_p:.2f}",
+                     ha="right", va="center", fontsize=10.5, color=bd.INK["secondary"])
 
     axr.set_yticks([])
-    axr.tick_params(axis="x", labelsize=9)
-    axr.set_xlabel("Mean CRPS ×10⁻³  (h = 21)", fontsize=9.4)
+    axr.tick_params(axis="x", labelsize=12)
+    axr.set_xlabel("Mean CRPS ×10⁻³  (h = 21)", fontsize=13)
     axr.grid(axis="y", visible=False)
     axr.grid(axis="x", visible=True, color=bd.INK["grid"], lw=0.6)
     axr.set_axisbelow(True)
     axr.spines["left"].set_visible(False)
-    axr.set_title("Does agency help the same model? Sometimes — once significantly.",
-                  fontsize=11.6, fontweight="bold", loc="left", pad=20)
-    axr.text(0.0, 1.017, "Frozen LLM-Process rung  to  agent on the same base model (h = 21 means)",
-             transform=axr.transAxes, fontsize=8.8, color=bd.INK["muted"], ha="left", va="bottom")
+    axr.set_title("Does agency help the same model?\nSometimes — once significantly.",
+                  fontsize=13.5, fontweight="bold", loc="left", pad=34, linespacing=1.2)
+    axr.text(0.0, 1.015, "Frozen LLM-Process rung  to  agent on the same base model (h = 21 means)",
+             transform=axr.transAxes, fontsize=11.5, color=bd.INK["muted"], ha="left", va="bottom")
 
     handles = [
-        Line2D([0], [0], marker="o", ls="none", ms=9, color=C_LLMP, mec=bd.INK["surface"],
+        Line2D([0], [0], marker="o", ls="none", ms=10, color=C_LLMP, mec=bd.INK["surface"],
                mew=1.0, label="frozen LLM-Process"),
-        Line2D([0], [0], marker="o", ls="none", ms=10, color=C_AGENT, mec=bd.INK["surface"],
+        Line2D([0], [0], marker="o", ls="none", ms=11, color=C_AGENT, mec=bd.INK["surface"],
                mew=1.0, label="agent"),
-        Line2D([0], [0], color=C_UP, lw=2.4, label="agent better"),
-        Line2D([0], [0], color=C_DOWN, lw=2.4, label="agent worse"),
+        Line2D([0], [0], color=C_UP, lw=2.6, label="agent better"),
+        Line2D([0], [0], color=C_DOWN, lw=2.6, label="agent worse"),
     ]
-    axr.legend(handles=handles, loc="lower left", fontsize=8.0, ncol=1,
+    axr.legend(handles=handles, loc="lower left", fontsize=11, ncol=1,
                frameon=False, handletextpad=0.4, columnspacing=1.2, borderaxespad=0.3,
                bbox_to_anchor=(0.01, 0.02))
 
     # caveat, tucked below the right-panel title
-    axr.text(0.0, 0.965, "n ≤ 24 origins; one regime event in the window.",
-             transform=axr.transAxes, ha="left", va="bottom", fontsize=7.8,
+    axr.text(0.0, 0.972, "n ≤ 24 origins; one regime event in the window.",
+             transform=axr.transAxes, ha="left", va="bottom", fontsize=10.5,
              color=bd.INK["muted"], style="italic")
 
     fig.text(
-        0.008, 0.012,
-        "Source: predictions/tsx_ws_eval_2026_weekly/, tsx_logret_21b. Per-origin CRPS via properscoring.crps_ensemble on the sorted 11-point quantile grid\n"
-        "vs the realised value, resolved origins only. LEFT: news agent gemini-3.5-flash vs darts_lightgbm_cov over the 24 common resolved origins, split\n"
-        "war-window (as_of 2026-02-09..04-13, n=10) vs quiet (n=14). RIGHT: frozen LLM-Process rung to agent on the same base model, leaderboard h=21 means;\n"
-        "code-agent win count and one-sided sign test recomputed per origin. Caveat: the war/quiet split is one regime event sampled weekly, not ten\n"
-        "independent breaks; dumbbells are horizon-mean deltas.",
-        ha="left", va="bottom", fontsize=6.8, color=bd.INK["muted"], linespacing=1.5,
+        0.012, 0.01,
+        "Source: predictions/tsx_ws_eval_2026_weekly/, tsx_logret_21b. Per-origin CRPS via properscoring.crps_ensemble on the sorted 11-point quantile\n"
+        "grid vs the realised value, resolved origins only. LEFT: news agent gemini-3.5-flash vs darts_lightgbm_cov over the 24 common resolved origins,\n"
+        "split war-window (as_of 2026-02-09..04-13, n=10) vs quiet (n=14). RIGHT: frozen LLM-Process rung to agent on the same base model, leaderboard\n"
+        "h=21 means; code-agent win count and one-sided sign test recomputed per origin. Caveat: the war/quiet split is one regime event sampled\n"
+        "weekly, not ten independent breaks; dumbbells are horizon-mean deltas.",
+        ha="left", va="bottom", fontsize=10, color=bd.INK["muted"], linespacing=1.45,
     )
 
-    fig.subplots_adjust(left=0.075, right=0.985, top=0.86, bottom=0.23, wspace=0.42)
+    fig.subplots_adjust(left=0.07, right=0.98, top=0.80, bottom=0.235, wspace=0.78)
     out = Path(__file__).resolve().parent / "fig6_where_agents_earn.png"
-    fig.savefig(out, dpi=220, bbox_inches="tight", facecolor=bd.INK["surface"])
+    fig.savefig(out, dpi=150, bbox_inches="tight", facecolor=bd.INK["surface"])
     print(f"wrote {out}")
     print(f"WAR   (n={war['n']}): agent={war['agent']:.7f}  tree={war['tree']:.7f}  agent delta={war_delta * 100:+.1f}%")
     print(f"QUIET (n={quiet['n']}): agent={quiet['agent']:.7f}  tree={quiet['tree']:.7f}  agent delta={quiet_delta * 100:+.1f}%")

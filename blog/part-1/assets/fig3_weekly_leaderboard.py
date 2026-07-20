@@ -178,7 +178,7 @@ def main() -> None:
         0.005,
         "Mean CRPS ×10⁻³ (lower = better); shading = within-column rank (darker = better). "
         "Recomputed from the prediction store with properscoring.crps_ensemble (reproduces "
-        "leaderboard.csv). 'n/a' = one degenerate origin gave a non-finite score.",
+        "leaderboard.csv).",
         fontsize=7.5,
         color=bd.INK["muted"],
         ha="center",

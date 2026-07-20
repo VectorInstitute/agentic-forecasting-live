@@ -132,7 +132,7 @@ def main() -> None:
     _check_anchors(frames)
 
     fig, axes = plt.subplots(
-        1, 3, figsize=(15.4, 8.9), gridspec_kw={"wspace": 0.62},
+        1, 3, figsize=(12.5, 12.4), gridspec_kw={"wspace": 1.0},
     )
 
     n = 21
@@ -154,85 +154,86 @@ def main() -> None:
             # Faint leader line across the row.
             ax.plot([xmin, cap], [y, y], color=bd.INK["grid"], lw=0.6, zorder=1)
 
-            # Left-side rank + label (label coloured for agents).
+            # Left-side rank + label (label coloured for agents). The rank keeps a
+            # fixed column just left of the panel; the label's right margin is set
+            # well clear of it so single- and two-digit ranks never touch the text.
             lab_color = bd.CAT["orange"] if is_agent else bd.INK["primary"]
             weight = "bold" if is_agent else "normal"
-            ax.text(-0.012, y, f"{rank + 1:>2}", transform=ax.get_yaxis_transform(),
-                    ha="right", va="center", fontsize=8.0, color=bd.INK["muted"])
-            ax.text(-0.055, y, row["label"], transform=ax.get_yaxis_transform(),
-                    ha="right", va="center", fontsize=8.9, color=lab_color, fontweight=weight)
+            ax.text(-0.022, y, f"{rank + 1:>2}", transform=ax.get_yaxis_transform(),
+                    ha="right", va="center", fontsize=11, color=bd.INK["muted"])
+            ax.text(-0.125, y, row["label"], transform=ax.get_yaxis_transform(),
+                    ha="right", va="center", fontsize=13, color=lab_color, fontweight=weight)
 
             if off:
                 # Off-scale floor: chevron at the right edge + true value.
-                ax.plot(cap - 0.012 * (cap - xmin), y, marker=">", ms=7.5,
+                ax.plot(cap - 0.012 * (cap - xmin), y, marker=">", ms=9,
                         color=color, mec="none", zorder=4, clip_on=False)
-                ax.annotate(f"{v:.2f}", xy=(cap, y), xytext=(-4, 0),
+                ax.annotate(f"{v:.2f}", xy=(cap, y), xytext=(-5, 0),
                             textcoords="offset points", ha="right", va="center",
-                            fontsize=8.0, color=color, fontweight="bold")
+                            fontsize=11, color=color, fontweight="bold")
             else:
-                ms = 10.5 if is_agent else 7.6
+                ms = 12 if is_agent else 8.6
                 z = 6 if is_agent else 5
                 if is_agent:  # halo ring behind agent dots
-                    ax.plot(v, y, marker="o", ms=ms + 5.5, mfc="none",
-                            mec=bd.CAT["orange"], mew=1.1, alpha=0.55, zorder=z - 1)
+                    ax.plot(v, y, marker="o", ms=ms + 6.5, mfc="none",
+                            mec=bd.CAT["orange"], mew=1.3, alpha=0.55, zorder=z - 1)
                 ax.plot(v, y, marker="o", ms=ms, color=color, mec=bd.INK["surface"],
-                        mew=1.1 if is_agent else 0.8, zorder=z)
+                        mew=1.2 if is_agent else 0.9, zorder=z)
                 # Value label just right of the dot.
-                dx = 0.024 * (cap - xmin)
+                dx = 0.028 * (cap - xmin)
                 ax.text(v + dx, y, f"{v:.2f}", ha="left", va="center",
-                        fontsize=7.6, color=bd.INK["secondary"])
+                        fontsize=12, color=bd.INK["secondary"])
 
         ax.set_yticks([])
-        ax.tick_params(axis="x", labelsize=8.4, length=3)
+        ax.tick_params(axis="x", labelsize=12.5, length=3)
         ax.grid(axis="y", visible=False)
         ax.grid(axis="x", visible=True, color=bd.INK["grid"], lw=0.6)
         ax.set_axisbelow(True)
         for s in ("left",):
             ax.spines[s].set_visible(False)
-        ax.set_xlabel("Mean CRPS  ×10⁻³   (lower is better)", fontsize=8.8)
-        ax.set_title(f"h = {h}", fontsize=13.5, fontweight="bold", loc="left", pad=8)
+        ax.set_xlabel("Mean CRPS  ×10⁻³   (lower is better)", fontsize=12.5)
+        ax.set_title(f"h = {h}", fontsize=15, fontweight="bold", loc="left", pad=8)
         # small note when floors are clipped off the right
         floors = sub[sub["crps_k"] > cap]
         if len(floors):
             names = ", ".join(f"{r.label} {r.crps_k:.1f}" for _, r in floors.iterrows())
-            ax.text(1.0, 1.008, f"off scale:  {names}", transform=ax.transAxes,
-                    ha="right", va="bottom", fontsize=7.0, color=bd.INK["muted"])
+            ax.text(1.0, 1.028, f"off scale:  {names}", transform=ax.transAxes,
+                    ha="right", va="bottom", fontsize=11, color=bd.INK["muted"])
 
     # ---- Title + legend ----------------------------------------------------
     fig.suptitle("The protected-eval scoreboard: 21 methods, three horizons",
-                 x=0.062, y=0.985, ha="left", fontsize=17, fontweight="bold",
+                 x=0.085, y=0.980, ha="left", fontsize=20, fontweight="bold",
                  color=bd.INK["primary"])
-    fig.text(0.062, 0.947,
-             "Mean CRPS on the leak-safe 2026 S&P/TSX eval, ranked within each horizon. "
-             "No family owns every horizon — and the agents (orange) mix in with the leaders "
-             "at h=1 and h=21.",
-             ha="left", va="top", fontsize=9.6, color=bd.INK["secondary"])
+    fig.text(0.085, 0.958,
+             "Mean CRPS on the leak-safe 2026 S&P/TSX eval, ranked within each horizon. No family owns every\n"
+             "horizon — and the agents (orange) mix in with the leaders at h=1 and h=21.",
+             ha="left", va="top", fontsize=13, color=bd.INK["secondary"], linespacing=1.35)
 
     handles = [
-        Line2D([0], [0], marker="o", ls="none", ms=8, mec=bd.INK["surface"],
+        Line2D([0], [0], marker="o", ls="none", ms=10, mec=bd.INK["surface"],
                mew=0.8, color=FAMILY_COLOR[f], label=FAMILY_LABEL[f])
         for f in ("naive", "classical", "gbm", "llmp", "llmp_cov", "agent")
     ]
-    leg = fig.legend(handles=handles, loc="lower center", ncol=6, fontsize=8.8,
-                     frameon=False, bbox_to_anchor=(0.53, -0.006),
-                     handletextpad=0.35, columnspacing=1.4)
+    leg = fig.legend(handles=handles, loc="lower center", ncol=6, fontsize=13,
+                     frameon=False, bbox_to_anchor=(0.53, 0.085),
+                     handletextpad=0.4, columnspacing=1.6)
     for txt, f in zip(leg.get_texts(), ("naive", "classical", "gbm", "llmp", "llmp_cov", "agent")):
         if f == "agent":
             txt.set_color(bd.CAT["orange"])
             txt.set_fontweight("bold")
 
     fig.text(
-        0.062, 0.028,
-        "Source: results/tsx_ws_eval_2026_weekly/leaderboard.csv — mean CRPS per predictor × horizon "
-        "(21 rungs each; n_scores = 24 / 22 / 24 resolved weekly origins). Values ×10⁻³. Far-worse floors "
-        "(naive at every horizon; ETS at h=5 & h=21) are flagged off-scale at the right rather than compressing "
-        "the ladder. Family colours as Part-1 fig. 3; agents highlighted in orange.",
-        ha="left", va="top", fontsize=7.0, color=bd.INK["muted"],
+        0.085, 0.052,
+        "Source: results/tsx_ws_eval_2026_weekly/leaderboard.csv — mean CRPS per predictor × horizon (21 rungs each;\n"
+        "n_scores = 24 / 22 / 24 resolved weekly origins). Values ×10⁻³. Far-worse floors (naive at every horizon; ETS at\n"
+        "h=5 & h=21) are flagged off-scale at the right rather than compressing the ladder. Family colours as Part-1 fig. 3;\n"
+        "agents highlighted in orange.",
+        ha="left", va="top", fontsize=11, color=bd.INK["muted"], linespacing=1.4,
     )
 
-    fig.subplots_adjust(left=0.11, right=0.985, top=0.905, bottom=0.10)
+    fig.subplots_adjust(left=0.135, right=0.985, top=0.88, bottom=0.155, wspace=1.0)
     out = Path(__file__).resolve().parent / "fig5_combined_leaderboard.png"
-    fig.savefig(out, dpi=220, bbox_inches="tight", facecolor=bd.INK["surface"])
+    fig.savefig(out, dpi=150, bbox_inches="tight", facecolor=bd.INK["surface"])
     print(f"wrote {out}")
     for h in HS:
         print(f"--- h={h} ---")

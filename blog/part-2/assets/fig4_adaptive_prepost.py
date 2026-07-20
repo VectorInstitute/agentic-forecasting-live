@@ -99,76 +99,99 @@ def main() -> None:
     assert abs(tree21 - REF_TREE21) <= 1e-5, f"tree21: {tree21:.7f}"
 
     # ---- Figure ------------------------------------------------------------
-    fig, (ax, axc) = plt.subplots(
-        1, 2, figsize=(13.2, 6.7), gridspec_kw={"width_ratios": [1.42, 1.0], "wspace": 0.10},
-    )
+    # The three horizons live on very different CRPS scales (~5 / ~12 / ~18.5
+    # ×10⁻³), so a single shared axis cannot zoom. We give each horizon its own
+    # y-zoomed panel with a non-zero baseline (and a break cue) so the ~2%
+    # pre-vs-post difference reads as near-identical-but-visible, not as two
+    # identical bars. War-window means stay as open diamonds above each pair.
+    fig = plt.figure(figsize=(12.9, 7.9))
+    # Left three horizon panels and the right card are decoupled so the card can
+    # use nearly the full height while the panels leave room for their labels.
+    gs_left = fig.add_gridspec(1, 3, left=0.06, right=0.605, top=0.845, bottom=0.205, wspace=0.62)
+    axes_h = [fig.add_subplot(gs_left[i]) for i in range(3)]
+    axc = fig.add_axes([0.655, 0.075, 0.33, 0.86])
 
-    # ================= LEFT: paired pre/post bars ===========================
-    xs = np.arange(len(HS), dtype=float)
-    bw = 0.34
-    pre_k = [pre_m[h] * 1000 for h in HS]
-    post_k = [post_m[h] * 1000 for h in HS]
+    # Per-horizon zoomed y-window (×10⁻³): brackets the pre/post bars, the war
+    # markers, and (h=21) the LightGBM+cov reference, from a non-zero baseline.
+    YLIM = {1: (5.02, 5.52), 5: (11.55, 16.1), 21: (16.9, 25.4)}
+    bw = 0.62
+    xpre, xpost = 0.0, 1.0
 
-    ax.bar(xs - bw / 2, pre_k, width=bw, color=C_PRE, alpha=0.9, zorder=3, label="PRE — seed strategy")
-    ax.bar(xs + bw / 2, post_k, width=bw, color=C_POST, alpha=0.9, zorder=3, label="POST — trained strategy")
-    for x, v in zip(xs - bw / 2, pre_k):
-        ax.text(x, v + 0.3, f"{v:.2f}", ha="center", va="bottom", fontsize=8.4,
-                fontweight="bold", color=C_PRE)
-    for x, v in zip(xs + bw / 2, post_k):
-        ax.text(x, v + 0.3, f"{v:.2f}", ha="center", va="bottom", fontsize=8.4,
-                fontweight="bold", color=C_POST)
+    for ax, h in zip(axes_h, HS):
+        y0, y1 = YLIM[h]
+        rng = y1 - y0
+        pv, qv = pre_m[h] * 1000, post_m[h] * 1000
+        ax.bar(xpre, pv, width=bw, color=C_PRE, alpha=0.9, zorder=3)
+        ax.bar(xpost, qv, width=bw, color=C_POST, alpha=0.9, zorder=3)
+        ax.text(xpre, pv + rng * 0.015, f"{pv:.2f}", ha="center", va="bottom",
+                fontsize=12, fontweight="bold", color=C_PRE)
+        ax.text(xpost, qv + rng * 0.015, f"{qv:.2f}", ha="center", va="bottom",
+                fontsize=12, fontweight="bold", color=C_POST)
 
-    # War-window cut: open markers over h=5 and h=21 (means over origins in window).
-    for j, h in enumerate(HS):
-        if h not in warpre:
-            continue
-        ax.plot(xs[j] - bw / 2, warpre[h] * 1000, marker="D", ms=6.2, mfc=bd.INK["surface"],
-                mec=C_PRE, mew=1.5, zorder=5, clip_on=False)
-        ax.plot(xs[j] + bw / 2, warpost[h] * 1000, marker="D", ms=6.2, mfc=bd.INK["surface"],
-                mec=C_POST, mew=1.5, zorder=5, clip_on=False)
-    ax.annotate("war-window cut\n(2026-02-09 – 04-13)",
-                xy=(xs[2] + bw / 2, warpost[21] * 1000),
-                xytext=(xs[1] + 0.16, 26.3), fontsize=8.0, color=bd.INK["secondary"],
-                ha="center", va="top", linespacing=1.25,
-                arrowprops=dict(arrowstyle="-", color=bd.INK["axis"], lw=0.9))
+        # War-window cut markers (h=5, h=21).
+        if h in warpre:
+            ax.plot(xpre, warpre[h] * 1000, marker="D", ms=9, mfc=bd.INK["surface"],
+                    mec=C_PRE, mew=1.8, zorder=5, clip_on=False)
+            ax.plot(xpost, warpost[h] * 1000, marker="D", ms=9, mfc=bd.INK["surface"],
+                    mec=C_POST, mew=1.8, zorder=5, clip_on=False)
+            ax.text(0.5, (warpre[h] * 1000 + rng * 0.03), "war-window cut",
+                    ha="center", va="bottom", fontsize=11, color=bd.INK["secondary"])
 
-    # Reference line: darts_lightgbm_cov h=21 mean, for rank context (h=21 group only).
-    ax.plot([xs[2] - 0.52, xs[2] + 0.50], [tree21 * 1000, tree21 * 1000],
-            color=bd.CAT["aqua"], lw=1.2, ls=(0, (4, 3)), zorder=4)
-    ax.text(xs[2] - 0.40, tree21 * 1000 + 0.45, f"LightGBM+cov  ({tree21 * 1000:.1f})",
-            ha="right", va="bottom", fontsize=7.8, color=bd.CAT["aqua"])
+        # h=21: LightGBM+cov reference line for rank context. The label lives in
+        # the panel's clear upper region (bars top ~19, war markers ~24) so it
+        # never sits at the panel floor near the footnote.
+        if h == 21:
+            ax.axhline(tree21 * 1000, color=bd.CAT["aqua"], lw=1.6, ls=(0, (4, 3)), zorder=4)
+            ax.text(-0.66, y0 + rng * 0.66, f"LightGBM+cov ({tree21 * 1000:.1f})",
+                    ha="left", va="center", fontsize=10.5, color=bd.CAT["aqua"])
 
-    # Post-win counts under each horizon group.
-    for j, h in enumerate(HS):
-        ax.text(xs[j], -2.35, f"post wins {wins_of[h]}/{n_of[h]}", ha="center", va="top",
-                fontsize=8.6, color=bd.INK["secondary"], fontweight="bold")
+        ax.set_xlim(-0.72, 1.72)
+        ax.set_ylim(y0, y1)
+        ax.set_xticks([0.5])
+        ax.set_xticklabels([f"h = {h}"], fontsize=13, fontweight="bold")
+        ax.tick_params(axis="x", length=0, pad=10)
+        ax.tick_params(axis="y", labelsize=11.5)
+        ax.grid(axis="x", visible=False)
+        ax.grid(axis="y", visible=True, color=bd.INK["grid"], lw=0.6)
+        ax.set_axisbelow(True)
+        # Post-win count under each panel (below the h = N label).
+        ax.text(0.5, -0.105, f"post wins {wins_of[h]}/{n_of[h]}",
+                transform=ax.transAxes, ha="center", va="top",
+                fontsize=11.5, color=bd.INK["secondary"], fontweight="bold")
+        # Break cue: diagonal slashes at the non-zero baseline.
+        _bk = dict(transform=ax.transAxes, color=bd.INK["axis"], clip_on=False, lw=1.4)
+        ax.plot([-0.05, 0.05], [-0.012, 0.012], **_bk)
+        ax.plot([-0.05, 0.05], [0.016, 0.040], **_bk)
 
-    ax.set_xticks(xs)
-    ax.set_xticklabels([f"h = {h}" for h in HS], fontsize=10.5)
-    ax.tick_params(axis="x", length=0, pad=6)
-    ax.set_ylim(0, 27.5)
-    ax.set_ylabel("Mean CRPS ×10⁻³  (lower is better)")
-    ax.tick_params(axis="y", labelsize=9)
-    ax.grid(axis="x", visible=False)
-    ax.margins(x=0.06)
-    ax.set_title("One study session: nothing moved", fontsize=13.5,
-                 fontweight="bold", loc="left", pad=22)
-    ax.text(0.0, 1.018, "PRE vs POST mean CRPS on the protected 2026 eval  ·  "
-            "horizon-mean differences run both ways, all within noise (n ≤ 24)",
-            transform=ax.transAxes, fontsize=8.6, color=bd.INK["muted"],
-            ha="left", va="bottom")
-    ax.legend(loc="upper left", fontsize=8.8, handlelength=1.1,
-              bbox_to_anchor=(0.005, 0.965), borderaxespad=0)
+    axes_h[0].set_ylabel("Mean CRPS ×10⁻³  (lower is better)", fontsize=13)
+
+    # Legend (PRE / POST / war marker) + title/subtitle spanning the left block.
+    from matplotlib.patches import Patch  # noqa: E402
+    from matplotlib.lines import Line2D as _L2D  # noqa: E402
+    handles = [
+        Patch(facecolor=C_PRE, alpha=0.9, label="PRE — seed strategy"),
+        Patch(facecolor=C_POST, alpha=0.9, label="POST — trained strategy"),
+        _L2D([0], [0], marker="D", ls="none", mfc=bd.INK["surface"], mec=bd.INK["secondary"],
+             mew=1.6, ms=9, label="war-window mean"),
+    ]
+    axes_h[0].legend(handles=handles, loc="lower left", fontsize=11.5, handlelength=1.1,
+                     bbox_to_anchor=(-0.02, 1.02), ncol=3, frameon=False,
+                     columnspacing=1.4, handletextpad=0.5, borderaxespad=0)
+    fig.text(0.06, 0.958, "One study session: nothing moved", fontsize=18,
+             fontweight="bold", color=bd.INK["primary"], ha="left")
+    fig.text(0.06, 0.915,
+             "PRE vs POST mean CRPS, protected 2026 eval  ·  panels y-zoomed  ·  all within noise (n ≤ 24)",
+             fontsize=11.5, color=bd.INK["muted"], ha="left", va="top")
 
     # ================= RIGHT: strategy-file excerpt card ====================
     axc.set_xlim(0, 1)
     axc.set_ylim(0, 1)
     axc.axis("off")
 
-    axc.text(0.0, 0.985, "WHAT GRADUATED", fontsize=10.5, fontweight="bold",
+    axc.text(0.0, 0.998, "WHAT GRADUATED", fontsize=13, fontweight="bold",
              color=bd.INK["secondary"], ha="left", va="top")
-    axc.text(0.0, 0.945, "trained strategy file  ·  skill_state.yaml (condensed, faithful)",
-             fontsize=8.6, color=bd.INK["muted"], ha="left", va="top")
+    axc.text(0.0, 0.960, "trained strategy file  ·  skill_state.yaml (condensed, faithful)",
+             fontsize=11, color=bd.INK["muted"], ha="left", va="top")
 
     # (accent, kind_tag, tag_color, title, body)
     CARDS = [
@@ -189,7 +212,7 @@ def main() -> None:
          "epochs, so apply no day-of-week drift.  [hyp-009]"),
     ]
 
-    top, bot, gap = 0.905, 0.115, 0.030
+    top, bot, gap = 0.925, 0.150, 0.022
     n = len(CARDS)
     ch = (top - bot - (n - 1) * gap) / n
     for i, (accent, tag, tagc, title, body) in enumerate(CARDS):
@@ -199,38 +222,43 @@ def main() -> None:
         face = bd.INK["page"] if neg else bd.INK["surface"]
         axc.add_patch(plt.Rectangle((0.0, y0), 1.0, ch, facecolor=face,
                                     edgecolor=bd.INK["grid"], lw=1.0, zorder=1))
-        axc.add_patch(plt.Rectangle((0.0, y0), 0.008, ch, facecolor=accent, lw=0, zorder=2))
-        axc.text(0.030, y1 - 0.028, tag, ha="left", va="top", fontsize=7.8,
+        axc.add_patch(plt.Rectangle((0.0, y0), 0.010, ch, facecolor=accent, lw=0, zorder=2))
+        axc.text(0.036, y1 - 0.024, tag, ha="left", va="top", fontsize=10.5,
                  fontweight="bold", color=tagc)
-        axc.text(0.030, y1 - 0.072, title, ha="left", va="top", fontsize=11.4,
+        axc.text(0.036, y1 - 0.068, title, ha="left", va="top", fontsize=12.5,
                  fontweight="bold", color=bd.INK["primary"])
-        axc.text(0.030, y1 - 0.118, _wrap(body, 52), ha="left", va="top",
-                 fontsize=8.6, color=bd.INK["secondary"], linespacing=1.42)
+        axc.text(0.036, y1 - 0.112, _wrap(body, 46), ha="left", va="top",
+                 fontsize=10, color=bd.INK["secondary"], linespacing=1.34)
 
     # Footer label.
-    axc.add_patch(plt.Rectangle((0.0, 0.008), 1.0, 0.088, facecolor=bd.INK["page"],
+    axc.add_patch(plt.Rectangle((0.0, 0.020), 1.0, 0.098, facecolor=bd.INK["page"],
                                 edgecolor=bd.STATUS["warning"], lw=1.3, zorder=1))
-    axc.add_patch(plt.Rectangle((0.0, 0.008), 0.008, 0.088, facecolor=bd.STATUS["warning"],
+    axc.add_patch(plt.Rectangle((0.0, 0.020), 0.010, 0.098, facecolor=bd.STATUS["warning"],
                                 lw=0, zorder=2))
-    axc.text(0.030, 0.052,
+    axc.text(0.036, 0.069,
              _wrap("25 corrections graduated in one session — all confirmations "
-                   "same-session (see text).", 62),
-             ha="left", va="center", fontsize=8.8, color=bd.INK["secondary"],
-             linespacing=1.35)
+                   "same-session (see text).", 54),
+             ha="left", va="center", fontsize=10.5, color=bd.INK["secondary"],
+             linespacing=1.32)
 
-    fig.text(
-        0.058, 0.005,
+    # Footnote wrapped to the LEFT panel-block width only (x 0.06 .. ~0.60) so it
+    # never runs horizontally under the right-hand strategy cards / yellow box.
+    _foot = (
         "Source: predictions/tsx_ws_eval_2026_weekly/ — seed rung "
-        "agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous (PRE) vs "
-        "..._tsx_strategy_trained_... (POST), tsx_logret_{1b,5b,21b}. Per-origin CRPS via "
-        "properscoring.crps_ensemble on the sorted 11-point quantile grid vs the realised value "
-        "(_blogdata.realized), resolved origins only (n = 24 / 22 / 24). War-window cut = origins "
-        "2026-02-09 to 04-13. Card text condensed from adaptive/skills_tsx/tsx-strategy-trained/skill_state.yaml.",
-        fontsize=6.9, color=bd.INK["muted"], ha="left",
+        "agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous "
+        "(PRE) vs ..._tsx_strategy_trained_... (POST), tsx_logret_{1b,5b,21b}. Per-origin "
+        "CRPS via properscoring.crps_ensemble on the sorted 11-point quantile grid vs the "
+        "realised value (_blogdata.realized), resolved origins only (n = 24 / 22 / 24). "
+        "War-window cut = origins 2026-02-09 to 04-13. Card text condensed from "
+        "adaptive/skills_tsx/tsx-strategy-trained/skill_state.yaml."
+    )
+    fig.text(
+        0.06, 0.055, _wrap(_foot, 92),
+        fontsize=9.5, color=bd.INK["muted"], ha="left", va="top", linespacing=1.4,
     )
 
     out = Path(__file__).resolve().parent / "fig4_adaptive_prepost.png"
-    fig.savefig(out, dpi=220, bbox_inches="tight", facecolor=bd.INK["surface"])
+    fig.savefig(out, dpi=150, bbox_inches="tight", facecolor=bd.INK["surface"])
     print(f"wrote {out}")
     for h in HS:
         extra = ""

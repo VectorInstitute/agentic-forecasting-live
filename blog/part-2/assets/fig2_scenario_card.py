@@ -58,17 +58,17 @@ def main() -> None:
 
     # ---- Title -------------------------------------------------------------
     fig.text(0.012, 0.955, "One scenario write-up, graded against what happened",
-             fontsize=17, fontweight="bold", color=bd.INK["primary"], ha="left")
-    fig.text(0.012, 0.915,
+             fontsize=18, fontweight="bold", color=bd.INK["primary"], ha="left")
+    fig.text(0.012, 0.912,
              "S&P/TSX 60-business-day outlook  ·  scenario set issued 2026-03-31  ·  "
              "judged by Claude Sonnet-4.6 against realised returns",
-             fontsize=10.5, color=bd.INK["secondary"], ha="left")
+             fontsize=13, color=bd.INK["secondary"], ha="left")
 
     # ================= LEFT: scenario cards =================================
     lx0, lx1 = 0.012, 0.60
-    ax.text(lx0, 0.85, "SCENARIOS", fontsize=10.5, fontweight="bold",
+    ax.text(lx0, 0.85, "SCENARIOS", fontsize=13, fontweight="bold",
             color=bd.INK["secondary"], ha="left")
-    top, bot, gap = 0.83, 0.175, 0.028
+    top, bot, gap = 0.83, 0.205, 0.030
     n = len(SCENARIOS)
     card_h = (top - bot - (n - 1) * gap) / n
     for i, (name, prob, outlook, driver, is_base) in enumerate(SCENARIOS):
@@ -84,9 +84,9 @@ def main() -> None:
         # Probability block.
         px = lx0 + 0.045
         ax.text(px, y0 + card_h * 0.60, f"{prob:.2f}", ha="center", va="center",
-                fontsize=25, fontweight="bold", color=accent)
-        ax.text(px, y0 + card_h * 0.24, "probability", ha="center", va="center",
-                fontsize=7.6, color=bd.INK["muted"])
+                fontsize=27, fontweight="bold", color=accent)
+        ax.text(px, y0 + card_h * 0.22, "probability", ha="center", va="center",
+                fontsize=10, color=bd.INK["muted"])
         # Probability bar.
         bar_x0, bar_w = lx0 + 0.088, 0.055
         ax.add_patch(plt.Rectangle((bar_x0, y0 + card_h * 0.30), bar_w, card_h * 0.42,
@@ -97,14 +97,14 @@ def main() -> None:
         # Text block.
         tx = lx0 + 0.165
         ax.text(tx, y0 + card_h * 0.72, name, ha="left", va="center",
-                fontsize=12.2, fontweight="bold", color=bd.INK["primary"])
+                fontsize=13.5, fontweight="bold", color=bd.INK["primary"])
         if is_base:
             ax.text(lx1 - 0.012, y0 + card_h * 0.72, "BASE CASE", ha="right", va="center",
-                    fontsize=8.6, fontweight="bold", color=accent)
+                    fontsize=11, fontweight="bold", color=accent)
         ax.text(tx, y0 + card_h * 0.44, f"60-day outlook:  {outlook}", ha="left", va="center",
-                fontsize=10.4, color=bd.INK["secondary"])
+                fontsize=13, color=bd.INK["secondary"])
         ax.text(tx, y0 + card_h * 0.19, driver, ha="left", va="center",
-                fontsize=9.4, color=bd.INK["muted"])
+                fontsize=12, color=bd.INK["muted"])
 
     # ================= RIGHT: verdict + realised ============================
     rx0, rx1 = 0.635, 0.988
@@ -114,57 +114,58 @@ def main() -> None:
     ax.add_patch(plt.Rectangle((rx0, v_bot), rx1 - rx0, v_top - v_bot,
                                facecolor=bd.INK["surface"], edgecolor=bd.INK["grid"],
                                lw=1.0, zorder=1))
-    ax.text(rx0 + 0.018, v_top - 0.035, "JUDGE VERDICT", fontsize=10.5,
+    ax.text(rx0 + 0.018, v_top - 0.035, "JUDGE VERDICT", fontsize=13,
             fontweight="bold", color=bd.INK["secondary"], ha="left")
     rows_y = [v_top - 0.095, v_top - 0.170, v_top - 0.245]
     for (label, score, color), ry in zip(VERDICT, rows_y):
         ax.text(rx0 + 0.018, ry, label, ha="left", va="center",
-                fontsize=11, color=bd.INK["primary"])
+                fontsize=13, color=bd.INK["primary"])
         # 5 dots.
         dot_x0 = rx0 + 0.150
         for k in range(5):
             filled = k < score
-            ax.add_patch(plt.Circle((dot_x0 + k * 0.032, ry), 0.0092,
+            ax.add_patch(plt.Circle((dot_x0 + k * 0.030, ry), 0.0092,
                                     facecolor=color if filled else bd.INK["surface"],
                                     edgecolor=color if filled else bd.INK["grid"],
                                     lw=1.2, zorder=3))
-        ax.text(rx1 - 0.018, ry, f"{score}/5", ha="right", va="center",
-                fontsize=11, fontweight="bold", color=color)
+        ax.text(rx1 - 0.020, ry, f"{score}/5", ha="right", va="center",
+                fontsize=13, fontweight="bold", color=color)
 
     # ---- Realised panel ----
     a_top, a_bot = 0.515, 0.175
     ax.add_patch(plt.Rectangle((rx0, a_bot), rx1 - rx0, a_top - a_bot,
                                facecolor=bd.INK["surface"], edgecolor=bd.INK["grid"],
                                lw=1.0, zorder=1))
-    ax.text(rx0 + 0.018, a_top - 0.035, "REALISED  (from 2026-03-31)", fontsize=10.5,
+    ax.text(rx0 + 0.018, a_top - 0.035, "REALISED  (from 2026-03-31)", fontsize=13,
             fontweight="bold", color=bd.INK["secondary"], ha="left")
     ry_list = [a_top - 0.105, a_top - 0.190, a_top - 0.275]
     for (horizon, fdate, ret), ry in zip(REALISED, ry_list):
-        ax.text(rx0 + 0.018, ry + 0.016, horizon, ha="left", va="center",
-                fontsize=11, fontweight="bold", color=bd.INK["primary"])
-        ax.text(rx0 + 0.018, ry - 0.028, f"through {fdate}", ha="left", va="center",
-                fontsize=8.2, color=bd.INK["muted"])
-        ax.text(rx1 - 0.045, ry, ret, ha="right", va="center",
-                fontsize=15, fontweight="bold", color=bd.STATUS["good"])
-        ax.plot([rx1 - 0.026], [ry], marker="^", ms=9, color=bd.STATUS["good"],
+        ax.text(rx0 + 0.018, ry + 0.018, horizon, ha="left", va="center",
+                fontsize=13.5, fontweight="bold", color=bd.INK["primary"])
+        ax.text(rx0 + 0.018, ry - 0.030, f"through {fdate}", ha="left", va="center",
+                fontsize=11, color=bd.INK["muted"])
+        ax.text(rx1 - 0.050, ry, ret, ha="right", va="center",
+                fontsize=17, fontweight="bold", color=bd.STATUS["good"])
+        ax.plot([rx1 - 0.028], [ry], marker="^", ms=11, color=bd.STATUS["good"],
                 zorder=4, clip_on=False)
 
     # ================= Mechanism-mismatch banner ============================
-    ax.add_patch(plt.Rectangle((0.012, 0.028), 0.976, 0.108,
+    # Body wrapped to two lines with inner padding so no word touches the box edge.
+    ax.add_patch(plt.Rectangle((0.012, 0.020), 0.976, 0.150,
                                facecolor=bd.INK["page"], edgecolor=bd.STATUS["warning"],
                                lw=1.4, zorder=1))
-    ax.add_patch(plt.Rectangle((0.012, 0.028), 0.006, 0.108,
+    ax.add_patch(plt.Rectangle((0.012, 0.020), 0.006, 0.150,
                                facecolor=bd.STATUS["warning"], lw=0, zorder=2))
-    ax.text(0.030, 0.104, "Right call, wrong reason", fontsize=12.5, fontweight="bold",
+    ax.text(0.032, 0.143, "Right call, wrong reason", fontsize=15, fontweight="bold",
             color=bd.INK["primary"], ha="left", va="center")
-    ax.text(0.030, 0.060,
-            "Base-case mechanism — persistent Middle-East friction keeping oil bid — did not hold; "
-            "the rally came from a ceasefire relief bounce. Direction and magnitude landed "
-            "(calibration 5/5), but the causal chain did not (drivers 3/5).",
-            fontsize=9.7, color=bd.INK["secondary"], ha="left", va="center")
+    ax.text(0.032, 0.070,
+            "Base-case mechanism — persistent Middle-East friction keeping oil bid — did not hold; the rally\n"
+            "came from a ceasefire relief bounce. Direction and magnitude landed (calibration 5/5), but the\n"
+            "causal chain did not (drivers 3/5).",
+            fontsize=12, color=bd.INK["secondary"], ha="left", va="center", linespacing=1.5)
 
     out = _P1_ASSETS.parent.parent / "part-2" / "assets" / "fig2_scenario_card.png"
-    fig.savefig(out, dpi=220, bbox_inches="tight", facecolor=bd.INK["surface"])
+    fig.savefig(out, dpi=150, bbox_inches="tight", facecolor=bd.INK["surface"])
     print(f"wrote {out}")
 
 

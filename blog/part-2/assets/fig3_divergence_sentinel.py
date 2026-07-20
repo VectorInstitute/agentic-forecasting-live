@@ -95,34 +95,34 @@ def main() -> None:
     top4 = df.sort_values("D", ascending=False).head(4)
 
     fig, (ax, axb) = plt.subplots(
-        1, 2, figsize=(11.6, 4.3), gridspec_kw={"width_ratios": [2.3, 1.0], "wspace": 0.24},
+        1, 2, figsize=(12.6, 7.6), gridspec_kw={"width_ratios": [2.05, 1.0], "wspace": 0.30},
     )
 
     # ---- Main panel: D per origin -----------------------------------------
     ax.axvspan(WAR_START, WAR_END, color=bd.STATUS["critical"], alpha=0.09, lw=0, zorder=0)
     ax.text(WAR_START + (WAR_END - WAR_START) / 2, 0.0485, "2026 war window",
-            ha="center", va="top", fontsize=8.6, color=bd.STATUS["critical"], alpha=0.85)
+            ha="center", va="top", fontsize=12.5, color=bd.STATUS["critical"], alpha=0.85)
 
-    ax.plot(df.index, df["D"], color=C_ROUTER, lw=1.6, zorder=3,
-            marker="o", ms=3.4, mfc=C_ROUTER, mec="none")
-    ax.scatter(top4.index, top4["D"], s=64, facecolor="none",
-               edgecolor=bd.INK["primary"], lw=1.3, zorder=5)
+    ax.plot(df.index, df["D"], color=C_ROUTER, lw=1.8, zorder=3,
+            marker="o", ms=4.4, mfc=C_ROUTER, mec="none")
+    ax.scatter(top4.index, top4["D"], s=96, facecolor="none",
+               edgecolor=bd.INK["primary"], lw=1.5, zorder=5)
     ax.axhline(med, color=bd.INK["muted"], lw=1.0, ls=(0, (4, 3)), zorder=2)
     ax.text(df.index[-1], med - 0.0022, f"in-sample median threshold ({med:.3f})",
-            fontsize=8.2, color=bd.INK["muted"], ha="right", va="top", zorder=6,
+            fontsize=12, color=bd.INK["muted"], ha="right", va="top", zorder=6,
             bbox=dict(facecolor=bd.INK["surface"], edgecolor="none", pad=1.2))
 
-    ax.set_ylabel("Divergence D  (mean |Δq| across 11 quantiles)")
+    ax.set_ylabel("Divergence D  (mean |Δq| across 11 quantiles)", fontsize=13)
     ax.set_ylim(0, 0.050)
     ax.margins(x=0.03)
     ax.xaxis.set_major_locator(mdates.MonthLocator())
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%b\n%Y"))
-    ax.tick_params(labelsize=8.6)
+    ax.tick_params(labelsize=12)
     ax.set_title("When the agent and the tree disagree",
-                 fontsize=12.5, fontweight="bold", loc="left", pad=10)
+                 fontsize=18, fontweight="bold", loc="left", pad=10)
     ax.annotate("4 highest-D origins", xy=(top4.index[0], top4["D"].iloc[0]),
                 xytext=(pd.Timestamp("2026-04-20"), 0.042),
-                fontsize=8.6, color=bd.INK["secondary"],
+                fontsize=12, color=bd.INK["secondary"],
                 arrowprops=dict(arrowstyle="-", color=bd.INK["axis"], lw=0.9))
     # The one top-4 firing outside the war window: 2026-06-08, where the agent
     # priced a correction off the record high (sticky 3.2% CPI, Q05/Q95 widened
@@ -131,43 +131,54 @@ def main() -> None:
     ax.annotate("post-record-high\ncorrection priced",
                 xy=(jun8, float(df.loc[jun8, "D"])),
                 xytext=(pd.Timestamp("2026-05-12"), 0.0305),
-                fontsize=8.0, color=bd.INK["secondary"], ha="center",
+                fontsize=11.5, color=bd.INK["secondary"], ha="center",
                 linespacing=1.25,
                 arrowprops=dict(arrowstyle="-", color=bd.INK["axis"], lw=0.9))
 
     # ---- Side panel: three policy bars ------------------------------------
-    labels = ["Always\nLightGBM +cov", "Always\nnews agent", "Divergence-gated\nrouter"]
+    # The three means differ by only ~4%, so a zero-baseline axis would hide the
+    # router's win. We zoom the y-axis to start at 16.5 (×10⁻³) and draw an
+    # explicit broken-axis cue so the ordering reads honestly.
+    labels = ["Always\nLightGBM\n+cov", "Always\nnews\nagent", "Divergence-\ngated\nrouter"]
     vals = [bars["tree"], bars["agent"], bars["router"]]
     colors = [C_TREE, C_AGENT, C_ROUTER]
     xs = np.arange(3)
     vals_k = [v * 1000 for v in vals]
+    Y0 = 16.5  # zoomed baseline (×10⁻³)
     axb.bar(xs, vals_k, width=0.62, color=colors, zorder=3)
     for x, v in zip(xs, vals_k):
-        axb.text(x, v + 0.35, f"{v:.2f}", ha="center", va="bottom",
-                 fontsize=9.2, fontweight="bold", color=bd.INK["primary"])
+        axb.text(x, v + 0.022, f"{v:.2f}", ha="center", va="bottom",
+                 fontsize=12, fontweight="bold", color=bd.INK["primary"])
     axb.set_xticks(xs)
-    axb.set_xticklabels(labels, fontsize=8.2)
-    axb.set_ylim(0, 21.5)
-    axb.set_ylabel("Mean CRPS ×10⁻³  (h=21)")
-    axb.tick_params(axis="y", labelsize=8.6)
+    axb.set_xticklabels(labels, fontsize=11.5)
+    axb.set_ylim(Y0, 17.95)
+    axb.set_yticks([16.5, 17.0, 17.5])
+    axb.set_ylabel("Mean CRPS ×10⁻³  (h=21)", fontsize=13)
+    axb.tick_params(axis="y", labelsize=12)
     axb.grid(axis="x", visible=False)
+    # Broken-axis cue: diagonal slashes at the zoomed baseline + an explicit,
+    # in-plot label (kept off the crowded x-tick region below the bars).
+    _bk = dict(transform=axb.transAxes, color=bd.INK["axis"], clip_on=False, lw=1.4)
+    axb.plot([-0.045, 0.045], [-0.010, 0.010], **_bk)
+    axb.plot([-0.045, 0.045], [0.016, 0.036], **_bk)
     axb.set_title("Route on disagreement (in-sample)",
-                  fontsize=10.6, fontweight="bold", loc="left", pad=10)
-    axb.text(0.0, 1.005, "exploratory: n=24, in-sample median threshold",
-             transform=axb.transAxes, fontsize=7.6, color=bd.INK["muted"],
-             ha="left", va="bottom")
+                  fontsize=13, fontweight="bold", loc="left", pad=12)
+    axb.text(0.03, 0.965,
+             "exploratory: n=24, in-sample threshold\n"
+             "y-axis zoomed — starts at 16.5 ×10⁻³ (bars ≈4% span)",
+             transform=axb.transAxes, fontsize=10.5, color=bd.INK["muted"],
+             ha="left", va="top", style="italic", linespacing=1.3)
 
     fig.text(
-        0.125, -0.045,
-        "Source: predictions/tsx_ws_eval_2026_weekly/ (news agent gemini-3.5-flash vs darts_lightgbm_cov), "
-        "tsx_logret_21b, all resolved weekly origins 2026-01-05 to 2026-06-15 (n=24). D = mean absolute "
-        "difference between the two 11-point quantile grids; CRPS per origin via properscoring.crps_ensemble. "
-        "Values ×10⁻³ on bars. Shaded: 2026 war window (style as Part-1 fig. 4).",
-        fontsize=7.3, color=bd.INK["muted"], ha="left",
+        0.02, -0.02,
+        "Source: predictions/tsx_ws_eval_2026_weekly/ (news agent gemini-3.5-flash vs darts_lightgbm_cov), tsx_logret_21b, all resolved weekly\n"
+        "origins 2026-01-05 to 2026-06-15 (n=24). D = mean absolute difference between the two 11-point quantile grids; CRPS per origin via\n"
+        "properscoring.crps_ensemble. Values ×10⁻³ on bars. Shaded: 2026 war window (style as Part-1 fig. 4).",
+        fontsize=10, color=bd.INK["muted"], ha="left", linespacing=1.4,
     )
 
     out = Path(__file__).resolve().parent / "fig3_divergence_sentinel.png"
-    fig.savefig(out, dpi=220, bbox_inches="tight", facecolor=bd.INK["surface"])
+    fig.savefig(out, dpi=150, bbox_inches="tight", facecolor=bd.INK["surface"])
     print(f"wrote {out}")
     print(f"median D = {med:.6f}")
     print("top-4 D origins:")
