@@ -183,7 +183,8 @@ Everything so far is a purpose-built forecasting method. What happens if we hand
 the same task to a general LLM — no fine-tuning, no forecasting head, just the
 raw model?
 
-The technique is the LLM-Process (LLMP): serialize the return history — and,
+The technique is the LLM-Process (LLMP), introduced by [Requeima et al.
+(2024)](https://arxiv.org/abs/2405.12856): serialize the return history — and,
 optionally, the same covariate panel — into a text prompt, and ask the model to
 emit the full quantile grid directly, as numbers. We then score those quantiles
 with CRPS exactly like every other method. No special pleading: same origins,
@@ -222,3 +223,12 @@ That is the ceiling of numbers-only forecasting, and no rearrangement of the
 same inputs breaks through it. The next rung has to read. In Part 2, we give the
 forecaster the news — and then face the harder problem of how you trust one that
 does.
+
+---
+
+**Reference**
+
+Requeima, J., Bronskill, J., Choi, D., Turner, R. E., & Duvenaud, D. (2024).
+[LLM Processes: Numerical Predictive Distributions Conditioned on Natural
+Language](https://arxiv.org/abs/2405.12856). *Advances in Neural Information
+Processing Systems, 37*, 109609–109671.
