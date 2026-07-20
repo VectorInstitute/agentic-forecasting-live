@@ -51,7 +51,6 @@ def main() -> None:
         "shared median",
         xy=(MEDIAN, 0),
         xytext=(MEDIAN - 0.0015, 70),
-        fontsize=8.5,
         color=bd.INK["secondary"],
         ha="right",
     )
@@ -60,42 +59,31 @@ def main() -> None:
         f"realised\n{REALIZED:+.1%}",
         xy=(REALIZED, 0),
         xytext=(REALIZED + 0.0015, 95),
-        fontsize=9,
         fontweight="bold",
         color=bd.INK["primary"],
         ha="left",
         linespacing=1.3,
     )
 
-    ax.set_title(
-        "CRPS rewards a sharp forecast — when it is also right",
-        fontsize=13,
-        fontweight="bold",
-        pad=12,
-        loc="left",
-    )
+    bd.figure_title(ax, 3, "Sharp vs. wide forecast against one realised value")
     ax.set_xlabel("Next-day log return")
     ax.set_ylabel("Forecast density")
     ax.set_ylim(0, None)
     ax.set_yticks([])
     ax.xaxis.set_major_formatter(plt.matplotlib.ticker.PercentFormatter(xmax=1.0, decimals=0))
-    ax.legend(loc="upper left", fontsize=10, handlelength=1.6)
+    ax.legend(loc="upper left", handlelength=1.6)
     ax.margins(x=0)
-
-    fig.text(
-        0.125,
-        -0.01,
-        "Didactic / synthetic. CRPS is the integrated squared gap between the forecast CDF and the "
-        "step at the realised value; lower is better. Both forecasts share a median, so the sharper "
-        "one wins here only because it also placed its mass near what happened.",
-        fontsize=7.5,
-        color=bd.INK["muted"],
-        ha="left",
-        wrap=True,
-    )
 
     out = bd.savefig(fig, "fig2_crps_didactic.png")
     print(f"wrote {out}  (sharp={crps_sharp:.5f}, wide={crps_wide:.5f})")
+    print(
+        "CAPTION: Didactic, synthetic example at daily log-return scale. Both Gaussian forecasts "
+        f"share a {MEDIAN:.1%} median; the realised next-day return is {REALIZED:+.1%}. CRPS is the "
+        "integrated squared gap between the forecast CDF and the step at the realised value; lower "
+        f"is better. The sharp forecast scores {crps_sharp:.4f} vs. {crps_wide:.4f} for the wide "
+        "one — the sharper forecast wins here only because it also placed its mass near what "
+        "happened.",
+    )
 
 
 if __name__ == "__main__":

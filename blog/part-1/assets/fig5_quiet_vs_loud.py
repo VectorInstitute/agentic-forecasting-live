@@ -14,6 +14,7 @@ from __future__ import annotations
 import _blogdata as bd
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
+from matplotlib.patches import Patch
 
 
 SPEC = "tsx_ws_daily_2025_2026"
@@ -67,41 +68,31 @@ def main() -> None:
     r_lo, r_hi = realized.min() * 100, realized.max() * 100
     m_lo = min(m[0] for m in med_ranges) * 100
     m_hi = max(m[1] for m in med_ranges) * 100
-    ax.text(
-        0.015,
-        0.045,
-        f"Realised swung {r_lo:+.1f}% to {r_hi:+.1f}% a day; forecast medians stayed within {m_lo:+.2f}% to {m_hi:+.2f}%.",
-        transform=ax.transAxes,
-        fontsize=9,
-        color=bd.INK["secondary"],
-        ha="left",
-    )
 
-    ax.set_title(
-        "The market is loud; the forecasts are quiet",
-        fontsize=13,
-        fontweight="bold",
-        loc="left",
-        pad=10,
-    )
+    bd.figure_title(ax, 6, "Realised next-day returns vs. forecast medians (h = 1)")
     ax.set_ylabel("Next-day log return")
     ax.yaxis.set_major_formatter(plt.matplotlib.ticker.PercentFormatter(xmax=1.0, decimals=0))
     ax.xaxis.set_major_locator(mdates.MonthLocator())
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%b\n%Y"))
     ax.margins(x=0.01)
-    ax.legend(loc="lower right", fontsize=9)
-
-    fig.text(
-        0.125,
-        -0.01,
-        "Source: daily prediction store (tsx_ws_daily_2025_2026), h=1, aligned on the predicted day. "
-        "Shaded: 2025 tariff drawdown (red) and rebound (green).",
-        fontsize=7.5,
-        color=bd.INK["muted"],
-        ha="left",
-    )
+    handles, labels = ax.get_legend_handles_labels()
+    handles += [
+        Patch(facecolor=bd.STATUS["critical"], alpha=0.35, lw=0),
+        Patch(facecolor=bd.STATUS["good"], alpha=0.35, lw=0),
+    ]
+    labels += ["Drawdown", "Rebound"]
+    ax.legend(handles, labels, loc="lower right")
 
     out = bd.savefig(fig, "fig5_quiet_vs_loud.png")
+    print(
+        f"CAPTION: The realised next-day return swung between {r_lo:+.1f}% and {r_hi:+.1f}% over the "
+        f"window, while both forecast medians stayed within {m_lo:+.2f}% to {m_hi:+.2f}%.",
+    )
+    print(
+        "CAPTION: Median h = 1 forecasts vs. the realised next-day return, aligned on the predicted "
+        "day, from the daily prediction store (tsx_ws_daily_2025_2026). Shaded bands are the 2025 "
+        "tariff drawdown (red) and rebound (green).",
+    )
     print(f"wrote {out}  realised [{r_lo:.2f},{r_hi:.2f}]%  medians [{m_lo:.3f},{m_hi:.3f}]%")
 
 

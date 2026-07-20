@@ -53,9 +53,10 @@ hand it next.
 emitted quantile grid.](assets/fig1_agent_anatomy.png)
 
 ***Figure 1.** One forecast, end to end: the news analyst's six date-scoped
-searches (left), the load-bearing factors from its written rationale (center),
-and the quantile grid it emitted (right) — median +1%, deliberate negative skew,
-and the realized 21-day move of +5.1% landing essentially at its Q0.80.*
+searches (left, paraphrased), the load-bearing factors from its written
+rationale (center), and the 11-point quantile grid it emitted (right) — median
++1%, deliberate negative skew, and the realized 21-day move of +5.1% landing
+essentially at its Q0.80.*
 
 ## The same scoreboard
 
@@ -87,10 +88,11 @@ the lighter model) at third — ahead of every frozen LLMP on the board.
 highlighted.](assets/fig5_combined_leaderboard.png)
 
 ***Figure 2.** The complete protected-window scoreboard, every method family on
-one board. The guard changes at every horizon: trees at h=1, the LLM family
-sweeping h=5, trees back on top at h=21 with three agents in the top seven. Mean
-CRPS over 24 resolved weekly origins; the naive floor and ETS sit off-scale at
-h=5 and h=21.*
+one board, ranked within each horizon. The guard changes at every horizon:
+trees at h=1, the LLM family sweeping h=5, trees back on top at h=21 with three
+agents in the top seven. Mean CRPS ×10⁻³ over n = 24/22/24 resolved weekly
+origins at h = 1/5/21; chevrons hold the far-worse floors — the naive method
+everywhere, ETS at h=5 and h=21 — off-scale so the ladder stays legible.*
 
 Two wrinkles keep that story honest. The ranking is model-dependent — the same
 agent harness on a heavier model finishes mid-pack at h=21 — so "agents read
@@ -124,11 +126,12 @@ to build on.
 deltas at h=21.](assets/fig6_where_agents_earn.png)
 
 ***Figure 3.** Left: the news agent versus LightGBM-with-covariates at h=21,
-split into war-window and quiet origins — the average hides two opposite
-directions, though the break-window figure rests heavily on a single origin.
-Right: paired same-model deltas, frozen LLMP → agent, at h=21. The code agent's
-18-of-24 is the largest paired count in the study; the per-origin margins behind
-it are small enough that it does not clear a stricter test.*
+split into war-window (n = 10) and quiet (n = 14) origins — the average hides
+two opposite directions, though the break-window edge rests heavily on a single
+origin. Right: paired same-model deltas, frozen LLMP to agent, at h=21. The
+code agent's 18-of-24 is the largest paired count in the study; the per-origin
+margins behind it are small enough that it does not clear a stricter test. One
+regime event sampled weekly, not ten independent breaks.*
 
 One more signal hides in the comparison, and it may matter more than the
 ranks: *when the agent disagrees with the trees*. The gap between the two
@@ -164,22 +167,26 @@ yet.
 ![Prediction intervals over time: LightGBM's band stays nearly constant while the
 news agent's widens sharply through the war window.](assets/fig7_sentinel_bands.png)
 
-***Figure 4.** The sentinel, rolled out over time. Each band is a method's 10–90
-prediction interval for the 21-day return, origin by origin across the protected
-window, with the realized return overlaid and the war window shaded. LightGBM's
-band — built from trailing volatility — barely moves all half-year, spanning a
-1.7× range end to end. The agent's is both consistently wider (median 1.63× the
-tree's) and far more responsive, spanning a 3.5× range and peaking at 3.0× the
-tree's width at the war trough. Its median width inside the war window is not
-elevated relative to quiet weeks; what distinguishes the break is the spike.*
+***Figure 4.** The sentinel, rolled out over time. Each band is a method's
+10–90 prediction interval for the 21-day return, origin by origin across the
+protected window, with the realized return overlaid and the war-window origins
+shaded. LightGBM's band — built from trailing volatility — barely moves all
+half-year, its width varying only 1.7× min-to-max. The agent's varies 3.5×:
+consistently wider (1.63× the tree's at the median origin) and far more
+responsive, peaking at 3.0× the tree's width at the war trough. Its median
+width inside the war window is not elevated relative to quiet weeks; what
+distinguishes the break is the spike.*
 
 ![Agent-vs-tree divergence per origin across the protected window, war window
 shaded, with router-vs-baselines CRPS bars inset.](assets/fig3_divergence_sentinel.png)
 
-***Figure 5.** Divergence between the news agent's and LightGBM's quantile grids,
-origin by origin. The spikes are the war window; the inset compares always-tree,
-always-agent, and the divergence-gated router. Exploratory: 24 origins, and the
-router threshold is set in-sample.*
+***Figure 5.** Divergence between the news agent's and LightGBM's quantile
+grids, origin by origin; three of the four largest spikes bracket the war
+window, and the fourth (2026-06-08) is the agent pricing a post-record-high
+correction that never confirmed. Inset: mean h=21 CRPS of always-tree (17.18
+×10⁻³), always-agent (17.59), and the divergence-gated router (16.88) — note
+the zoomed axis starting at 16.5; the three means differ by only about 4%.
+Exploratory: 24 origins, and the router threshold is set in-sample.*
 
 One cost aside, said plainly: an agent forecast runs on the order of 100× the
 tokens of an LLMP call — tens to hundreds of thousands against a couple thousand —
@@ -243,9 +250,12 @@ the judge structurally can't — they are complements, not substitutes.
 ![The war-low scenario card: three weighted scenarios beside the judge's
 verdict and the realized returns.](assets/fig2_scenario_card.png)
 
-***Figure 6.** The war-low scenario set, graded against what happened: the 0.55
-base case called the direction and roughly the magnitude (calibration 5/5)
-through a mechanism that did not occur (drivers 3/5) — right call, wrong reason.*
+***Figure 6.** The war-low scenario set (issued 2026-03-31), graded against
+what happened: the 0.55 base case called the direction and roughly the
+magnitude — realized +3.65% at 21 days, +6.35% at 60 — earning calibration 5/5
+through a mechanism that did not occur (drivers 3/5). The base case bet on
+persistent Middle-East friction keeping oil bid; the rally came from the
+ceasefire relief instead. Right call, wrong reason.*
 
 ## The honest limit
 

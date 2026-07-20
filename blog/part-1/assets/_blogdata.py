@@ -257,6 +257,23 @@ INK = {
 STATUS = {"good": "#0ca30c", "warning": "#fab219", "critical": "#d03b3b"}
 
 
+# Font-size ladder for every blog figure. Sizes are points at the shared 220-dpi
+# render. ``small`` is the floor: no text on any figure may be smaller, and
+# savefig() enforces that. Tick/label/legend sizes are pushed into rcParams by
+# apply_style(), so scripts should not pass ``fontsize=`` to routine axis calls.
+FS = {
+    "title": 17,  # figure_title() — the one "Figure N." headline
+    "axtitle": 13,  # per-axes / panel headers
+    "label": 12,  # axis labels
+    "tick": 11,  # tick labels
+    "legend": 12,  # legend entries
+    "annot": 11,  # in-plot annotations (also the rc default font size)
+    "small": 10,  # the floor — nothing smaller may exist
+}
+
+DPI = 220
+
+
 def apply_style() -> None:
     """Apply the shared light-mode matplotlib rcParams (recessive chrome)."""
     import matplotlib as mpl
@@ -268,10 +285,14 @@ def apply_style() -> None:
             "savefig.facecolor": INK["surface"],
             "font.family": "sans-serif",
             "font.sans-serif": ["Helvetica Neue", "Helvetica", "Arial", "DejaVu Sans"],
+            "font.size": FS["annot"],
             "text.color": INK["primary"],
             "axes.edgecolor": INK["axis"],
             "axes.labelcolor": INK["secondary"],
             "axes.titlecolor": INK["primary"],
+            "axes.titlesize": FS["axtitle"],
+            "axes.labelsize": FS["label"],
+            "figure.titlesize": FS["title"],
             "axes.linewidth": 0.8,
             "axes.grid": True,
             "axes.axisbelow": True,
@@ -279,21 +300,128 @@ def apply_style() -> None:
             "grid.linewidth": 0.7,
             "xtick.color": INK["muted"],
             "ytick.color": INK["muted"],
+            "xtick.labelsize": FS["tick"],
+            "ytick.labelsize": FS["tick"],
             "xtick.labelcolor": INK["secondary"],
             "ytick.labelcolor": INK["secondary"],
             "axes.spines.top": False,
             "axes.spines.right": False,
             "legend.frameon": False,
-            "figure.dpi": 220,
-            "savefig.dpi": 220,
+            "legend.fontsize": FS["legend"],
+            "figure.dpi": DPI,
+            "savefig.dpi": DPI,
         },
     )
 
 
-def savefig(fig, name: str) -> Path:
-    """Save a figure PNG into the assets dir at >=200 dpi."""
-    out = ASSETS_DIR / name
-    fig.savefig(out, dpi=220, bbox_inches="tight")
+def figure_title(target, number: int, text: str, **kw):
+    """Draw the numbered headline — "Figure N.  Text" — on an Axes or a Figure.
+
+    The number burned into the PNG must match the caption number in post.md;
+    both parts' reading order is pinned in assets/CAPTIONS.md. Extra kwargs pass
+    through to ``set_title`` / ``suptitle`` (e.g. ``x=``, ``y=`` to align a
+    suptitle with the axes block).
+    """
+    from matplotlib.axes import Axes
+    from matplotlib.figure import Figure
+
+    label = f"Figure {number}.  {text}"
+    common = {"fontsize": FS["title"], "fontweight": "bold", "color": INK["primary"]}
+    if isinstance(target, Axes):
+        kw.setdefault("loc", "left")
+        kw.setdefault("pad", 10)
+        return target.set_title(label, **common, **kw)
+    if isinstance(target, Figure):
+        kw.setdefault("x", 0.01)
+        kw.setdefault("ha", "left")
+        return target.suptitle(label, **common, **kw)
+    raise TypeError(f"figure_title target must be an Axes or Figure, got {type(target)!r}")
+
+
+def _png_width_px(path: Path) -> int:
+    import struct
+
+    head = path.read_bytes()[:24]
+    if head[12:16] != b"IHDR":  # pragma: no cover - corrupt write
+        raise ValueError(f"{path.name}: not a valid PNG header")
+    return struct.unpack(">I", head[16:20])[0]
+
+
+def _figure_text_below_axes(fig) -> list[tuple[str, float]]:
+    """Figure-level Text artists sitting below the axes block (y < 0.10)."""
+    inv = fig.transFigure.inverted()
+    bad = []
+    for t in fig.texts:
+        s = t.get_text().strip()
+        if not s or not t.get_visible():
+            continue
+        _, fy = inv.transform(t.get_transform().transform(t.get_position()))
+        if fy < 0.10:
+            bad.append((s.replace("\n", " ")[:60], round(float(fy), 3)))
+    return bad
+
+
+def _undersized_texts(fig) -> list[tuple[str, float]]:
+    """Visible, non-empty Text artists below the FS['small'] floor."""
+    from matplotlib.text import Text
+
+    bad = []
+    for t in fig.findobj(Text):
+        s = t.get_text()
+        if not s or not s.strip() or not t.get_visible():
+            continue
+        size = float(t.get_fontsize())
+        if size < FS["small"] - 1e-6:
+            bad.append((s.strip().replace("\n", " ")[:50], size))
+    return bad
+
+
+def savefig(fig, name: str, out_dir: Path | None = None) -> Path:
+    """Save a figure PNG at the shared 220 dpi, enforcing the chrome-out contract.
+
+    Refuses to save when:
+
+    * any figure-level text sits below the axes block (y < 0.10 in figure
+      coords) — the footnote idiom. Footnotes belong in the markdown caption
+      and in assets/CAPTIONS.md, never on the PNG;
+    * any visible text is smaller than the ``FS['small']`` floor;
+    * after writing, the PNG is more than 2% wider than ``figsize`` × 220 dpi —
+      ``bbox_inches="tight"`` silently *expands* the canvas around over-wide
+      artists, which then shrinks the plot when the PNG is scaled into the page.
+
+    ``out_dir`` defaults to the calling script's own directory, so the one
+    helper serves both parts' asset folders.
+    """
+    if out_dir is None:
+        import inspect
+
+        out_dir = Path(inspect.stack()[1].filename).resolve().parent
+        if not out_dir.is_dir():  # e.g. interactive use
+            out_dir = ASSETS_DIR
+
+    low = _figure_text_below_axes(fig)
+    if low:
+        raise ValueError(
+            f"{name}: figure-level text below the axes block {low} — footnotes are "
+            "banned on rendered figures; move the text to the post caption/CAPTIONS.md",
+        )
+    small = _undersized_texts(fig)
+    if small:
+        raise ValueError(
+            f"{name}: text below the FS['small']={FS['small']}pt floor: {small}",
+        )
+
+    out = Path(out_dir) / name
+    fig.savefig(out, dpi=DPI, bbox_inches="tight")
+
+    width_px = _png_width_px(out)
+    nominal = fig.get_figwidth() * DPI
+    if width_px / nominal > 1.02:
+        raise ValueError(
+            f"{name}: saved width {width_px}px is {width_px / nominal:.1%} of the "
+            f"nominal {nominal:.0f}px ({fig.get_figwidth()}in × {DPI}dpi) — an "
+            "over-wide artist is inflating the tight bbox; wrap or shrink it",
+        )
     return out
 
 

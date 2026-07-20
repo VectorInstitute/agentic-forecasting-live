@@ -94,11 +94,12 @@ probabilistic and point forecasts sit on one scale.
 ![Two forecast distributions with the same median facing a realized +0.4% move;
 the sharp one scores lower.](assets/fig2_crps_didactic.png)
 
-***Figure 3.** The trade-off made concrete. Two forecasts share a median of 0%,
-facing a realized move of +0.4%. The sharp forecast (σ = 0.4%) scores CRPS
-0.0024; the wide one (σ = 1.2%) scores 0.0033. Sharpness wins — but only because
-the sharp forecast also placed its mass near what happened. Had the outcome been
-a 3% crash, the sharp forecast is the one that gets punished.*
+***Figure 3.** The trade-off made concrete, in a synthetic example at daily
+log-return scale. Two Gaussian forecasts share a median of 0%, facing a realized
+move of +0.4%. The sharp forecast (σ = 0.4%) scores CRPS 0.0024; the wide one
+(σ = 1.2%) scores 0.0033. Sharpness wins — but only because the sharp forecast
+also placed its mass near what happened. Had the outcome been a 3% crash, the
+sharp forecast is the one that gets punished.*
 
 With a referee in hand, the evaluation skeleton is one sentence, repeated for
 every method: define the task (log return at horizon *h*), fix an origin date
@@ -169,9 +170,11 @@ still belongs on the numbers-only ladder.
 ![Rank heatmap of mean CRPS by method and horizon, 2025 backtest beside the
 protected 2026 eval.](assets/fig3_weekly_leaderboard.png)
 
-***Figure 4.** The scoreboard: mean CRPS by method and horizon, backtest beside
-protected eval, shaded by rank within each column so the eval visibly reshuffles
-the backtest order.*
+***Figure 4.** The scoreboard: mean CRPS ×10⁻³ by method and horizon, the 2025
+backtest beside the protected 2026 eval, cells shaded by within-column rank
+(darker is better) and rows ordered by backtest rank — so the eval columns
+visibly reshuffle the backtest order. Every cell is recomputed from the
+persisted prediction store and reproduces the released leaderboards exactly.*
 
 In the 2025 backtest, plain LightGBM tops the h=1 column at CRPS 0.0038. In the
 protected 2026 window that lead does not survive: LightGBM-with-covariates takes
@@ -199,8 +202,10 @@ But the ranking is only half the story.
 ![Per-origin CRPS day by day across 2025–26 at all three horizons; every
 method's error spikes at the same landmark windows.](assets/fig4_daily_crps_landmarks.png)
 
-***Figure 5.** Per-origin CRPS day by day across the full 2025–26 stretch, at all
-three horizons, with the landmark windows shaded.*
+***Figure 5.** Per-origin CRPS day by day across the full 2025–26 stretch, at
+all three horizons, with the landmark windows shaded (red drawdowns, green
+rebounds — identities as in Figure 2). All five methods resolve across the full
+daily grid, roughly 365 origins per horizon.*
 
 Every method's error spikes at the same moments — the 2025 tariff crash lifts all
 three horizons at once, the 2026 war window lifts them again — because the cause

@@ -131,38 +131,19 @@ def main() -> None:
             mec=bd.INK["surface"], mew=0.8, zorder=7)
     ax.axhline(0.0, color=bd.INK["axis"], lw=0.9, alpha=0.7, zorder=1)
 
-    # Peak-ratio callout at the war trough.
-    px = peak_origin.to_pydatetime()
-    ptop = float(agent.loc[peak_origin, "hi"]) * pct
-    # Two stacked lines: headline above, context line below it, both clear of
-    # the band top (va anchors chosen so the pair can never overlap).
-    ax.annotate(
-        f"{peak_ratio:.1f}× the tree's width",
-        xy=(px, ptop), xytext=(px, ptop + 7.2),
-        ha="center", va="bottom", fontsize=13, fontweight="bold", color=C_AGENT,
-        arrowprops=dict(arrowstyle="-", color=C_AGENT, lw=1.2, shrinkB=3),
-        zorder=8,
-    )
-    ax.text(px, ptop + 6.9, f"war trough · origin {peak_origin:%Y-%m-%d}",
-            ha="center", va="top", fontsize=12, color=bd.INK["muted"], zorder=8)
-
     ax.set_xlim(origins.min() - pd.Timedelta(days=7), origins.max() + pd.Timedelta(days=7))
-    ax.set_ylim(-13.5, 21.5)
+    ax.set_ylim(-13.5, 16.5)
     ax.xaxis.set_major_locator(mdates.MonthLocator())
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%b\n%Y"))
-    ax.tick_params(axis="both", labelsize=12)
-    ax.set_xlabel("Forecast origin (weekly, 2026)", fontsize=13.5)
-    ax.set_ylabel("21-day log return  (%)", fontsize=13.5)
+    ax.set_xlabel("Forecast origin (weekly, 2026)")
+    ax.set_ylabel("21-day log return  (%)")
     ax.grid(axis="x", visible=False)
     ax.set_axisbelow(False)
-    ax.set_title(
-        "Figure 4. The tree's uncertainty barely moves; the agent's runs wider — and spikes at the trough",
-        fontsize=17.5, fontweight="bold", loc="left", pad=14,
-    )
+    bd.figure_title(ax, 4, "10–90 forecast bands vs the realized 21-day return")
 
     handles = [
         Patch(facecolor=C_AGENT, alpha=0.30, edgecolor=C_AGENT, lw=1.6,
-              label=f"News agent 10–90 interval (median {median_ratio:.2f}× the tree's)"),
+              label="News agent 10–90 interval"),
         Patch(facecolor=C_TREE, alpha=0.38, edgecolor=C_TREE, lw=1.6,
               label="LightGBM +cov 10–90 interval"),
         Line2D([0], [0], color=bd.INK["primary"], lw=1.9, marker="o", ms=5,
@@ -170,19 +151,36 @@ def main() -> None:
         Patch(facecolor=bd.INK["grid"], alpha=0.55, lw=0,
               label="War window (origins 2026-02-09 – 04-13)"),
     ]
-    ax.legend(handles=handles, loc="upper left", fontsize=12, frameon=True,
+    ax.legend(handles=handles, loc="upper left", frameon=True,
               framealpha=0.92, edgecolor=bd.INK["grid"], handlelength=1.5,
               borderaxespad=0.5, labelspacing=0.45)
 
     fig.tight_layout()
-    out = Path(__file__).resolve().parent / "fig7_sentinel_bands.png"
-    fig.savefig(out, dpi=220, bbox_inches="tight", facecolor=bd.INK["surface"])
+    out = bd.savefig(fig, "fig7_sentinel_bands.png")
     print(f"wrote {out}")
+    span_agent = float(w_agent.max() / w_agent.min())
+    span_tree = float(w_tree.max() / w_tree.min())
     print(f"n origins            = {len(origins)}  ({origins.min():%Y-%m-%d} .. {origins.max():%Y-%m-%d})")
     print(f"median width ratio   = {median_ratio:.4f}")
     print(f"peak   width ratio   = {peak_ratio:.4f}  at origin {peak_origin:%Y-%m-%d}")
     print(f"agent 10-90 width    : {w_agent.min():.4f} .. {w_agent.max():.4f}")
     print(f"tree  10-90 width    : {w_tree.min():.4f} .. {w_tree.max():.4f}")
+    print(
+        f"CAPTION: Both bands are 10–90 prediction intervals for the 21-day TSX log return, "
+        f"drawn per forecast origin over the {len(origins)} common resolved weekly origins "
+        f"({origins.min():%Y-%m-%d} – {origins.max():%Y-%m-%d}); the shaded strip marks the war-window "
+        f"origins ({WAR_START:%Y-%m-%d} – {WAR_END:%m-%d})."
+    )
+    print(
+        f"CAPTION: Over the half-year the tree's band width varies only {span_tree:.1f}× "
+        f"min-to-max while the agent's varies {span_agent:.1f}×; the agent's 10–90 band runs "
+        f"{median_ratio:.2f}× the tree's width at the median origin and peaks at {peak_ratio:.1f}× "
+        f"at the war-trough origin ({peak_origin:%Y-%m-%d})."
+    )
+    print(
+        "CAPTION: Bands are read off the persisted 11-point quantile grids "
+        "(q0.1–q0.9, sorted grid); source predictions/tsx_ws_eval_2026_weekly/, tsx_logret_21b."
+    )
 
 
 if __name__ == "__main__":

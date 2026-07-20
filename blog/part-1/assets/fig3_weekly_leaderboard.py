@@ -115,35 +115,35 @@ def main() -> None:
                 txt,
                 ha="center",
                 va="center",
-                fontsize=9.2,
+                fontsize=bd.FS["small"],
                 color="#ffffff" if frac < 0.45 else bd.INK["primary"],
                 fontweight="bold" if rank <= 3 else "normal",
             )
         # Row label + family swatch.
         _, label, family = MODELS[i]
         ax.add_patch(plt.Rectangle((-0.24, y + 0.3), 0.12, 0.4, facecolor=FAMILY_COLOR[family], lw=0))
-        ax.text(-0.34, y + 0.5, label, ha="right", va="center", fontsize=9.3, color=bd.INK["primary"])
+        ax.text(-0.34, y + 0.5, label, ha="right", va="center", color=bd.INK["primary"])
 
     # Column headers (two grouped windows).
     for j, cl in enumerate(COL_LABELS):
-        ax.text(j + 0.5, n_models + 0.1, cl, ha="center", va="bottom", fontsize=9.8, color=bd.INK["secondary"])
+        ax.text(j + 0.5, n_models + 0.1, cl, ha="center", va="bottom", color=bd.INK["secondary"])
     ax.text(
         1.5,
-        n_models + 0.85,
+        n_models + 0.75,
         SPECS[0][1],
         ha="center",
         va="bottom",
-        fontsize=11.5,
+        fontsize=bd.FS["axtitle"],
         fontweight="bold",
         color=bd.INK["primary"],
     )
     ax.text(
         4.5,
-        n_models + 0.85,
+        n_models + 0.75,
         SPECS[1][1],
         ha="center",
         va="bottom",
-        fontsize=11.5,
+        fontsize=bd.FS["axtitle"],
         fontweight="bold",
         color=bd.INK["primary"],
     )
@@ -157,35 +157,41 @@ def main() -> None:
     ypos = [-1.15, -1.75, -2.35, -1.15, -1.75, -2.35]
     for f, xp, yp in zip(fams, xpos, ypos):
         ax.add_patch(plt.Rectangle((xp, yp), 0.16, 0.4, facecolor=FAMILY_COLOR[f], lw=0))
-        ax.text(xp + 0.28, yp + 0.2, FAMILY_LABEL[f], ha="left", va="center", fontsize=9, color=bd.INK["secondary"])
+        ax.text(
+            xp + 0.28,
+            yp + 0.2,
+            FAMILY_LABEL[f],
+            ha="left",
+            va="center",
+            fontsize=bd.FS["small"],
+            color=bd.INK["secondary"],
+        )
+
+    # Encoding key: required to decode the cell values and the shading.
+    ax.text(
+        -3.4,
+        -3.0,
+        "Cell value: mean CRPS ×10⁻³ (lower = better).  Shading: rank within column (darker = better).",
+        ha="left",
+        va="center",
+        fontsize=bd.FS["small"],
+        color=bd.INK["secondary"],
+    )
 
     ax.set_xlim(-3.6, len(COLS) + 0.1)
-    ax.set_ylim(-2.7, n_models + 2.4)
+    ax.set_ylim(-3.4, n_models + 1.4)
     ax.axis("off")
 
-    ax.text(
-        -3.6,
-        n_models + 1.95,
-        "The backtest order does not survive the protected window",
-        fontsize=14,
-        fontweight="bold",
-        color=bd.INK["primary"],
-        ha="left",
-    )
-
-    fig.text(
-        0.5,
-        0.005,
-        "Mean CRPS ×10⁻³ (lower = better); shading = within-column rank (darker = better). "
-        "Recomputed from the prediction store with properscoring.crps_ensemble (reproduces "
-        "leaderboard.csv).",
-        fontsize=7.5,
-        color=bd.INK["muted"],
-        ha="center",
-    )
+    bd.figure_title(ax, 4, "Weekly leaderboards: mean CRPS by predictor and horizon")
 
     out = bd.savefig(fig, "fig3_weekly_leaderboard.png")
     print(f"wrote {out}")
+    print(
+        "CAPTION: Mean CRPS ×10⁻³ (lower = better) by predictor and horizon for the two weekly "
+        "rolling-origin runs; cell shading encodes within-column rank (darker = better) and rows "
+        "are ordered by mean 2025-backtest rank. Recomputed from the persisted prediction store "
+        "with properscoring.crps_ensemble (reproduces leaderboard.csv).",
+    )
 
 
 if __name__ == "__main__":

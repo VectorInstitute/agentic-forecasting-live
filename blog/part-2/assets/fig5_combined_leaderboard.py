@@ -160,17 +160,19 @@ def main() -> None:
             lab_color = bd.CAT["orange"] if is_agent else bd.INK["primary"]
             weight = "bold" if is_agent else "normal"
             ax.text(-0.022, y, f"{rank + 1:>2}", transform=ax.get_yaxis_transform(),
-                    ha="right", va="center", fontsize=11, color=bd.INK["muted"])
+                    ha="right", va="center", color=bd.INK["muted"])
             ax.text(-0.125, y, row["label"], transform=ax.get_yaxis_transform(),
-                    ha="right", va="center", fontsize=13, color=lab_color, fontweight=weight)
+                    ha="right", va="center", fontsize=bd.FS["label"], color=lab_color,
+                    fontweight=weight)
 
             if off:
-                # Off-scale floor: chevron at the right edge + true value.
+                # Off-scale floor: chevron mark at the right edge + true value
+                # (the value label is required to decode the clipped mark).
                 ax.plot(cap - 0.012 * (cap - xmin), y, marker=">", ms=9,
                         color=color, mec="none", zorder=4, clip_on=False)
                 ax.annotate(f"{v:.2f}", xy=(cap, y), xytext=(-5, 0),
                             textcoords="offset points", ha="right", va="center",
-                            fontsize=11, color=color, fontweight="bold")
+                            color=color, fontweight="bold")
             else:
                 ms = 12 if is_agent else 8.6
                 z = 6 if is_agent else 5
@@ -179,69 +181,71 @@ def main() -> None:
                             mec=bd.CAT["orange"], mew=1.3, alpha=0.55, zorder=z - 1)
                 ax.plot(v, y, marker="o", ms=ms, color=color, mec=bd.INK["surface"],
                         mew=1.2 if is_agent else 0.9, zorder=z)
-                # Value label just right of the dot.
-                dx = 0.028 * (cap - xmin)
+                # Value label just right of the dot (agents need extra clearance
+                # so the halo ring never overlaps the leading digit).
+                dx = (0.062 if is_agent else 0.028) * (cap - xmin)
                 ax.text(v + dx, y, f"{v:.2f}", ha="left", va="center",
-                        fontsize=12, color=bd.INK["secondary"])
+                        color=bd.INK["secondary"])
 
         ax.set_yticks([])
-        ax.tick_params(axis="x", labelsize=12.5, length=3)
+        ax.tick_params(axis="x", length=3)
         ax.grid(axis="y", visible=False)
         ax.grid(axis="x", visible=True, color=bd.INK["grid"], lw=0.6)
         ax.set_axisbelow(True)
         for s in ("left",):
             ax.spines[s].set_visible(False)
-        ax.set_xlabel("Mean CRPS  ×10⁻³   (lower is better)", fontsize=12.5)
-        ax.set_title(f"h = {h}", fontsize=15, fontweight="bold", loc="left", pad=8)
-        # small note when floors are clipped off the right — on its own line with
-        # clear air above the "h = N" title (pad=8, ~15pt tall), so the two never
-        # collide in the narrow axes
-        floors = sub[sub["crps_k"] > cap]
-        if len(floors):
-            names = ", ".join(f"{r.label} {r.crps_k:.1f}" for _, r in floors.iterrows())
-            ax.annotate(f"off scale:  {names}", xy=(1.0, 1.0), xycoords="axes fraction",
-                        xytext=(0, 30), textcoords="offset points",
-                        ha="right", va="baseline", fontsize=11, color=bd.INK["muted"])
+        ax.set_xlabel("Mean CRPS  ×10⁻³   (lower is better)")
+        ax.set_title(f"h = {h}", fontweight="bold", loc="left", pad=8)
 
     # ---- Title + legend ----------------------------------------------------
-    fig.suptitle("The protected-eval scoreboard: 21 methods, three horizons",
-                 x=0.085, y=0.988, ha="left", fontsize=20, fontweight="bold",
-                 color=bd.INK["primary"])
-    fig.text(0.085, 0.958,
-             "Mean CRPS on the leak-safe 2026 S&P/TSX eval, ranked within each horizon. No family owns every\n"
-             "horizon — and the agents (orange) mix in with the leaders at h=1 and h=21.",
-             ha="left", va="top", fontsize=13, color=bd.INK["secondary"], linespacing=1.35)
+    bd.figure_title(fig, 2, "Mean CRPS leaderboard: 21 methods, three horizons", y=0.985)
 
     handles = [
         Line2D([0], [0], marker="o", ls="none", ms=10, mec=bd.INK["surface"],
                mew=0.8, color=FAMILY_COLOR[f], label=FAMILY_LABEL[f])
         for f in ("naive", "classical", "gbm", "llmp", "llmp_cov", "agent")
     ]
-    leg = fig.legend(handles=handles, loc="lower center", ncol=6, fontsize=13,
-                     frameon=False, bbox_to_anchor=(0.53, 0.085),
+    # ncol=3 (two rows): a single 6-column row of these labels is wider than the
+    # 12.5in canvas and would inflate the tight bbox past the savefig guard.
+    leg = fig.legend(handles=handles, loc="lower center", ncol=3,
+                     frameon=False, bbox_to_anchor=(0.53, 0.005),
                      handletextpad=0.4, columnspacing=1.6)
     for txt, f in zip(leg.get_texts(), ("naive", "classical", "gbm", "llmp", "llmp_cov", "agent")):
         if f == "agent":
             txt.set_color(bd.CAT["orange"])
             txt.set_fontweight("bold")
 
-    fig.text(
-        0.085, 0.052,
-        "Source: results/tsx_ws_eval_2026_weekly/leaderboard.csv — mean CRPS per predictor × horizon (21 rungs each;\n"
-        "n_scores = 24 / 22 / 24 resolved weekly origins). Values ×10⁻³. Far-worse floors (naive at every horizon; ETS at\n"
-        "h=5 & h=21) are flagged off-scale at the right rather than compressing the ladder. Family colours as Part-1 fig. 3;\n"
-        "agents highlighted in orange.",
-        ha="left", va="top", fontsize=11, color=bd.INK["muted"], linespacing=1.4,
-    )
-
-    fig.subplots_adjust(left=0.135, right=0.985, top=0.88, bottom=0.155, wspace=1.0)
-    out = Path(__file__).resolve().parent / "fig5_combined_leaderboard.png"
-    fig.savefig(out, dpi=150, bbox_inches="tight", facecolor=bd.INK["surface"])
+    fig.subplots_adjust(left=0.19, right=0.985, top=0.925, bottom=0.10, wspace=1.0)
+    out = bd.savefig(fig, "fig5_combined_leaderboard.png")
     print(f"wrote {out}")
     for h in HS:
         print(f"--- h={h} ---")
         for rank, row in frames[h].iterrows():
             print(f"  {rank + 1:2d}  {row['crps_k']:7.3f}  {row['family']:9s}  {row['label']}")
+
+    # Caption-ready sentences for the text moved off the figure.
+    n_scores = {h: sorted(raw.loc[raw["horizon"] == h, "n_scores"].unique()) for h in HS}
+    ns = " / ".join(str(int(n_scores[h][0])) for h in HS)
+    assert all(len(v) == 1 for v in n_scores.values()), n_scores
+    print(
+        f"CAPTION: Mean CRPS (values ×10⁻³) per method and horizon on the leak-safe 2026 "
+        f"S&P/TSX protected eval, ranked within each panel; n_scores = {ns} resolved weekly "
+        f"origins at h = 1 / 5 / 21. Source: results/tsx_ws_eval_2026_weekly/leaderboard.csv."
+    )
+    off_bits = []
+    for h in HS:
+        sub = frames[h]
+        floors = sub[sub["crps_k"] > XWIN[h][1]]
+        if len(floors):
+            off_bits.append(f"h={h}: " + ", ".join(f"{r.label} {r.crps_k:.1f}" for _, r in floors.iterrows()))
+    print(
+        "CAPTION: Chevrons at the right edge mark far-worse floors held off-scale so the "
+        "ladder stays legible — " + "; ".join(off_bits) + " (all ×10⁻³)."
+    )
+    print(
+        "CAPTION: Family colours as Part-1 fig. 3; the five agents are highlighted in orange. "
+        "No family owns every horizon — the agents mix in with the leaders at h = 1 and h = 21."
+    )
 
 
 if __name__ == "__main__":
