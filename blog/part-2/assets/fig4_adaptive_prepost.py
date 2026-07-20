@@ -107,7 +107,7 @@ def main() -> None:
     fig = plt.figure(figsize=(12.9, 7.9))
     # Left three horizon panels and the right card are decoupled so the card can
     # use nearly the full height while the panels leave room for their labels.
-    gs_left = fig.add_gridspec(1, 3, left=0.06, right=0.605, top=0.845, bottom=0.205, wspace=0.62)
+    gs_left = fig.add_gridspec(1, 3, left=0.06, right=0.605, top=0.80, bottom=0.205, wspace=0.62)
     axes_h = [fig.add_subplot(gs_left[i]) for i in range(3)]
     axc = fig.add_axes([0.655, 0.075, 0.33, 0.86])
 
@@ -174,9 +174,11 @@ def main() -> None:
         _L2D([0], [0], color=bd.CAT["aqua"], lw=1.6, ls=(0, (4, 3)),
              label=f"LightGBM+cov (h=21 ref, {tree21 * 1000:.1f})"),
     ]
+    # Two columns × two rows keeps the legend inside the left panel block so it
+    # never runs into the right-hand "WHAT GRADUATED" cards.
     axes_h[0].legend(handles=handles, loc="lower left", fontsize=11.5, handlelength=1.4,
-                     bbox_to_anchor=(-0.02, 1.02), ncol=4, frameon=False,
-                     columnspacing=1.3, handletextpad=0.5, borderaxespad=0)
+                     bbox_to_anchor=(-0.02, 1.02), ncol=2, frameon=False,
+                     columnspacing=1.6, handletextpad=0.5, borderaxespad=0)
     fig.text(0.06, 0.958, "One study session: nothing moved", fontsize=18,
              fontweight="bold", color=bd.INK["primary"], ha="left")
     fig.text(0.06, 0.915,
