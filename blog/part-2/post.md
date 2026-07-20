@@ -7,9 +7,9 @@
 ## The staircase
 
 Part 1 ended on a frozen LLM that could emit a genuine predictive distribution
-but saw only numbers — quiet exactly where the series was about to get loud,
+but saw only numbers (and series descriptors) — quiet exactly where the series was about to get loud,
 because the cause of every regime break was written in language, not in the price
-history. The next rung hands the same forecaster the news.
+history. The next rung hands the same forecaster the (ability to go out and read the) news.
 
 The analyst agent keeps the task identical — a full quantile grid for the log
 return at 1, 5, and 21 business days — but before it answers it runs web
@@ -39,7 +39,7 @@ right tail (Q0.95 at +9%) reserved for "tariff relief or commodity-driven surge.
 The realized 21-day move, +5.1%, landed almost exactly on its Q0.8 — well inside
 the distribution, but in the upper reaches the agent had explicitly reserved for
 an outcome it considered unlikely. The rally that produced it lived in that
-right tail.
+right tail. (I kind of wonder whether this agent tried to look at futures? Maybe something to note before we go to live experiments. I wonder if we could even build something like a Skill for futures analysis... Like a Skill that the agent can use to ask: "What does the futures market have to say about expectations for this market/commodity? etc.)
 
 ![Anatomy of one agent forecast: six search queries, four load-bearing rationale
 factors, and the emitted quantile grid with the realized move marked at
@@ -58,7 +58,7 @@ referee. We slot the news agent into the exact rolling-origin sweeps — the 202
 backtest and the protected 2026 eval — and score its quantiles with CRPS beside
 the naive floor, the classical methods, LightGBM, and the frozen LLMP models. No
 special pleading, and no thumb on the scale for the method that took the most
-work to build.
+work to build. (This last part felt a bit heavy handed, editorially for me.)
 
 The honest expectation, set by Part 1, is that reading the news does not
 automatically win. On the protected 2026 eval at h=1 the numbers-only board still
@@ -82,6 +82,8 @@ frozen LLMP on the board.
 agent rungs highlighted against the numbers-only ladder and the LLMP
 matrix.](assets/fig5_combined_leaderboard.png)
 
+(I'm starting to think after seeing this figure that throughout, we might want to migrate the bulk of figures' text to outside of the rendered figures themselves. A lot of the figure QA problems are due to text wrapping and placement. If we can move small text out of the figures and into figure captions, I think that would be a good move, everywhere.)
+
 *The complete protected-window scoreboard, every method family on one board.
 The guard changes at every horizon: trees at h=1, the LLM family sweeping h=5,
 trees back on top at h=21 with three agents in the top seven.*
@@ -93,7 +95,7 @@ has to earn its rung, model by model. The code-executing analyst completes the
 picture with an inverted profile: at
 h=1 it lands second of twenty-one at 0.00499 — a hair behind
 LightGBM-with-covariates — because its eleven-code-runs-per-forecast style *is*
-statistics, and one-day forecasting is purely a calibration game. At h=21 it
+statistics, and one-day forecasting is purely a calibration game (is this defensible without a citation? I'm not sure this true as a reader point blank). At h=21 it
 sits mid-pack, yet beats its own frozen base model at eighteen of twenty-four
 origins — the clearest paired evidence in the study that agency improves a
 model — while showing none of the news agent's break-window advantage: it
@@ -128,7 +130,7 @@ There is one more signal hiding in the comparison, and it may matter more than
 the ranks: *when the agent disagrees with the trees*. Measure the gap between
 the agent's quantile grid and LightGBM's at each origin, and on the protected
 window that divergence behaves like an event detector — it correlates with the
-size of the realized move (ρ≈0.5) and with the tree's own error, and three of
+size of the realized move (ρ≈0.5) (wait, is that the p value or the correlation coefficient? I'm not convinced here at all. Let's just make sure we're making fair claims.) and with the tree's own error, and three of
 its four largest values sit at the origins bracketing the 2026 war drawdown.
 (The fourth is an early-June origin where the agent sharply widened its tails
 after a correction off a record high — the sentinel fires on perceived regime
@@ -145,7 +147,7 @@ interesting. The gap between the two forecasters has two parts: the agent
 moving its *center* away from the tree's, and the agent changing its *width*.
 It is the width that carries the signal. The ratio of the agent's 10–90
 interval to the tree's predicts the size of the realized move (ρ=0.52,
-p=0.01); the median shift predicts nothing (ρ=0.20). At the war trough the
+p=0.01); the median shift predicts nothing (ρ=0.20). (Again, I might need more support and explanation for how to interpret any statistics we're presenting here and earlier. Even a brief explanation and rationale would be helpful.) At the war trough the
 agent's interval ran **three times** the tree's — and at one break origin its
 median matched the tree's almost exactly while its interval ran 2.5× wider: a
 pure alarm, no directional bet. The tree's interval, built from trailing
@@ -155,6 +157,9 @@ news, when the quiet period is ending — and says so by widening. That
 reframes what an agent is for: not a replacement for the cheap methods, a
 *sentinel* alongside them — conventional forecasters for the nominal periods,
 and an agent watching for the moment the period stops being nominal.
+
+(I think this is the most important result in the whole series -- that an agent might be better used as an accompanying sentinel to other methods.
+Could we please create a visualization that shows these two methods' prediction distributions over time? It would be really cool to see where LGBM stayed narrow where the agentic predictor went wider, rolled out over time! Always make sure you QA figures in post review before handing back to me. Perhaps this could be something to accompany or merge into the next figure. This should really be the flagship figure of the whole series, I think.)
 
 ![Agent-vs-tree divergence per origin across the protected window, war window
 shaded, with router-vs-baselines CRPS bars inset.](assets/fig3_divergence_sentinel.png)
@@ -175,7 +180,7 @@ the right reasons* — and for an analyst agent, the reasoning is the product. S
 ran a second track: at four landmark origins, the agent writes a scenario
 analysis — weighted scenarios, named drivers, return ranges — and an LLM judge,
 given only the realized returns, scores it on calibration, drivers, and
-specificity. Then we read the artifacts ourselves, against the event timeline.
+specificity. (I think the reader needs a very short bullet list to describe what the LLM judge is actually looking for in each of these 3 criteria.) Then we read the artifacts ourselves, against the event timeline.
 
 The 2026 war low, 2026-03-31, is the set piece. The agent nailed the shape: its
 base case, "Commodity-Led Defensive Rotation" at 0.55 probability, called +3% to
@@ -282,15 +287,15 @@ directionally better at h=5 and h=21 — precisely where widen-under-stress
 corrections should bite — at magnitudes twenty-four origins cannot separate
 from luck.
 
-We read this null as the study's most useful output. A single session can only
+We read this null as (one of) the study's most useful outputs. A single session can only
 confirm hypotheses against the past that generated them; it produces real
-knowledge and cannot, by construction, produce *evidence* — that requires
+knowledge and cannot, by construction, produce actual *evidence* — that requires
 hypotheses meeting forecasts whose outcomes don't yet exist. Which is the
 design this whole series has been walking toward: an agent that keeps learning
 as its forecasts resolve, evaluated against a frozen copy of itself, the gap
 between them the measured value of experience. Evaluating adaptive agents that
 way — and treating the agent harness itself as an optimizable system, in the
-lineage of ADAS and the Darwin Gödel Machine — is where our attention goes
+lineage of ADAS, the Darwin Gödel Machine, and ALMA in particular (see here for paper: https://arxiv.org/abs/2602.07755) — is where our attention goes
 next. Stay tuned.
 
 ![Pre/post adaptive evaluation: paired CRPS by horizon with war-window split,
@@ -339,6 +344,8 @@ holds but a physical impossibility, and where "divergence is an alarm" and
 "agents pay at the breaks" become predictions you commit to *before* the outcome
 rather than patterns you notice after. That is the destination ForecastBench
 pointed at in Part 1, and it is where we think the experiment should continue.
+(I do think we could use more measured language in our conclusion. I do think the idea that an agentic forecaster can act as the context-aware sentinel as a member of an overall forecasting strategy is the most useful takeaway from the work we've done. It suggests to me that a production forecasting pipeline, especially for things like market indices or commodity prices, could benefit from being composed of a mix of conventional and agentic methods.)
 
 The full harness, data pipeline, and methods behind this series are open at
 [github.com/VectorInstitute/agentic-forecasting](https://github.com/VectorInstitute/agentic-forecasting).
+(We could say something more here. This entire experiment and our next steps have their foundation this repository, which was initially built to serve the 2026 Agentic Forecasting Bootcamps at Vector Institute. We don't have to be verbose -- but even a subtle CTA to nudge people towards building something themselves by forking that repo could be great! This project itself was actually my own fork!)

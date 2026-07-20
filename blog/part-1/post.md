@@ -15,7 +15,7 @@ a market index, a demand curve, a risk metric — where being roughly right on
 average isn't enough and you need a full distribution?
 
 Forecasting is the rare honest testbed for that question, because the future
-can't be memorized. A model can regurgitate a benchmark it saw in training, but
+can't be memorized. (This feels disconnected to the question. What question is forecasting the honest testbed for? Isn't the question more like -- can we start to realize the gains we're seeing reported on our own chosen series? Forecasting as a live benchmark for AI is the other side of this, and it's for that purpose that we call it a rare honest testbed -- it's for AI.) A model can regurgitate a benchmark it saw in training, but
 it cannot have seen next week's close. Score a forecast against what actually
 happened and you get a number no amount of pretraining can fake.
 
@@ -27,7 +27,7 @@ climbed steadily toward the human-superforecaster reference line. Source:
 [ForecastBench](https://www.forecastbench.org/explore/).*
 
 This two-part series accompanies Vector's Agentic Forecasting Bootcamp; the full
-code, data pipeline, and evaluation harness are open at [github.com/VectorInstitute/agentic-forecasting](https://github.com/VectorInstitute/agentic-forecasting). In Part 1 we
+code, data pipeline, and evaluation harness are open at [github.com/VectorInstitute/agentic-forecasting](https://github.com/VectorInstitute/agentic-forecasting) (and its forks, like this one: https://github.com/VectorInstitute/agentic-forecasting-live). In Part 1 we
 build the scoreboard for one concrete series and run the numbers-only methods —
 from a naive baseline to gradient-boosted trees to a frozen LLM — up to their
 ceiling. Part 2 brings in agents that read.
@@ -38,7 +38,7 @@ Our series is the S&P/TSX Composite, the main Canadian equity index. We forecast
 it because we're in Toronto and it's the market on our doorstep — but it is also
 a genuinely useful stress test. The TSX is heavy in energy and materials, so it
 reacts fast to the wider world: an oil move, a tariff announcement, a war-risk
-premium all show up in it quickly.
+premium all show up in it quickly. (I think at this point we should also mention that market forecasting is known to be very difficult. ForecastBench even lets you partition and interpret benchmark progress separately for datasets vs. markets. So I just think we should say here that we chose the problem because it's hard. Market forecasting is not handing agentic methods an easy win, it's in fact the opposite.)
 
 We forecast log returns, not price levels. Levels drift and trend, and a model
 can look impressive on levels just by predicting "about the same as yesterday."
@@ -49,13 +49,13 @@ business days: roughly tomorrow, next week, next month.
 And we forecast probabilistically. A single-number point forecast of tomorrow's
 return is almost useless: it will be wrong, and it tells you nothing about *how*
 wrong it might be. What a decision-maker needs is a distribution — where the
-center sits and how wide the uncertainty is. So every method here emits a full
-grid of quantiles, from which we read a median and a spread.
+center sits and how wide the uncertainty is (I had trouble parsing this). So every method here emits a full
+grid of quantiles, from which we read a median and a spread. (People will understand this.)
 
 ![S&P/TSX Composite level, 2025–2026, with four landmark windows shaded and
 labelled with their TSX percentage moves.](assets/fig1_tsx_landmarks.png)
 
-*Figure 1 shows the level path we forecast, with four landmark windows that
+*Figure 1 (I'm noticing throughout that we are inconsistently titling and referencing figures. Every figure in both parts should have consistent numbering and be referenced correctly. We can put figure numbering in the title. -- Also -- isn't this the second figure anyway?) shows the level path we forecast, with four landmark windows that
 recur through this series: the 2025 tariff drawdown (−12.8% peak-to-trough) and
 its +19.3% rebound, and the 2026 war-driven drawdown (−9.3%) and +8.5%
 recovery. We forecast the close-to-close log return of this series, not the
@@ -71,7 +71,7 @@ That score is the Continuous Ranked Probability Score, or CRPS. Intuitively: a
 probabilistic forecast spreads probability mass across the number line; the
 outcome lands at one point, and CRPS measures how far the forecast's mass sat,
 on average, from where reality landed. It rewards two things at once, and this
-is the subtle part — being *sharp* (a narrow, confident distribution) and being
+is the subtle part (It's not that subtle -- we don't need filler like this for the intended reader. Otherwise I like the level of detail and guidance we're giving to the reader.) — being *sharp* (a narrow, confident distribution) and being
 *calibrated* (that mass actually sitting where the outcome falls). A tight
 forecast in the wrong place is punished hard; a vague, hedge-everything forecast
 is punished gently but never wins. Lower is better, and conveniently, CRPS
@@ -118,7 +118,7 @@ the protected window, we say so.
 
 Every method on this ladder sees only the series — and, for some, a panel of
 numeric covariates. None reads a word of news. They differ only in how much
-structure they assume.
+structure they assume. (Should we mention here that this is for part 1 and that part 2 is where we will go deeper into agentic methods?)
 
 The bottom rung is the **naive floor**: take the recent distribution of returns
 and carry it forward. It is the "your model isn't magic" baseline, and it is no
@@ -162,10 +162,13 @@ method's error spikes at the same landmark windows.](assets/fig4_daily_crps_land
 *Figure 4 tracks per-origin CRPS day by day across the full 2025–26 stretch, at
 all three horizons, with the landmark windows shaded.*
 
+(This figure's caption at the bottom is wider than the plots, causing it to render really small. 
+Can we please do a line break so that the plots span the whole figure?)
+
 Every method's error spikes at the same moments — the 2025 tariff crash lifts all
 three horizons at once, the 2026 war window lifts them again — because the cause
 of each break is exogenous to the series. No amount of tree depth or covariate
-engineering sees a tariff coming from the price history alone.
+engineering sees a tariff coming from the price history alone. (Are we going to have to defend the fact that we didn't include futures covariates here? Or is the panel we used defensible? It might be worth a very brief justification.)
 
 ![h=1 median forecasts versus the realized next-day return through the 2025
 drawdown-and-rebound.](assets/fig5_quiet_vs_loud.png)
@@ -181,17 +184,17 @@ quiet.*
 
 Everything so far is a purpose-built forecasting method. What happens if we hand
 the same task to a general LLM — no fine-tuning, no forecasting head, just the
-raw model?
+raw model? (This is awkward -- the figures above have already shown LLMP. I think we might want to change where the LLMP is introduced. It could be in the same section as the other methods or immediately following. The connective tissue for me is that while we're using an LLM, we're using it in a mostly numbers-only way at this point. And at the very least we're programatically (as opposed to agentically) constructing the context for it in advance, a huge differentiator between LLMPs and agentic forecasters.)
 
 The technique is the LLM-Process (LLMP), introduced by [Requeima et al.
 (2024)](https://arxiv.org/abs/2405.12856): serialize the return history — and,
 optionally, the same covariate panel — into a text prompt, and ask the model to
 emit the full quantile grid directly, as numbers. We then score those quantiles
 with CRPS exactly like every other method. No special pleading: same origins,
-same cutoff, same referee.
+same cutoff, same referee. (Let's mention the senior author and his affiliation explicitly in this part -- David Duvenaud, a Vector Institute faculty member.)
 
 The result that matters is that this works at all. A frozen, general-purpose
-model, prompted with a column of numbers, emits a genuine predictive
+model, prompted with a column of numbers (and a bit of context about them!), emits a genuine predictive
 distribution — calibrated enough to compete. In the protected 2026 window at
 h=1, an LLMP forecast from a lightweight model (Gemini flash-lite) ties
 LightGBM-with-covariates at the top of the board — 0.00501 against 0.00497.
@@ -219,10 +222,10 @@ of each regime break was not in the price history at those origins. It was in
 the news. A tariff is announced in words before it is a number in a series; a
 war-risk premium is a headline before it is a return.
 
-That is the ceiling of numbers-only forecasting, and no rearrangement of the
+That (appears to be) the ceiling of numbers-only forecasting, and no rearrangement of the
 same inputs breaks through it. The next rung has to read. In Part 2, we give the
 forecaster the news — and then face the harder problem of how you trust one that
-does.
+does. (We might want to soften the claims here. I think it's possible to build a more context-sensitive numerical model, especially if there are quality futures signals, but they're still hard to build for general classes of problems. A frozen LLM (a cheap one in the case of flash lite) showing up off the shelf and getting into a tie with a LightGBM model is itself an interesting result. And it totally motivates going to the next part, where we ask whether and how adding agency to those LLMs may help.)
 
 ---
 
