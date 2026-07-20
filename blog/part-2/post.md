@@ -1,6 +1,6 @@
 # Forecasting agents that read the news — and what it takes to trust them
 
-**By the Vector AI Engineering team**
+**Ethan Jackson, Ali Kore, Behnoosh Zamanlooy & Shayaan Mehdi**
 
 *Part 2 of two.*
 

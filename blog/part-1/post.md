@@ -1,6 +1,6 @@
 # An honest scoreboard for market forecasting
 
-**By the Vector AI Engineering team**
+**Ethan Jackson, Ali Kore, Behnoosh Zamanlooy & Shayaan Mehdi**
 
 *Part 1 of two.*
 
@@ -26,7 +26,7 @@ ForecastBench's live questions about unresolved future events; the frontier has
 climbed steadily toward the human-superforecaster reference line. Source:
 [ForecastBench](https://www.forecastbench.org/explore/).*
 
-This two-part series accompanies Vector's Agentic Forecasting bootcamp; the full
+This two-part series accompanies Vector's Agentic Forecasting Bootcamp; the full
 code, data pipeline, and evaluation harness are open at [github.com/VectorInstitute/agentic-forecasting](https://github.com/VectorInstitute/agentic-forecasting). In Part 1 we
 build the scoreboard for one concrete series and run the numbers-only methods —
 from a naive baseline to gradient-boosted trees to a frozen LLM — up to their
@@ -127,7 +127,7 @@ in the protected window it scores CRPS 0.0093, and the best method roughly
 halves that.
 
 Next, the **classical statistical methods** — ETS, a Kalman-filter local model,
-and AutoARIMA. These are decades-refined, fully interpretable, and free to run:
+and AutoARIMA. These are decades-refined, fully interpretable, and near-free to run:
 they fit a few parameters to the series' own autocorrelation and emit a
 calibrated distribution. On the TSX they clear the naive floor comfortably and,
 at the short horizon, land within a hair of far heavier machinery.
