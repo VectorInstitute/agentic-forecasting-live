@@ -137,13 +137,11 @@ def main() -> None:
             ax.text(0.5, (warpre[h] * 1000 + rng * 0.03), "war-window cut",
                     ha="center", va="bottom", fontsize=11, color=bd.INK["secondary"])
 
-        # h=21: LightGBM+cov reference line for rank context. The label lives in
-        # the panel's clear upper region (bars top ~19, war markers ~24) so it
-        # never sits at the panel floor near the footnote.
+        # h=21: LightGBM+cov reference line for rank context. It is labelled in the
+        # top legend (the panel center is filled by bars, so no in-panel label fits
+        # near the line without colliding).
         if h == 21:
             ax.axhline(tree21 * 1000, color=bd.CAT["aqua"], lw=1.6, ls=(0, (4, 3)), zorder=4)
-            ax.text(-0.66, y0 + rng * 0.66, f"LightGBM+cov ({tree21 * 1000:.1f})",
-                    ha="left", va="center", fontsize=10.5, color=bd.CAT["aqua"])
 
         ax.set_xlim(-0.72, 1.72)
         ax.set_ylim(y0, y1)
@@ -173,10 +171,12 @@ def main() -> None:
         Patch(facecolor=C_POST, alpha=0.9, label="POST — trained strategy"),
         _L2D([0], [0], marker="D", ls="none", mfc=bd.INK["surface"], mec=bd.INK["secondary"],
              mew=1.6, ms=9, label="war-window mean"),
+        _L2D([0], [0], color=bd.CAT["aqua"], lw=1.6, ls=(0, (4, 3)),
+             label=f"LightGBM+cov (h=21 ref, {tree21 * 1000:.1f})"),
     ]
-    axes_h[0].legend(handles=handles, loc="lower left", fontsize=11.5, handlelength=1.1,
-                     bbox_to_anchor=(-0.02, 1.02), ncol=3, frameon=False,
-                     columnspacing=1.4, handletextpad=0.5, borderaxespad=0)
+    axes_h[0].legend(handles=handles, loc="lower left", fontsize=11.5, handlelength=1.4,
+                     bbox_to_anchor=(-0.02, 1.02), ncol=4, frameon=False,
+                     columnspacing=1.3, handletextpad=0.5, borderaxespad=0)
     fig.text(0.06, 0.958, "One study session: nothing moved", fontsize=18,
              fontweight="bold", color=bd.INK["primary"], ha="left")
     fig.text(0.06, 0.915,
