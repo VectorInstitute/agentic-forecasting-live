@@ -465,11 +465,13 @@ ladder</h2>
 <p>Everything so far is a purpose-built forecasting method. What happens
 if we hand the same task to a general LLM — no fine-tuning, no
 forecasting head, just the raw model?</p>
-<p>The technique is the LLM-Process (LLMP): serialize the return history
-— and, optionally, the same covariate panel — into a text prompt, and
-ask the model to emit the full quantile grid directly, as numbers. We
-then score those quantiles with CRPS exactly like every other method. No
-special pleading: same origins, same cutoff, same referee.</p>
+<p>The technique is the LLM-Process (LLMP), introduced by <a
+href="https://arxiv.org/abs/2405.12856">Requeima et al. (2024)</a>:
+serialize the return history — and, optionally, the same covariate panel
+— into a text prompt, and ask the model to emit the full quantile grid
+directly, as numbers. We then score those quantiles with CRPS exactly
+like every other method. No special pleading: same origins, same cutoff,
+same referee.</p>
 <p>The result that matters is that this works at all. A frozen,
 general-purpose model, prompted with a column of numbers, emits a
 genuine predictive distribution — calibrated enough to compete. In the
@@ -502,6 +504,13 @@ headline before it is a return.</p>
 of the same inputs breaks through it. The next rung has to read. In Part
 2, we give the forecaster the news — and then face the harder problem of
 how you trust one that does.</p>
+<hr />
+<p><strong>Reference</strong></p>
+<p>Requeima, J., Bronskill, J., Choi, D., Turner, R. E., &amp; Duvenaud,
+D. (2024). <a href="https://arxiv.org/abs/2405.12856">LLM Processes:
+Numerical Predictive Distributions Conditioned on Natural Language</a>.
+<em>Advances in Neural Information Processing Systems, 37</em>,
+109609–109671.</p>
 
 </article>
 <footer class="post-footer">
