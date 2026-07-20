@@ -163,22 +163,34 @@ prospectively, not a result.
 Decompose the divergence and the mechanism gets sharper — and more
 interesting. The gap between the two forecasters has two parts: the agent
 moving its *center* away from the tree's, and the agent changing its *width*.
-It is the width that carries the signal. How much wider the agent's 10–90
-interval runs than the tree's tracks the size of the move that follows
-(ρ = 0.52, p = 0.010, n = 24) — a real relationship on this window. How far the
-agent moves its median tracks nothing (ρ = 0.20, p = 0.36; that p is large, so
-this is indistinguishable from no relationship at all). Read together, those two
-numbers say something specific: the agent's useful signal is *how uncertain it
-says it is*, not *which way it leans*. At the war trough the
+It is the width that carries what signal there is. How much wider the agent's
+10–90 interval runs than the tree's co-moves with the size of the move that
+follows (ρ = 0.52, p = 0.010, n = 24), while how far the agent moves its *median*
+tracks nothing at all (ρ = 0.20, p = 0.36 — a p that large is indistinguishable
+from no relationship). The contrast is the interesting part: the agent's useful
+signal is *how uncertain it says it is*, not *which way it leans*.
+
+We should be careful about how much weight that first number can bear, though,
+because we pushed on it and it bends. The association is carried almost entirely
+by the war window: drop those ten origins and it falls away (ρ = 0.27, p = 0.35).
+And because these origins are weekly while the horizon is a month, consecutive
+outcomes overlap by roughly four-fifths — so the 24 points are closer to five
+independent observations, and a permutation test that respects that overlap puts
+the p-value anywhere from 0.01 to 0.17 depending on how conservatively you block
+it. What we have is one regime event, examined closely.
+
+What that event looks like up close is striking, though. At the war trough the
 agent's interval ran **three times** the tree's — and at one break origin its
 median matched the tree's almost exactly while its interval ran 2.5× wider: a
 pure alarm, no directional bet. The tree's interval, built from trailing
-volatility, barely moved all half-year. The agent doesn't beat the
-numbers-only methods by predicting direction better; it notices, from the
-news, when the quiet period is ending — and says so by widening. That
-reframes what an agent is for: not a replacement for the cheap methods, a
-*sentinel* alongside them — conventional forecasters for the nominal periods,
-and an agent watching for the moment the period stops being nominal.
+volatility, barely moved all half-year. So the mechanism on offer is not that the
+agent predicts direction better; it is that the agent can notice, from the news,
+that the quiet period may be ending — and say so by widening. That suggests a
+different job description than the one we started with: not a replacement for the
+cheap methods but a *sentinel* alongside them, conventional forecasters carrying
+the nominal periods and an agent watching for the moment they stop being nominal.
+On this evidence that is a hypothesis worth testing properly, not a finding to
+build on yet.
 
 ![Prediction intervals over time: LightGBM's band stays nearly constant while the
 news agent's widens sharply through the war window.](assets/fig7_sentinel_bands.png)
@@ -186,9 +198,11 @@ news agent's widens sharply through the war window.](assets/fig7_sentinel_bands.
 ***Figure 4.** The sentinel, rolled out over time. Each band is a method's 10–90
 prediction interval for the 21-day return, origin by origin across the protected
 window, with the realized return overlaid and the war window shaded. LightGBM's
-band — built from trailing volatility — barely moves all half-year. The agent's
-expands as the regime breaks, running about 1.6× the tree's width typically and
-roughly 3× at the trough.*
+band — built from trailing volatility — barely moves all half-year, spanning a
+1.7× range end to end. The agent's is both consistently wider (median 1.63× the
+tree's) and far more responsive, spanning a 3.5× range and peaking at 3.0× the
+tree's width at the war trough. Its median width inside the war window is not
+elevated relative to quiet weeks; what distinguishes the break is the spike.*
 
 ![Agent-vs-tree divergence per origin across the protected window, war window
 shaded, with router-vs-baselines CRPS bars inset.](assets/fig3_divergence_sentinel.png)
