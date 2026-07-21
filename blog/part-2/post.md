@@ -26,8 +26,8 @@ own diagnostics — pull the series into a dataframe, measure the trailing
 volatility and drawdown, check a claim before committing to it — rather than
 eyeballing numbers in a prompt.
 
-What does one forecast actually look like? Take the analyst agent standing on
-2026-03-30, at the trough of the war-driven drawdown. It fired six date-scoped
+What does one forecast actually look like? Take the news analyst (on Claude
+Sonnet 4.6) standing on 2026-03-30, at the trough of the war-driven drawdown. It fired six date-scoped
 searches — Bank of Canada policy, CPI and the Labour Force Survey, oil and gold,
 USD/CAD and GoC yields, US tariff spillovers, TSX sector earnings — then wrote a
 rationale that reads like a desk note: an accommodative BoC on hold at 2.25%,
@@ -61,11 +61,12 @@ the frozen LLMPs. Same origins, same cutoff, same referee.
 The honest expectation, set by Part 1, is that reading the news does not
 automatically win — and at h=1 it doesn't. On the protected 2026 eval the
 Part 1 board clusters near CRPS 0.0050 against a naive floor of 0.0093,
-and the two news-agent variants land mid-pack at 0.00507 and 0.00509,
-indistinguishable from the frozen models: for a one-day-ahead return, where the
-move is close to unforecastable, a news scan has little to add over a
-well-shaped distribution. The one agent that thrives there is the
-code-executing analyst, second of twenty-one, a hair behind
+and the two news-agent variants — the same harness on Claude Sonnet 4.6 and
+Gemini 3.5 Flash (stated cutoffs in Part 1's table) — land mid-pack at 0.00507
+and 0.00509, indistinguishable from the frozen models: for a one-day-ahead
+return, where the move is close to unforecastable, a news scan has little to
+add over a well-shaped distribution. The one agent that thrives there is the
+code-executing analyst (also on Sonnet 4.6), second of twenty-one, a hair behind
 LightGBM-with-covariates — its eleven-code-runs-per-forecast style *is*
 statistics, and at one day out, with the whole top of the board inside a 2%
 spread and direction a coin flip, that is most of what there is to win. But
@@ -92,8 +93,15 @@ legible.*
 Two wrinkles keep that story honest. The ranking is model-dependent — the same
 agent harness on a heavier model finishes mid-pack at h=21 — so "agents read
 the news" is not yet a horizontal claim about agents; it is a configuration
-that has to earn its rung, model by model. And the paired comparisons are
-weaker than they look: at h=21 the code agent beats its own frozen base model
+that has to earn its rung, model by model. One point in the lighter
+configuration's favour: it runs on Gemini 3.5 Flash, whose stated knowledge
+cutoff (January 2025) predates the protected window by a full year, so its
+third place cannot be memorized knowledge of the period — while the heavier
+harness runs on Claude Sonnet 4.6, whose training data extends into January
+2026 (see Part 1's cutoff table). And the paired comparisons are
+weaker than they look — though cutoff-neutral, at least: agent and frozen base
+share one model, so anything memorized cancels. At h=21 the code agent beats
+its own frozen base model
 at eighteen of twenty-four origins, the largest paired count in the study, but
 the margins behind the count are small, and a test that weighs them — or
 respects how heavily the origins overlap — lands it inside noise. The code
@@ -190,9 +198,11 @@ so whatever it buys on the scoreboard, it buys at a price worth naming.
 
 CRPS ranks distributions. It cannot tell you whether a forecaster was *right for
 the right reasons* — and for an analyst agent, the reasoning is the product. So we
-ran a second track: at four landmark origins, the agent writes a scenario
-analysis — weighted scenarios, named drivers, return ranges — and an LLM judge,
-given only the realized returns, scores it 1–5 on three axes:
+ran a second track: at four landmark origins, the agent (on Gemini 3.1
+Flash-Lite, whose stated January 2025 cutoff predates all four origins) writes
+a scenario analysis — weighted scenarios, named drivers, return ranges — and an
+LLM judge from a different model family (Claude Sonnet 4.6), given only the
+realized returns, scores it 1–5 on three axes:
 
 - **Drivers** — did the forces the write-up named actually move the index? Five
   means the cited drivers are exactly what happened; one means they are unrelated.
@@ -230,11 +240,15 @@ different things:
 | 2026-02-25 | pre-drawdown | 3 | 2 | 3 |
 | 2026-03-31 | war low | 3 | 5 | 4 |
 
-Calibration swings from 2 to 5; drivers never clears 3 — because the judge,
-grounded only in realized returns, systematically refuses to certify causal
-chains it cannot see. A forecaster can land the number and miss the reason, or
-read the world well and misweight it, and only scoring them separately shows
-which.
+Calibration swings from 2 to 5; drivers never clears 3 — the judge
+systematically refuses to certify causal chains it cannot verify from the
+returns alone. A cutoff note keeps that honest: the judge's training data runs
+through January 2026, so at the two 2025 origins it may well know the tariff
+story from memory — and it withheld drivers credit anyway, in-knowledge and
+out. The restraint comes from the rubric's grounding, not from ignorance; only
+the 2026 verdicts test it against genuine blindness. A forecaster can land the
+number and miss the reason, or read the world well and misweight it, and only
+scoring them separately shows which.
 
 The claim to take away: for analyst agents, the artifact is the value and the
 score is the floor. Automated judging scales and human trace-reading catches what
@@ -255,9 +269,11 @@ ceasefire relief instead. Right call, wrong reason.*
 There is a ceiling here that no methodology fixes. An agent that reads the open
 web to forecast a series cannot be perfectly firewalled from the future it is
 predicting. Our as-of date and verifier keep out the obvious leaks, but retrieval
-is porous, model training cutoffs are opaque, and a stray dated-wrong snippet or a
-fact the model simply knows can tint a "2026-03-30" forecast with April's
-hindsight. Every offline agent score is therefore optimistic at best — the same
+is porous, and stated model cutoffs are vendor claims we can report, not verify —
+Part 1's cutoff table lists them, and for the Sonnet-4.6-based agents the stated
+training data reaches into the protected window's first month. A stray
+dated-wrong snippet or a fact the model simply knows can tint a "2026-03-30"
+forecast with April's hindsight. Every offline agent score is therefore optimistic at best — the same
 caution Part 1 raised for the LLMs, now sharper, because the agent is actively
 reaching for information rather than passively holding it. The protected 2026
 window narrows the gap; it does not close it. A strong offline result is a reason
@@ -273,7 +289,8 @@ skill can be measured without an asterisk. We come back to that at the end.
 ## The adaptive agent — pre/post on the TSX
 
 Every agent so far was frozen. The last rung asks what happens when the agent is
-allowed to study. We gave the analyst one self-directed session — fifty turns,
+allowed to study. We gave the analyst (on Gemini 3.5 Flash, whose January 2025
+cutoff predates the entire protected window) one self-directed session — fifty turns,
 about seventy minutes — with the full TSX history in a sandbox, a hypothesis
 ledger, and an evidence gate: nothing enters its strategy file without recorded
 confirmations. Then we evaluated the same agent on the protected window twice,

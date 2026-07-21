@@ -122,13 +122,27 @@ We run two such sweeps. The first is a **2025 backtest**: weekly origins across
 horizon, over data more recent than most of what these methods could have been
 built or tuned against.
 
-The distinction matters most for the LLMs, and here we are deliberately
-skeptical. We do not trust stated training cutoffs. A model asked to forecast an
-"unknown" 2025 date may quietly know how that quarter turned out, so its
-backtest score is optimistic at best. The protected 2026 window is our honest
-read — recent enough that leakage is less likely, though never zero. So we
-report both sweeps side by side, and when a method's backtest lead evaporates in
-the protected window, we say so.
+The distinction matters most for the LLMs, and it cuts differently for each
+one. The five models in our matrix state these knowledge cutoffs:
+
+| Model | Stated knowledge cutoff |
+|---|---|
+| `gemini-3.1-flash-lite` | Jan 2025 |
+| `gemini-3.5-flash` | Jan 2025 |
+| `gpt-5.4` | Aug 2025 |
+| `claude-sonnet-4-6` | Aug 2025 (training data through Jan 2026) |
+| `claude-sonnet-5` | Jan 2026 |
+
+For the Gemini models, nearly the entire 2025 backtest is already
+out-of-knowledge; for GPT-5.4, about two-thirds of it is in-knowledge; for the
+Claude models, all of it is — and their training data reaches into January
+2026, overlapping the first four origins of the protected window itself. So
+"protected" is fully post-cutoff only for the Gemini and OpenAI models; for the
+Claude models it holds from February 2026 on. And we are deliberately skeptical
+even of the stated dates: a model asked to forecast an "unknown" date inside
+its training window may quietly know how that quarter turned out, so its
+backtest score is optimistic at best. We report both sweeps side by side, and
+when a method's backtest lead evaporates in the protected window, we say so.
 
 ## The fixed-context ladder
 
@@ -197,8 +211,16 @@ purpose-built gradient-boosted trees at the short horizon, for a fraction of a
 cent in the case of Gemini Flash-Lite. Across the model matrix — several frontier and lightweight models, with and
 without covariates — the LLMP forecasts land throughout the leaderboard,
 sometimes leading a horizon, sometimes mid-pack, never obviously broken. At the
-longer backtest horizons a heavier reasoning model (Claude Sonnet 5) tops h=5 and h=21, though its per-forecast cost is an order of magnitude
-above a Gemini Flash-Lite call — a trade-off worth naming out loud.
+longer backtest horizons a heavier reasoning model (Claude Sonnet 5) tops h=5
+and h=21 — at a per-forecast cost an order of magnitude above a Gemini
+Flash-Lite call — but that result carries the asterisk the cutoff table
+predicts. Sonnet 5's reliable knowledge runs through January 2026; every
+backtest origin sits inside it. In the protected window its h=5 error degrades
+1.47× from backtest — the largest gap of any configuration, against roughly
+1.2–1.3× for every other method, leak-free numeric ones included — and its
+lead at both horizons vanishes. Two dozen origins cannot prove memorization,
+but this is exactly what it would look like. The Flash-Lite tie at h=1, by
+contrast, sits entirely past that model's January 2025 cutoff.
 
 But the ranking is only half the story.
 
