@@ -25,7 +25,7 @@ def main() -> None:
 
     # Landmark shading + annotation.
     wash = {"drawdown": bd.STATUS["critical"], "rebound": bd.STATUS["good"]}
-    label_y = {"drawdown": 0.13, "rebound": 0.90}
+    label_y = {"drawdown": 0.10, "rebound": 0.95}
     for lm in lms:
         ax.axvspan(lm["start"], lm["end"], color=wash[lm["kind"]], alpha=0.08, lw=0)
         mid = lm["start"] + (lm["end"] - lm["start"]) / 2
@@ -37,7 +37,6 @@ def main() -> None:
             textcoords=("data", "axes fraction"),
             ha="center",
             va="center",
-            fontsize=8.5,
             color=bd.INK["primary"],
             fontweight="bold",
             linespacing=1.3,
@@ -61,32 +60,21 @@ def main() -> None:
 
     ax.plot(close.index, close.values, color=bd.CAT["blue"], lw=1.8, zorder=4)
 
-    ax.set_title(
-        "The market the forecaster must predict: S&P/TSX Composite, 2025-2026",
-        fontsize=13,
-        fontweight="bold",
-        pad=12,
-        loc="left",
-    )
+    bd.figure_title(ax, 2, "S&P/TSX Composite with landmark drawdowns and rebounds, 2025–2026")
     ax.set_ylabel("Index level (adj. close)")
     ax.xaxis.set_major_locator(mdates.MonthLocator(interval=2))
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%b\n%Y"))
     ax.margins(x=0.01)
     ax.yaxis.set_major_formatter(plt.matplotlib.ticker.StrMethodFormatter("{x:,.0f}"))
 
-    fig.text(
-        0.125,
-        -0.02,
-        "Source: workshop_experiments TSX data service (Yahoo ^GSPTSE adj. close). "
-        "Percentages are peak-to-trough (drawdowns) and trough-to-recovery (rebounds), "
-        "computed on the close path.",
-        fontsize=7.5,
-        color=bd.INK["muted"],
-        ha="left",
-    )
-
     out = bd.savefig(fig, "fig1_tsx_landmarks.png")
     print(f"wrote {out}")
+    moves = "; ".join(f"{lm['label']} {lm['pct']:+.1f}%" for lm in lms)
+    print(
+        "CAPTION: Yahoo ^GSPTSE adjusted close via the workshop_experiments TSX data service. "
+        "Shaded windows mark landmark moves, computed on the close path as peak-to-trough "
+        f"(drawdowns) and trough-to-recovery (rebounds): {moves}.",
+    )
 
 
 if __name__ == "__main__":

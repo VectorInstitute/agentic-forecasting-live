@@ -1,289 +1,185 @@
 # Part-2 figure captions and data provenance
 
-Both figures read directly from repo artefacts and invent no numbers. The
-generating scripts (`fig1_agent_anatomy.py`, `fig2_scenario_card.py`) import the
-Part-1 `_blogdata.py` helper, so the palette, fonts, and 220-dpi output match
-Part-1 exactly. Realised returns come from the same leak-safe TSX data service
-(`workshop_experiments.data_tsx.build_tsx_workshop_service`, Yahoo `^GSPTSE`
-adjusted close) used throughout Part 1.
+Reader-facing captions live in `../post.md`. This file keys every figure by its
+**reading-order number** (which no longer matches the `figN_` script prefixes —
+the table below is the mapping), records the provenance and computed values
+that were deliberately removed from the rendered PNGs (maximal chrome-out), and
+pins the numbers.
 
-Data-root note: these were rendered against the refreshed prediction/scenario
-store via `BLOG_WS_DATA_ROOT=.../workshop_experiments/workshop_experiments/data`
-(env override added to `_blogdata.py`); paths below are relative to that store.
+All six scripts import the Part-1 `_blogdata.py` helper, so palette, fonts, and
+the 220-dpi output match Part 1 exactly. Realised returns come from the same
+leak-safe TSX data service (`workshop_experiments.data_tsx.
+build_tsx_workshop_service`, Yahoo `^GSPTSE` adjusted close) used throughout.
+The data store is co-located in this clone; no env var is needed (set
+`BLOG_WS_DATA_ROOT` only when rendering against a different store). Paths below
+are relative to that store.
+
+| Reading order | Script / PNG |
+|---|---|
+| Figure 1 | `fig1_agent_anatomy` |
+| Figure 2 | `fig5_combined_leaderboard` |
+| Figure 3 | `fig6_where_agents_earn` |
+| Figure 4 | `fig7_sentinel_bands` |
+| Figure 5 | `fig3_divergence_sentinel` |
+| Figure 6 | `fig2_scenario_card` |
+| — retired | `fig4_adaptive_prepost` (no longer referenced by the post; script and PNG kept on disk) |
 
 ---
 
-## fig1 — `fig1_agent_anatomy.png`
+## Figure 1 — `fig1_agent_anatomy.png` (`fig1_agent_anatomy.py`)
 
-Anatomy of a single news-analyst agent forecast (Claude Sonnet-4.6), issued at
-origin **2026-03-30** for the S&P/TSX Composite **21-business-day log return**
-(forecast date 2026-04-28), read left→right as gather → reason → forecast:
-
-- **Gather** — the six `search_web` calls the agent issued (86.5 s wall), shown
-  as a vertical tool trail. Trail labels paraphrase the verbatim `tool_calls`
-  titles: (1) *Bank of Canada policy rate decision and forward guidance for
-  Canadian equities*; (2) *Canada CPI inflation and Labour Force Survey jobs
-  report market reaction 2026*; (3) *oil and gold commodity price outlook impact
-  on the TSX energy and materials sectors 2026*; (4) *USD/CAD Canadian dollar and
-  Government of Canada 10-year bond yield moves March 2026*; (5) *US Federal
-  Reserve policy and tariff trade spillovers into Canadian stocks 2026*; (6)
-  *S&P TSX Composite outlook Canadian bank energy mining sector earnings Q1 2026*.
-- **Reason** — four load-bearing factors lifted from the written `rationale`:
-  BoC held at **2.25%** (accommodative hold); CPI **1.8%** vs **−84K** February
-  jobs (soft inflation, weakening labour); Middle-East commodity volatility (oil
-  mixed, gold bid); **25% US tariffs** as the structural headwind driving the
-  negative skew.
-- **Forecast** — the emitted 11-point quantile grid as a distribution strip
-  (log-return space): **Q0.05 = −7.5%**, **median = +1.0%**, **Q0.80 = +5.0%**,
-  **Q0.95 = +9.0%**; darker band = the 60% interval (Q0.20–Q0.80). The realised
-  21-day move, **+5.1%** (simple return; log **+4.96%**), lands essentially at
-  **Q0.80** — the agent's positive-median, negative-skew call was well-placed.
+PNG title: *Anatomy of one agent forecast*. News analyst agent (Claude
+Sonnet-4.6) forecasting the S&P/TSX **21-business-day log return** from origin
+**2026-03-30** (forecast date 2026-04-28): six `search_web` calls (86.5 s
+wall), four load-bearing rationale factors (BoC hold at **2.25 %**; CPI
+**1.8 %** vs **−84K** February jobs; Middle-East commodity volatility; **25 %
+US tariffs** driving the negative skew), and the emitted 11-point quantile grid
+— **Q0.05 = −7.5 %**, **median = +1.0 %**, **Q0.80 = +5.0 %**, **Q0.95 =
++9.0 %**. Realised 21-day move **+5.1 %** (simple; log +4.96 %) lands
+essentially at Q0.80. Search-trail labels paraphrase the verbatim `tool_calls`
+titles.
 
 **Source:** `data/predictions/tsx_ws_eval_2026_weekly/`
 `agent_predictor_tsx_analyst_news_claude-sonnet-4-6_continuous/tsx_logret_21b/`
-`2026-03-30.yaml` (`tool_calls`, `metadata.rationale`, `payload.quantiles`).
-Realised value: `tsx_logret_21b` at forecast date 2026-04-28 from the TSX data
-service (`_blogdata.realized`).
+`2026-03-30.yaml` (`tool_calls`, `metadata.rationale`, `payload.quantiles`);
+realised value from the TSX data service (`_blogdata.realized`).
 
-## fig2 — `fig2_scenario_card.png`
+## Figure 2 — `fig5_combined_leaderboard.png` (`fig5_combined_leaderboard.py`)
 
-One narrative scenario write-up (origin **2026-03-31**, 60-business-day outlook)
-graded against what happened. **Left:** the three scenarios with their assigned
-probabilities and 60-day outlook ranges —
+PNG title: *Mean CRPS leaderboard: 21 methods, three horizons*. All 21 methods
+× 3 horizons read straight from the final `leaderboard.csv`, ranked per panel
+on a zoomed value axis. Far-worse floors are held off-scale with chevron marks
+carrying their true values — h=1: naive **9.28**; h=5: ETS **16.21**, naive
+**23.30**; h=21: ETS **32.57**, naive **42.33** (all ×10⁻³). Family colours as
+the Part-1 fig-3 legend; the five agents (news gemini-3.5, news sonnet-4.6,
+code sonnet-4.6, adaptive pre/post) highlighted in orange.
+
+Anchor facts (asserted in-script before render): h=1 leader
+`darts_lightgbm_cov` **4.975** with the **code agent 2nd at 4.991**; h=5 top
+five all LLM-based with both LightGBMs at **14th/17th**; h=21 leader
+`darts_lightgbm_cov` **17.18** with **news-gemini 3rd at 17.59** and three
+agents in the top seven. n_scores = **24 / 22 / 24** resolved weekly origins.
+
+**Source:** `results/tsx_ws_eval_2026_weekly/leaderboard.csv` (`mean_crps` per
+`model` × `horizon`; the CSV is the authoritative scoreboard).
+
+## Figure 3 — `fig6_where_agents_earn.png` (`fig6_where_agents_earn.py`)
+
+PNG title: *Mean CRPS at h = 21: war vs quiet split, and agent vs frozen base*.
+
+**Left** — news agent (`..._analyst_news_gemini-3.5-flash_continuous`) vs
+`darts_lightgbm_cov` over the 24 common resolved h=21 origins, split on the war
+window (origins 2026-02-09 → 04-13, n = 10) vs quiet weeks (n = 14): war
+window agent **0.02178** vs tree **0.02449** (**−11 %**, agent better); quiet
+agent **0.01460** vs tree **0.01196** (**+22 %**, agent worse).
+
+**Right** — paired same-model dumbbells, frozen LLMP → agent, leaderboard h=21
+means: news gemini-3.5 **−3.7 %**; adaptive pre **+1.7 %**; adaptive post
+**+2.8 %**; news sonnet-4.6 **−0.0 %** (flat); code sonnet-4.6 **−3.1 %**,
+better at **18/24** origins (one-sided sign test p ≈ 0.011 — the only pair that
+separates, and it does not survive a magnitude-weighting or overlap-respecting
+test; see post).
+
+**Caveats (now caption-side):** n ≤ 24 origins at every cut; the war/quiet
+split is one regime event sampled weekly, not ten independent breaks.
+**Source:** `predictions/tsx_ws_eval_2026_weekly/`, `tsx_logret_21b/`;
+per-origin CRPS via `properscoring.crps_ensemble`; the script pins the
+war/quiet means, all dumbbell means, and the 18/24 count, and asserts its
+recompute reproduces them before writing the PNG.
+
+## Figure 4 — `fig7_sentinel_bands.png` (`fig7_sentinel_bands.py`)
+
+PNG title: *10–90 forecast bands vs the realized 21-day return*. Both methods'
+10–90 prediction intervals per forecast origin over the 24 common resolved
+weekly origins (2026-01-05 → 2026-06-15), realised 21-day return overlaid,
+war-window origins (2026-02-09 → 04-13) shaded.
+
+Computed stats (printed by the script; caption-side by design): the tree's band
+width varies only **1.7×** min-to-max across the half-year while the agent's
+varies **3.5×**; the agent's band runs **1.63×** the tree's width at the median
+origin and peaks at **3.00×** at the war-trough origin **2026-03-16**. The
+agent's *median* width inside the war window is **not** elevated vs quiet weeks
+— the break is distinguished by the spike, not a level shift.
+
+**Source:** `predictions/tsx_ws_eval_2026_weekly/`, both rungs (news gemini
+agent and `darts_lightgbm_cov`), `tsx_logret_21b/<origin>.yaml` — bands read
+off the persisted 11-point quantile grids (q0.1–q0.9); realised values from the
+TSX data service.
+
+## Figure 5 — `fig3_divergence_sentinel.png` (`fig3_divergence_sentinel.py`)
+
+PNG title: *When the agent and the tree disagree*. **Main panel:** per-origin
+divergence D between the gemini news agent's and LightGBM+cov's 11-point
+quantile grids (D = mean absolute difference across the 11 levels), war window
+shaded. Top-4 origins: **2026-03-16 (D=0.0461)**, **2026-03-23 (0.0338)**,
+**2026-06-08 (0.0228)**, **2026-02-23 (0.0223)**. The June origin is the agent
+pricing a post-record-high correction (record 35,217; sticky 3.2 % CPI;
+Q0.05/Q0.95 widened to −7.2 %/+6.8 % in its rationale) that never confirmed.
+**Inset:** mean h=21 CRPS — always LightGBM+cov **0.01718**, always agent
+**0.01759**, divergence-gated router **0.01688** (in-sample median threshold
+D = 0.0170). The inset's zoomed non-zero axis start (16.5 ×10⁻³) is encoded on
+the figure itself (break glyphs + "16.5 (axis start)" tick) so a screenshot
+cannot mislead.
+
+**Exploratory caveats (caption-side):** n = 24 origins; the router threshold is
+the in-sample median, so the CRPS gain is illustrative, not out-of-sample —
+about 28 % of random gates of the same size do as well (see post).
+**Source:** `predictions/tsx_ws_eval_2026_weekly/`, `tsx_logret_21b/`; the
+script pins the three policy means (0.0171834 / 0.0175927 / 0.0168775) and
+asserts its recompute reproduces them to 1e-5 before writing the PNG.
+
+## Figure 6 — `fig2_scenario_card.png` (`fig2_scenario_card.py`)
+
+PNG title: *Right call, wrong reason — a scenario write-up graded against what
+happened* (the mechanism-mismatch headline lives in the title by design).
+Scenario set issued **2026-03-31**, 60-business-day outlook:
 
 | Scenario | Prob. | 60-day outlook |
 |---|---|---|
-| Commodity-Led Defensive Rotation *(base case)* | **0.55** | +3% to +5% |
-| US-Trade Policy Stalls / Tariff Risk | **0.30** | −4% to −7% |
-| BoC Policy Disappointment | **0.15** | −2% to +1% |
+| Commodity-Led Defensive Rotation *(base case)* | **0.55** | +3 % to +5 % |
+| US-Trade Policy Stalls / Tariff Risk | **0.30** | −4 % to −7 % |
+| BoC Policy Disappointment | **0.15** | −2 % to +1 % |
 
-**Right, top:** the LLM judge's verdict (Claude Sonnet-4.6) — **calibration 5/5,
-drivers 3/5, specificity 4/5**. **Right, bottom:** the realised cumulative log
-returns from 2026-03-31 — **+2.60%** at 5 days (through 2026-04-08), **+3.65%**
-at 21 days (through 2026-04-30), **+6.35%** at 60 days (through 2026-06-25), all
-up. **Annotation:** the mechanism mismatch — the base case earned its high
-calibration by calling the direction (and roughly the magnitude) right, but for
-the wrong reason: it assumed *persistent Middle-East friction keeping oil bid*,
-whereas the rally came from a *ceasefire relief bounce* — hence the lower
-drivers score.
+Judge (Claude Sonnet-4.6): **calibration 5/5, drivers 3/5, specificity 4/5**.
+Realised cumulative log returns from 2026-03-31: **+2.60 %** at 5 days
+(through 2026-04-08), **+3.65 %** at 21 days (2026-04-30), **+6.35 %** at 60
+days (2026-06-25). The mechanism mismatch: the base case assumed persistent
+Middle-East friction keeping oil bid; the rally came from a ceasefire relief
+bounce — hence the withheld drivers credit.
 
-**Source:** `data/scenarios/2026-03-31/writeup.md` (scenario names,
-probabilities, outlook ranges) and `data/scenarios/2026-03-31/judge.yaml`
-(`verdict` scores + `realized_outcome` horizons/returns).
-
-## fig3 — `fig3_divergence_sentinel.png`
-
-Agent-vs-tree divergence as a regime sentinel (protected 2026 eval, h=21).
-**Main panel:** per-origin divergence D between the gemini news agent's
-(`agent_predictor_tsx_analyst_news_gemini-3.5-flash_continuous`) and LightGBM
-+cov's (`darts_lightgbm_cov`) 11-point quantile grids, where D = mean absolute
-difference across the 11 quantile levels; the 2026 war window (origins
-2026-02-09 → 2026-04-13) is shaded in the Part-1 fig-4 landmark style. Three of
-the four highest-D origins sit in or at the window: **2026-03-16 (D=0.0461)**,
-**2026-03-23 (0.0338)**, **2026-02-23 (0.0223)** — the two forecasters disagree
-most exactly when the regime breaks. The fourth, **2026-06-08 (0.0228)**, fires
-outside the confirmed window: the agent's rationale at that origin prices a
-correction off the TSX's record high (35,217) with sticky 3.2% CPI, widening its
-Q0.05/Q0.95 to −7.2%/+6.8% — a genuine perceived-risk signal, annotated on the
-figure. **Side panel:** mean CRPS of three policies over the same origins —
-always LightGBM +cov **0.01718**, always agent **0.01759**, and a
-divergence-gated router (use the agent when D exceeds its median, else LightGBM
-+cov) **0.01688** (in-sample median threshold D = 0.0170).
-
-**Population:** all **24** weekly origins with resolved 21-day outcomes,
-**2026-01-05 → 2026-06-15** — the same n=24 the refreshed eval leaderboard
-reports at h=21 (no resolved origin is excluded).
-
-**Exploratory caveats (also flagged on the figure):** n = 24 origins; the router
-threshold is the *in-sample* median, so the CRPS gain is illustrative, not an
-out-of-sample result. A companion construction that sets the threshold on the
-2025 backtest fires at the 2025 tariff window as well — but does not pay for the
-sonnet news agent, so the gated-routing gain is rung-specific, not a law.
-
-**Source:** `data/predictions/tsx_ws_eval_2026_weekly/` (both rungs),
-`tsx_logret_21b/<origin>.yaml`; realised values from the TSX data service
-(`_blogdata.realized`); CRPS per origin via `properscoring.crps_ensemble` on the
-sorted quantile grids. The script pins the three policy means (0.0171834 /
-0.0175927 / 0.0168775) and asserts its recompute reproduces them to 1e-5 before
-writing the PNG.
-
-## fig4 — `fig4_adaptive_prepost.png`
-
-One adaptive study session, graded honestly as a **null result**. The adaptive
-analyst studies the market, opens hypotheses, backtests them, and graduates the
-confirmed ones into a strategy file that the forecasting rung then reads. This
-figure asks the only question that matters: did a session of study actually move
-the protected-eval score?
-
-**Left — pre/post paired CRPS.** Grouped bars by horizon (h = 1, 5, 21) of mean
-CRPS on the protected 2026 weekly eval: **PRE** = the seed-strategy rung
-(`agent_predictor_tsx_adaptive_analyst_tsx_strategy_gemini-3.5-flash_continuous`)
-vs **POST** = the trained-strategy rung (`..._tsx_strategy_trained_...`).
-
-| Horizon | PRE mean CRPS | POST mean CRPS | n | POST wins |
-|---|---|---|---|---|
-| h = 1 | **0.00522** | **0.00527** | 24 | 13/24 |
-| h = 5 | **0.01206** | **0.01193** | 22 | 12/22 |
-| h = 21 | **0.01857** | **0.01876** | 24 | 10/24 |
-
-The horizon means move both directions — POST is very slightly better at h=5,
-very slightly worse at h=1 and h=21 — and every gap is a fraction of a
-CRPS×10⁻³, well inside the noise floor for n ≤ 24. The per-origin win split is
-essentially a coin flip at every horizon. Small open diamonds mark the
-**war-window cut** (origins 2026-02-09 → 04-13 only): h=5 pre **0.01552** / post
-**0.01514**, h=21 pre **0.02460** / post **0.02416** — the trained strategy's
-wider low-vol/anomaly intervals help a touch in the turbulent stretch, but not
-enough to register in the pooled mean. The subtle dashed reference line is
-`darts_lightgbm_cov`'s h=21 mean (**0.01718**), for rank context: both agent
-rungs sit above the plain covariate tree at the long horizon.
-
-**Right — what graduated.** A faithful, condensed excerpt of the trained
-strategy file, styled as fig2's cards: (1) the low-volatility calibration
-correction (realised vol < 10% → widen intervals 12% / 18% / 23% by horizon,
-hyp-001); (2) the negative-anomaly correction (daily return z-score < −2.5 →
-widen the 1-day intervals 40%, 5-day 20%, hyp-003); and (3) one recorded
-**NEGATIVE result** — the day-of-week finding, where unconditional and
-sub-period ANOVA tests (overall p = 0.5392, averages sign-flipping across
-epochs) rule out any day-of-week adjustment (hyp-009). Card footer: **25
-corrections graduated in one session — all confirmations same-session.**
-
-**The honest caveat (framed on the figure and here):** all 25 graduated
-corrections were *confirmed within the same session that opened them* — the
-strategy file's `hypotheses` all carry `opened_on` = `confirmed_on` =
-`2026-07-18`, three same-day confirmations each. There is no held-out
-confirmation and no out-of-sample graduation gate, so the strategy file is a
-record of what the session found self-consistent, not of what survived
-independent replication. Combined with the null pre/post result, the takeaway is
-deliberately deflationary: one study session produced a plausible, readable
-strategy document but did **not** move the protected-eval score beyond noise.
-
-**Source:** `data/predictions/tsx_ws_eval_2026_weekly/` — the two adaptive rungs
-above, tasks `tsx_logret_{1b,5b,21b}`, `<origin>.yaml`. Per-origin CRPS via
-`properscoring.crps_ensemble` on the sorted 11-point quantile grid vs the
-realised value (`_blogdata.realized`), resolved origins only (n = 24 / 22 / 24;
-paired on the origins both rungs resolved). War-window cut = origins 2026-02-09
-→ 04-13. Reference line from `darts_lightgbm_cov/tsx_logret_21b/`. Card text
-condensed (faithfully) from
-`workshop_experiments/.../adaptive/skills_tsx/tsx-strategy-trained/skill_state.yaml`
-(`calibration_corrections` for hyp-001/hyp-003, `hypotheses`/`observations` for
-hyp-009). The script pins all six horizon means, both war-window cuts, the
-reference mean, and the three win counts, and asserts its recompute reproduces
-them to 1e-5 before writing the PNG.
-
-## fig5 — `fig5_combined_leaderboard.png`
-
-The full protected-eval scoreboard: **all 21 methods × 3 horizons** (h = 1, 5,
-21), read straight from the final `leaderboard.csv`. One panel per horizon; within
-each panel the 21 rungs are ranked by mean CRPS (best on top) and drawn as a dot
-on a **zoomed** value axis, so the tight ordering at the top of the ladder stays
-legible — at h=1 every non-floor method sits within ~7% of the leader. The three
-far-worse floors are flagged off-scale at the right margin with their true value
-rather than compressing the axis: **naive** at every horizon (9.28 / 23.30 /
-42.33 ×10⁻³) and **ETS** at h=5 & h=21 (16.21 / 32.57).
-
-Dots are colour-coded by method family, identical to the Part-1 fig-3 legend —
-naive floor grey, classical green (aqua), LightGBM blue, LLM-Process purple
-(violet), LLM-Process +covariates pink (magenta) — and the five **AGENTS** (news
-gemini-3.5, news sonnet-4.6, code sonnet-4.6, adaptive pre-study, adaptive
-post-study) get a distinct **orange** highlight (haloed dot + bold label).
-
-Anchor facts (all reproduce from the CSV; asserted in-script before render):
-
-| Horizon | Reads |
-|---|---|
-| **h = 1** | Leader `darts_lightgbm_cov` **4.975**; **code agent 2nd 4.991**; then LLMP flash-lite 5.012. Everything except the naive floor clusters inside 4.98–5.34. |
-| **h = 5** | Top five all LLM-based — four LLMP rungs (11.76 / 11.79 / 11.92 / 11.94) plus the **adaptive-trained agent 4th (11.93)**; both LightGBMs sink to **14th (12.41)** and **17th (12.67)**. |
-| **h = 21** | Leader `darts_lightgbm_cov` **17.18**; **news-gemini 3rd 17.59**; **three agents in the top seven** (news-gemini 3rd, adaptive-pre 5th 18.57, adaptive-post 7th 18.76). |
-
-Headline: **no family owns every horizon.** The trees win the two ends they were
-built for (h=1 point-ish accuracy, h=21 mean reversion); the LLM family owns the
-5-day horizon; the agents mix in with the leaders at h=1 and h=21 but are
-mid-pack at h=5. Values are mean CRPS ×10⁻³ over the resolved weekly origins
-(`n_scores` = 24 / 22 / 24).
-
-**Source:** `results/tsx_ws_eval_2026_weekly/leaderboard.csv` — the `mean_crps`
-column per `model` × `horizon` (21 rungs each). No recompute needed (the CSV is
-the authoritative scoreboard); the script asserts the anchor ranks/values above
-before writing the PNG. Family colours and palette from Part-1 `_blogdata.py`.
-
-## fig6 — `fig6_where_agents_earn.png`
-
-Two panels isolating **where the agent's judgement pays and where it doesn't**
-(h = 21 throughout).
-
-**Left — war window vs quiet weeks.** Grouped bars of mean CRPS for the gemini
-news agent (`..._analyst_news_gemini-3.5-flash_continuous`) vs `darts_lightgbm_cov`,
-split by regime over the **24 common resolved origins** (both rungs resolved):
-
-| Regime | n | News agent | LightGBM +cov | Agent vs tree |
-|---|---|---|---|---|
-| War window (as_of 2026-02-09 → 04-13) | **10** | **0.02178** | **0.02449** | **−11%** (agent better) |
-| Quiet weeks | **14** | **0.01460** | **0.01196** | **+22%** (agent worse) |
-
-Through the regime break the agent beats the tree by **11%**; in the calm it
-loses to the same tree by **22%**. The agent's read-the-news edge is real but it
-is paid for by carrying wider intervals into quiet weeks where the tree's tight
-climatology wins.
-
-**Right — does agency help the same model?** Paired dumbbells from a **frozen
-LLM-Process rung** to the agent built on the **same base model**; arrow direction
-and colour encode improvement (green) vs regression (red), flat in grey. All
-values are the leaderboard h=21 means:
-
-| Frozen base | Agent arm | Base → arm | Δ | Paired result |
-|---|---|---|---|---|
-| LLMP gemini-3.5 (0.01826) | News agent (gemini-3.5) | → **0.01759** | −4% | 14/24 origins, n.s. |
-| LLMP gemini-3.5 (0.01826) | Adaptive agent (pre-study) | → **0.01857** | +2% | worse, n.s. |
-| LLMP gemini-3.5 (0.01826) | Adaptive agent (post-study) | → **0.01876** | +3% | worse, n.s. |
-| LLMP sonnet-4.6 (0.02099) | News agent (sonnet-4.6) | → **0.02099** | flat | 14/24, n.s. |
-| LLMP sonnet-4.6 (0.02099) | Code agent (sonnet-4.6) | → **0.02035** | −3% | **18/24 origins, one-sided sign test p ≈ 0.01** |
-
-Only one of the five arms is statistically distinguishable from its frozen base —
-the **sonnet-4.6 code agent** (18 of 24 origins beat the frozen rung; one-sided
-sign test p ≈ 0.011). Everything else, including **both adaptive arms** (whose
-base is the same gemini-3.5 model), is within noise, and the two adaptive arms
-actually **regress** off their base. Wrapping a model in an agent scaffold is not
-a free lunch: mostly it does nothing measurable, and it can hurt.
-
-**Caveats (flagged on the figure and here):** **n ≤ 24 origins** at every cut;
-the war/quiet split is **one regime event sampled weekly — not ten independent
-breaks** (the 10 war-window origins are overlapping weekly reads of a single
-2026 drawdown, so the −11% is one event's worth of evidence, not a law); and the
-dumbbells are **horizon-mean deltas**, not per-origin paired tests except where a
-win count / p-value is stated.
-
-**Source:** `predictions/tsx_ws_eval_2026_weekly/`, `tsx_logret_21b/<origin>.yaml`.
-Per-origin CRPS via `properscoring.crps_ensemble` on the sorted 11-point quantile
-grid vs the realised value (`_blogdata.realized`), resolved origins only. **Left**
-recomputed over the 24 common resolved origins of the two rungs, split on the
-war-window dates. **Right** uses the leaderboard h=21 means (each reproduced by
-the recompute); the code-agent win count and one-sided sign test (`scipy.stats.
-binomtest(18, 24, alternative="greater")` = 0.0113) are recomputed per origin. The
-script pins the war/quiet means (agent 0.02178 / 0.01460, tree 0.02449 / 0.01196),
-all seven dumbbell means, and the 18/24 code-agent count, and asserts its
-recompute reproduces them (means to 1e-5) before writing the PNG.
-
-**Note on the quiet-week numbers vs the exploratory draft:** an earlier pass used
-a 22-origin common set (quiet n=12, agent +17%). The refreshed store now resolves
-**24** common origins, so quiet is **n=14** and the agent's quiet-week penalty is
-**+22%**; the war window is unchanged (n=10, agent 0.02178 vs tree 0.02449, −11%).
-The 24-origin figures above are authoritative.
+**Source:** `data/scenarios/2026-03-31/writeup.md` and
+`data/scenarios/2026-03-31/judge.yaml` (`verdict` scores +
+`realized_outcome`).
 
 ---
 
+### Retired — `fig4_adaptive_prepost.png` (`fig4_adaptive_prepost.py`)
+
+Removed from the post in the final compression pass (a second null scoreboard
+after Figure 2 added cost without information; the adaptive section now carries
+its one transferable finding in prose). The script still runs and its pinned
+numbers remain valid: pre/post mean CRPS 0.00522/0.00527 (h=1, n=24),
+0.01206/0.01193 (h=5, n=22), 0.01857/0.01876 (h=21, n=24); per-origin wins a
+coin flip at every horizon; all 25 graduated corrections confirmed same-session
+(`opened_on` = `confirmed_on` = 2026-07-18). Note: it has **not** been migrated
+to the chrome-out `bd.savefig` contract.
+
 ### Regenerating
 
-From the worktree root, with the refreshed data store on hand:
+From the repo root (data store co-located; no env var needed):
 
 ```
-export BLOG_WS_DATA_ROOT=.../workshop_experiments/workshop_experiments/data
 uv run python blog/part-2/assets/fig1_agent_anatomy.py
 uv run python blog/part-2/assets/fig2_scenario_card.py
 uv run python blog/part-2/assets/fig3_divergence_sentinel.py
-uv run python blog/part-2/assets/fig4_adaptive_prepost.py
 uv run python blog/part-2/assets/fig5_combined_leaderboard.py
 uv run python blog/part-2/assets/fig6_where_agents_earn.py
+uv run python blog/part-2/assets/fig7_sentinel_bands.py
 ```
 
-Each writes its PNG (220 dpi) beside the script. Omit `BLOG_WS_DATA_ROOT` to use
-this checkout's own `data/` store.
+Each writes its PNG beside the script through `_blogdata.savefig`, which
+enforces the shared contract: 220 dpi (Part-1 parity), no figure-level text
+below the axes block (footnotes are banned — they belong in the post caption
+and here), no text under the 10 pt floor, and saved width ≤ 1.02 × figsize ×
+220 dpi. Scripts print `CAPTION:` lines at save time with any computed values a
+caption needs — paste from there, never hand-transcribe.

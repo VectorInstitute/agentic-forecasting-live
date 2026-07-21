@@ -87,6 +87,47 @@ all landmark % moves and the two didactic CRPS values are from `assets/CAPTIONS.
    justification.)
 
 
+## Knowledge-cutoff pass (2026-07-21)
+
+The cutoff table and the Sonnet-5 error-gap caveat were added after verifying
+each vendor's stated cutoff from primary sources:
+
+- **Claude Sonnet 5**: reliable knowledge cutoff Jan 2026, training data Jan 2026;
+  **Claude Sonnet 4.6**: reliable Aug 2025, training data Jan 2026 — both from
+  the Anthropic models overview (platform.claude.com/docs/en/about-claude/models/overview).
+- **GPT-5.4**: Aug 31, 2025 — OpenAI model docs (developers.openai.com/api/docs/models/gpt-5.4).
+- **Gemini 3.5 Flash** and **Gemini 3.1 Flash-Lite (preview)**: Jan 2025 —
+  deepmind.google/models/gemini/flash and ai.google.dev model pages.
+
+Error-gap numbers recomputed from the persisted prediction stores with the same
+CRPS call as the leaderboards (scratch script, `crps_series` from `_blogdata.py`):
+sonnet-5_cov h=5 backtest 8.458e-3 → eval 12.444e-3 (1.47×); all other LLMP
+configs at h=5 fall in 1.17–1.25×, numeric methods 1.25–1.31×; at h=1 every
+method (LLMP and numeric alike) degrades ~1.19–1.35× — so the backtest→eval
+degradation is regime, not leakage, except for the Sonnet-5-cov outlier. At
+h=21 sonnet-5_cov's backtest lead (20.358e-3, rank 1) lands at 20.273e-3 in
+eval vs LightGBM-cov 17.183e-3 — the lead does not survive. The protected
+window's first four origins (2026-01-05 … 2026-01-26) fall inside the Claude
+models' stated training window; a sub-split shows no visible advantage on those
+origins (both Sonnet LLMPs trail LightGBM there), so they are flagged in the
+text rather than dropped.
+
+Part 2 model attributions added in the same pass (verified from artifacts):
+news agents = claude-sonnet-4-6 and gemini-3.5-flash; code agent =
+claude-sonnet-4-6; adaptive agent = gemini-3.5-flash; fig1 anatomy forecast =
+sonnet-4-6 news agent at 2026-03-30 (post-training-cutoff, clean). Track 2
+scenario writer = gemini-3.1-flash-lite-preview (all four `scenarios/*/meta.yaml`),
+judge = claude-sonnet-4-6 (all four `scenarios/*/judge.yaml`) — writer's Jan 2025
+cutoff predates all four origins (write-ups cutoff-clean); judge's training data
+covers the two 2025 origins, so the "cannot see the causal chain" claim was
+narrowed to "refuses to certify … cannot verify," with the in-knowledge restraint
+noted explicitly. Paired agent-vs-frozen-base comparisons are same-model and
+therefore cutoff-neutral (noted in the wrinkle paragraph).
+
+Word-count note: this pass adds ~230 readable words to Part 1, putting it above
+the 1,700–2,000 hard range. The ranked cut list below still applies if comms
+wants it back inside the range.
+
 ## Orchestrator pass (2026-07-17)
 - Sonnet-5 aside re-sourced: token/wall multiples computed from run accounting
   (weekly eval: sonnet-5 target-only 399,507 out-tokens / 72 preds ≈ 5.5k/pred vs

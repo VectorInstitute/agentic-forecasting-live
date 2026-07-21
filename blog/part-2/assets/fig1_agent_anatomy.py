@@ -78,7 +78,7 @@ def main() -> None:
 
     fig = plt.figure(figsize=(13.4, 7.6))
     gs = fig.add_gridspec(1, 3, width_ratios=[1.02, 1.06, 0.92], wspace=0.10,
-                          left=0.015, right=0.965, top=0.79, bottom=0.11)
+                          left=0.015, right=0.965, top=0.82, bottom=0.11)
     ax_l = fig.add_subplot(gs[0])
     ax_c = fig.add_subplot(gs[1])
     ax_r = fig.add_subplot(gs[2])
@@ -88,26 +88,20 @@ def main() -> None:
         ax.set_ylim(0, 1)
 
     # ---- Title band --------------------------------------------------------
-    fig.text(0.015, 0.945,
-             "Anatomy of one agent forecast",
-             fontsize=18, fontweight="bold", color=bd.INK["primary"], ha="left")
-    fig.text(0.015, 0.895,
-             "News analyst (Claude Sonnet-4.6), S&P/TSX 21-business-day log return  ·  "
-             "origin 2026-03-30  ·  86 s wall, 6 searches",
-             fontsize=13, color=bd.INK["secondary"], ha="left")
+    bd.figure_title(fig, 1, "Anatomy of one agent forecast", x=0.015, y=0.955)
 
     # Column headers.
-    ax_l.text(0.0, 1.055, "1  GATHER", fontsize=13.5, fontweight="bold",
+    ax_l.text(0.0, 1.055, "1  GATHER", fontsize=bd.FS["axtitle"], fontweight="bold",
               color=AGENT, ha="left", transform=ax_l.transAxes)
-    ax_l.text(0.0, 1.010, "six web searches", fontsize=12,
+    ax_l.text(0.0, 1.010, "six web searches",
               color=bd.INK["muted"], ha="left", transform=ax_l.transAxes)
-    ax_c.text(0.0, 1.055, "2  REASON", fontsize=13.5, fontweight="bold",
+    ax_c.text(0.0, 1.055, "2  REASON", fontsize=bd.FS["axtitle"], fontweight="bold",
               color=bd.CAT["violet"], ha="left", transform=ax_c.transAxes)
-    ax_c.text(0.0, 1.010, "load-bearing factors", fontsize=12,
+    ax_c.text(0.0, 1.010, "load-bearing factors",
               color=bd.INK["muted"], ha="left", transform=ax_c.transAxes)
-    ax_r.text(0.0, 1.055, "3  FORECAST", fontsize=13.5, fontweight="bold",
+    ax_r.text(0.0, 1.055, "3  FORECAST", fontsize=bd.FS["axtitle"], fontweight="bold",
               color=bd.CAT["blue"], ha="left", transform=ax_r.transAxes)
-    ax_r.text(0.0, 1.010, "quantile grid (log return)", fontsize=12,
+    ax_r.text(0.0, 1.010, "quantile grid (21-day log return)",
               color=bd.INK["muted"], ha="left", transform=ax_r.transAxes)
 
     # ---- Left: tool trail --------------------------------------------------
@@ -118,10 +112,10 @@ def main() -> None:
     for i, (y, label) in enumerate(zip(ys, SEARCHES), start=1):
         ax_l.add_patch(plt.Circle((xdot, y), 0.028, facecolor=AGENT,
                                   edgecolor=bd.INK["surface"], lw=1.6, zorder=3))
-        ax_l.text(xdot, y, str(i), ha="center", va="center", fontsize=11,
+        ax_l.text(xdot, y, str(i), ha="center", va="center",
                   color="#ffffff", fontweight="bold", zorder=4)
         ax_l.text(xdot + 0.080, y, label, ha="left", va="center",
-                  fontsize=12.5, color=bd.INK["primary"])
+                  fontsize=bd.FS["label"], color=bd.INK["primary"])
 
     # ---- Center: rationale factor cards ------------------------------------
     m = len(FACTORS)
@@ -136,9 +130,9 @@ def main() -> None:
         ax_c.add_patch(plt.Rectangle((0.02, y0), 0.02, card_h,
                                      facecolor=bd.CAT["violet"], lw=0, zorder=2))
         ax_c.text(0.075, y0 + card_h * 0.62, head, ha="left", va="center",
-                  fontsize=12.5, fontweight="bold", color=bd.INK["primary"])
+                  fontsize=bd.FS["label"], fontweight="bold", color=bd.INK["primary"])
         ax_c.text(0.075, y0 + card_h * 0.26, sub, ha="left", va="center",
-                  fontsize=11, color=bd.INK["secondary"])
+                  color=bd.INK["secondary"])
 
     # ---- Right: distribution strip -----------------------------------------
     levels = sorted(QUANT)
@@ -159,7 +153,6 @@ def main() -> None:
     ax_r.grid(False)
     ax_r.axhline(0, color=bd.INK["axis"], lw=0.9, zorder=1)
     ax_r.yaxis.set_major_formatter(plt.matplotlib.ticker.PercentFormatter(decimals=0))
-    ax_r.tick_params(axis="y", labelsize=12)
 
     xc = 0.34          # strip centre
     half90 = 0.16      # 90% interval half-width
@@ -177,12 +170,12 @@ def main() -> None:
     ax_r.plot([xc - half90 * 1.42, xc + half90 * 1.42], [med, med],
               color=bd.INK["primary"], lw=2.4, zorder=6)
     ax_r.text(xc + half90 * 1.5, med, f"median {med:+.0f}%", ha="left", va="center",
-              fontsize=12, fontweight="bold", color=bd.INK["primary"])
+              fontsize=bd.FS["label"], fontweight="bold", color=bd.INK["primary"])
     # Key-quantile labels, tucked just left of the strip (clear of the % axis).
     for q in (0.05, 0.80, 0.95):
         v = QUANT[q] * 100
         ax_r.text(xc - half90 * 1.04, v, f"Q{q:.2f}", ha="right", va="center",
-                  fontsize=11, color=bd.INK["muted"])
+                  color=bd.INK["muted"])
 
     # Realised outcome marker (neutral, high-contrast) landing at ~Q0.80.
     xr = xc + half90 * 1.42
@@ -198,18 +191,26 @@ def main() -> None:
     real_simple = (np.exp(realised) - 1) * 100  # simple-return headline (+5.1%)
     ax_r.text(xr + 0.30, real_pc + 1.35,
               f"realised {real_simple:+.1f}%\n(21-day)  ≈ Q0.80",
-              ha="center", va="bottom", fontsize=12.5, fontweight="bold",
+              ha="center", va="bottom", fontsize=bd.FS["label"], fontweight="bold",
               color=bd.INK["primary"], linespacing=1.25)
 
-    fig.text(0.015, 0.015,
-             "Source: predictions/tsx_ws_eval_2026_weekly/agent_predictor_tsx_analyst_news_claude-sonnet-4-6_continuous/tsx_logret_21b/\n"
-             "2026-03-30.yaml (tool_calls, rationale, quantiles). Quantiles and realised are 21-day log returns; realised +5.1% is the\n"
-             "simple-return equivalent (log +4.96%). Realised via the leak-safe TSX data service.",
-             fontsize=10, color=bd.INK["muted"], ha="left", linespacing=1.4)
-
-    out = _P1_ASSETS.parent.parent / "part-2" / "assets" / "fig1_agent_anatomy.png"
-    fig.savefig(out, dpi=150, bbox_inches="tight", facecolor=bd.INK["surface"])
+    out = bd.savefig(fig, "fig1_agent_anatomy.png")
     print(f"wrote {out}  realised={real_pc:+.3f}% (log)  median={med:+.1f}%")
+    print(
+        "CAPTION: News analyst agent (Claude Sonnet-4.6) forecasting the S&P/TSX "
+        "21-business-day log return from origin 2026-03-30: six web searches and "
+        "86 s of wall clock, four load-bearing rationale factors, and an 11-point "
+        f"quantile grid (median {med:+.0f}%)."
+    )
+    print(
+        f"CAPTION: The realised 21-day return of {real_simple:+.1f}% "
+        f"(log {real_pc:+.2f}%) landed at roughly the agent's Q0.80. Search "
+        "queries are paraphrased; verbatim queries, rationale, and quantiles are "
+        "in the persisted prediction store "
+        "(predictions/tsx_ws_eval_2026_weekly/agent_predictor_tsx_analyst_news_"
+        "claude-sonnet-4-6_continuous/tsx_logret_21b/2026-03-30.yaml), with the "
+        "realised value from the leak-safe TSX data service."
+    )
 
 
 if __name__ == "__main__":

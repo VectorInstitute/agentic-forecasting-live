@@ -17,6 +17,7 @@ from __future__ import annotations
 import _blogdata as bd
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
+from matplotlib.patches import Patch
 
 
 SPEC = "tsx_ws_daily_2025_2026"
@@ -36,56 +37,56 @@ def main() -> None:
     lms = bd.landmarks()
 
     fig, axes = plt.subplots(3, 1, figsize=(12, 9.2), sharex=True)
+    n_origins = {}  # horizon -> {model label: resolved-origin count}
     for ax, target in zip(axes, bd.TARGETS):
         h = bd.HORIZON_OF[target]
         # Landmark shading.
         wash = {"drawdown": bd.STATUS["critical"], "rebound": bd.STATUS["good"]}
         for lm in lms:
             ax.axvspan(lm["start"], lm["end"], color=wash[lm["kind"]], alpha=0.09, lw=0, zorder=0)
+        counts = {}
         for model, label, color, ls in SERIES:
             s = bd.crps_series(SPEC, model, target)
             if s.empty:
                 continue
+            counts[label] = int(s.size)
             ax.plot(s.index, s.values, color=color, lw=1.1, ls=ls, alpha=0.85, label=label, zorder=3)
+        n_origins[h] = counts
         ax.set_ylabel(f"CRPS  (h={h})")
         ax.margins(x=0.01)
         ax.set_ylim(bottom=0)
 
-    fig.suptitle(
-        "Every method goes blind at the same moments: daily CRPS through the landmark windows",
-        fontsize=13,
-        fontweight="bold",
-        x=0.125,
-        ha="left",
-        y=0.975,
-    )
+    bd.figure_title(fig, 5, "Daily CRPS per origin through the landmark windows", x=0.125, y=0.98)
     handles, labels = axes[0].get_legend_handles_labels()
+    handles += [
+        Patch(facecolor=bd.STATUS["critical"], alpha=0.35, lw=0),
+        Patch(facecolor=bd.STATUS["good"], alpha=0.35, lw=0),
+    ]
+    labels += ["Drawdown", "Rebound"]
     fig.legend(
         handles,
         labels,
         loc="upper left",
         bbox_to_anchor=(0.125, 0.945),
-        ncol=5,
-        fontsize=9,
-        columnspacing=1.4,
-        handlelength=1.8,
+        ncol=7,
+        columnspacing=1.2,
+        handlelength=1.5,
     )
     axes[-1].xaxis.set_major_locator(mdates.MonthLocator(interval=2))
     axes[-1].xaxis.set_major_formatter(mdates.DateFormatter("%b\n%Y"))
 
-    fig.text(
-        0.125,
-        0.035,
-        "Source: daily prediction store (tsx_ws_daily_2025_2026), CRPS per origin via "
-        "properscoring.crps_ensemble. Shaded: TSX landmark windows (red = drawdown, green = rebound; "
-        "identities in fig. 1). All five methods resolve across the full daily grid (~365 origins each).",
-        fontsize=7.5,
-        color=bd.INK["muted"],
-        ha="left",
-    )
-
-    fig.subplots_adjust(top=0.9, bottom=0.1, hspace=0.16)
+    fig.subplots_adjust(top=0.895, bottom=0.075, hspace=0.16)
     out = bd.savefig(fig, "fig4_daily_crps_landmarks.png")
+    n_by_h = {h: (min(c.values()), max(c.values())) for h, c in n_origins.items() if c}
+    n_str = ", ".join(
+        f"h={h}: n={lo}" if lo == hi else f"h={h}: n={lo}–{hi}" for h, (lo, hi) in sorted(n_by_h.items())
+    )
+    print(
+        "CAPTION: Per-origin CRPS on the daily grid from the daily prediction store "
+        "(tsx_ws_daily_2025_2026), scored with properscoring.crps_ensemble. Shaded bands are the "
+        "TSX landmark windows (red = drawdown, green = rebound; identities as in Figure 1). "
+        f"All five methods resolve across the full daily grid ({n_str} origins per method).",
+    )
     print(f"wrote {out}")
 
 

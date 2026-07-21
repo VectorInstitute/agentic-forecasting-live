@@ -2,14 +2,15 @@
 
 **Ethan Jackson, Ali Kore, Behnoosh Zamanlooy & Shayaan Mehdi**
 
-*Part 2 of two.*
+*Part 2 of 2.*
 
 ## The staircase
 
 Part 1 ended on a frozen LLM that could emit a genuine predictive distribution
-but saw only numbers — quiet exactly where the series was about to get loud,
-because the cause of every regime break was written in language, not in the price
-history. The next rung hands the same forecaster the news.
+but saw only numbers and a short description of the series — quiet exactly where
+the series was about to get loud, because the cause of every regime break was
+written in language, not in the price history. The next rung hands the same
+forecaster the ability to go out and read the news for itself.
 
 The analyst agent keeps the task identical — a full quantile grid for the log
 return at 1, 5, and 21 business days — but before it answers it runs web
@@ -25,8 +26,8 @@ own diagnostics — pull the series into a dataframe, measure the trailing
 volatility and drawdown, check a claim before committing to it — rather than
 eyeballing numbers in a prompt.
 
-What does one forecast actually look like? Take the analyst agent standing on
-2026-03-30, at the trough of the war-driven drawdown. It fired six date-scoped
+What does one forecast actually look like? Take the news analyst (on Claude
+Sonnet 4.6) standing on 2026-03-30, at the trough of the war-driven drawdown. It fired six date-scoped
 searches — Bank of Canada policy, CPI and the Labour Force Survey, oil and gold,
 USD/CAD and GoC yields, US tariff spillovers, TSX sector earnings — then wrote a
 rationale that reads like a desk note: an accommodative BoC on hold at 2.25%,
@@ -41,127 +42,152 @@ the distribution, but in the upper reaches the agent had explicitly reserved for
 an outcome it considered unlikely. The rally that produced it lived in that
 right tail.
 
-![Anatomy of one agent forecast: six search queries, four load-bearing rationale
-factors, and the emitted quantile grid with the realized move marked at
-Q0.80.](assets/fig1_agent_anatomy.png)
+![Anatomy of one agent forecast: search queries, rationale factors, and the
+emitted quantile grid.](assets/fig1_agent_anatomy.png)
 
-*One forecast, end to end: the news analyst's six date-scoped searches (left),
-the load-bearing factors from its written rationale (center), and the quantile
-grid it emitted (right) — median +1%, deliberate negative skew, and the realized
-21-day move of +5.1% landing essentially at its Q0.80.*
+***Figure 1.** One forecast, end to end: the news analyst's six date-scoped
+searches (left, paraphrased), the load-bearing factors from its written
+rationale (center), and the 11-point quantile grid it emitted (right) — median
++1%, deliberate negative skew, and the realized 21-day move of +5.1% landing
+essentially at its Q0.80.*
 
 ## The same scoreboard
 
 An agent that reads is still just another predictor, so it earns its place the
-same way everything in Part 1 did: identical origins, identical cutoff, identical
-referee. We slot the news agent into the exact rolling-origin sweeps — the 2025
-backtest and the protected 2026 eval — and score its quantiles with CRPS beside
-the naive floor, the classical methods, LightGBM, and the frozen LLMP models. No
-special pleading, and no thumb on the scale for the method that took the most
-work to build.
+way everything in Part 1 did: slotted into the same rolling-origin sweeps and
+scored with CRPS beside the naive floor, the classical methods, LightGBM, and
+the frozen LLMPs. Same origins, same cutoff, same referee.
 
 The honest expectation, set by Part 1, is that reading the news does not
-automatically win. On the protected 2026 eval at h=1 the numbers-only board still
-clusters near CRPS 0.0050 — LightGBM-with-covariates at 0.00497, a lightweight
-LLMP call at 0.00501 — while the naive floor sits at 0.0093. For a one-day-ahead
-return, where the move is close to unforecastable, a news scan has little to add
-over a well-shaped distribution, and the agents' rows say exactly that: 0.00507
-and 0.00509 for the two news-agent variants, mid-pack and indistinguishable from
-the frozen models. But step through the horizons and the board reorganizes by
-*family*. At h=5 the language models sweep: the top five methods are all
-LLM-based, and the two LightGBM configurations fall to 14th and 17th of
-twenty-one — the week horizon appears to sit in a pocket where an LLM's fatter,
-more skeptical distributions fit the return process better than the trees'
-tight quantiles.
-At h=21 the guard changes again: the trees retake the lead, but three of the
-top seven methods are agents, led by the news agent (on the lighter model) at
-third, 0.01759 — behind only the two LightGBM configurations and ahead of every
-frozen LLMP on the board.
+automatically win — and at h=1 it doesn't. On the protected 2026 eval the
+Part 1 board clusters near CRPS 0.0050 against a naive floor of 0.0093,
+and the two news-agent variants — the same harness on Claude Sonnet 4.6 and
+Gemini 3.5 Flash (stated cutoffs in Part 1's table) — land mid-pack at 0.00507
+and 0.00509, indistinguishable from the frozen models: for a one-day-ahead
+return, where the move is close to unforecastable, a news scan has little to
+add over a well-shaped distribution. The one agent that thrives there is the
+code-executing analyst (also on Sonnet 4.6), second of twenty-one, a hair behind
+LightGBM-with-covariates — its eleven-code-runs-per-forecast style *is*
+statistics, and at one day out, with the whole top of the board inside a 2%
+spread and direction a coin flip, that is most of what there is to win. But
+step through the horizons and the board reorganizes by *family*. At h=5 the
+language models sweep: the top five methods are all LLM-based and the two
+LightGBM configurations fall to 14th and 17th of twenty-one — the week horizon
+appears to favour the LLMs' fatter, more skeptical distributions over
+LightGBM's tight quantiles. At h=21 the guard changes again: the LightGBM
+configurations retake the lead, but three of the top seven methods are agents,
+led by the news agent (on the lighter model) at third — ahead of every frozen
+LLMP on the board.
 
-![The full protected-eval leaderboard by horizon, all 21 methods, with the
-agent rungs highlighted against the numbers-only ladder and the LLMP
-matrix.](assets/fig5_combined_leaderboard.png)
+![Protected-eval leaderboard: all 21 methods at each horizon, agent rungs
+highlighted.](assets/fig5_combined_leaderboard.png)
 
-*The complete protected-window scoreboard, every method family on one board.
-The guard changes at every horizon: trees at h=1, the LLM family sweeping h=5,
-trees back on top at h=21 with three agents in the top seven.*
+***Figure 2.** The complete protected-window scoreboard, every method family on
+one board, ranked within each horizon. The guard changes at every horizon:
+LightGBM at h=1, the LLM family sweeping h=5, LightGBM back on top at h=21 with
+three agents in the top seven. Mean CRPS ×10⁻³ over n = 24/22/24 resolved
+weekly origins at h = 1/5/21; chevrons hold the far-worse floors — the naive
+method everywhere, ETS at h=5 and h=21 — off-scale so the ladder stays
+legible.*
 
-One more honest wrinkle: that ranking is model-dependent — the same agent
-harness on a heavier model finishes mid-pack at h=21 — so "agents read the
-news" is not yet a horizontal claim about agents; it is a configuration that
-has to earn its rung, model by model. The code-executing analyst completes the
-picture with an inverted profile: at
-h=1 it lands second of twenty-one at 0.00499 — a hair behind
-LightGBM-with-covariates — because its eleven-code-runs-per-forecast style *is*
-statistics, and one-day forecasting is purely a calibration game. At h=21 it
-sits mid-pack, yet beats its own frozen base model at eighteen of twenty-four
-origins — the clearest paired evidence in the study that agency improves a
-model — while showing none of the news agent's break-window advantage: it
-computes from the same history the trees see, and it fails where they fail.
-What an agent *reads* determines where it wins.
+Two wrinkles keep that story honest. The ranking is model-dependent — the same
+agent harness on a heavier model finishes mid-pack at h=21 — so "agents read
+the news" is not yet a horizontal claim about agents; it is a configuration
+that has to earn its rung, model by model. One point in the lighter
+configuration's favour: it runs on Gemini 3.5 Flash, whose stated knowledge
+cutoff (January 2025) predates the protected window by a full year, so its
+third place cannot be memorized knowledge of the period — while the heavier
+harness runs on Claude Sonnet 4.6, whose training data extends into January
+2026 (see Part 1's cutoff table). And the paired comparisons are
+weaker than they look — though cutoff-neutral, at least: agent and frozen base
+share one model, so anything memorized cancels. At h=21 the code agent beats
+its own frozen base model
+at eighteen of twenty-four origins, the largest paired count in the study, but
+the margins behind the count are small, and a test that weighs them — or
+respects how heavily the origins overlap — lands it inside noise. The code
+agent also shows none of the news agent's break-window behaviour: it computes
+from the same history the conventional methods see, and it fails where they
+fail. What an agent *reads* determines where it wins.
 
 Ranks, though, still average over the thing that matters. Split the h=21
-origins into the ten inside the war window and the fourteen quiet ones, and the
-news agent's third place decomposes into two opposite results: at the break it
-is ~11% *better* than LightGBM-with-covariates — largely by sidestepping the
-tree's worst blowups — and on quiet weeks it is ~22% *worse*, paying an
-LLM-noise tax whenever there is nothing to read. The trees win the average
-because averages are mostly quiet weeks; the agent earns its fee precisely at
-the moments Part 1 showed the numbers-only ladder to be blind. And the paired,
-same-model comparisons say agency itself — not just model scale — is doing
-work: the code agent beats its own frozen base at eighteen of twenty-four
-origins, the strongest paired result in the study, while the news agent's gain
-over its base is positive but within noise. With one regime event per year, no
-retrospective can grade these conditional claims properly — an honest limit we
-return to below.
+origins into the ten inside the war window and the fourteen quiet ones and the
+news agent's third place decomposes into two opposite averages: ~11% *better*
+than LightGBM-with-covariates at the break, ~22% *worse* on quiet weeks, as
+though it pays an LLM-noise tax whenever there is nothing to read. Pushed on,
+the tidy story gives. The break-window edge rests on a single origin where
+LightGBM blew up and the agent did not — remove that week and 11% becomes 2%,
+and the agent records the *worse* score on six of the ten break origins. One
+avoided blowup, not a dependable edge when the regime turns.
 
-![Where agents earn their keep: war-window vs quiet-week CRPS against
-LightGBM, and paired same-model agency deltas at
-h=21.](assets/fig6_where_agents_earn.png)
+None of this is a defect in the methods; it is the window. Twenty-four weekly
+origins at a one-month horizon overlap into roughly five independent
+observations containing one regime event — not enough to resolve differences
+this size, in any direction. These are observations to be checked, not results
+to build on.
 
-*Left: the news agent versus LightGBM-with-covariates at h=21, split into
-war-window and quiet origins — the average hides two opposite results. Right:
-paired same-model deltas, frozen LLMP → agent, at h=21; the code agent's
-18-of-24 is the study's only statistically significant paired win.*
+![War-window vs quiet-week CRPS against LightGBM, and paired same-model
+deltas at h=21.](assets/fig6_where_agents_earn.png)
 
-There is one more signal hiding in the comparison, and it may matter more than
-the ranks: *when the agent disagrees with the trees*. Measure the gap between
-the agent's quantile grid and LightGBM's at each origin, and on the protected
-window that divergence behaves like an event detector — it correlates with the
-size of the realized move (ρ≈0.5) and with the tree's own error, and three of
-its four largest values sit at the origins bracketing the 2026 war drawdown.
-(The fourth is an early-June origin where the agent sharply widened its tails
-after a correction off a record high — the sentinel fires on perceived regime
-risk, not only on breaks that confirm.) A naive rule that trusts the agent only
-when divergence runs above its median beats either method alone: CRPS 0.0169
-against 0.0172 for always-LightGBM and 0.0176 for always-agent. We report this
-as exploratory, not established: twenty-four origins, an in-sample threshold,
-and the same construction on the 2025 backtest fires at the tariff window but
-does not pay — that agent's divergent forecasts were the wrong ones. A
-hypothesis to test prospectively, not a result.
+***Figure 3.** Left: the news agent versus LightGBM-with-covariates at h=21,
+split into war-window (n = 10) and quiet (n = 14) origins — the average hides
+two opposite directions, though the break-window edge rests heavily on a single
+origin. Right: paired same-model deltas, frozen LLMP to agent, at h=21. The
+code agent's 18-of-24 is the largest paired count in the study; the per-origin
+margins behind it are small enough that it does not clear a stricter test. One
+regime event sampled weekly, not ten independent breaks.*
 
-Decompose the divergence and the mechanism gets sharper — and more
-interesting. The gap between the two forecasters has two parts: the agent
-moving its *center* away from the tree's, and the agent changing its *width*.
-It is the width that carries the signal. The ratio of the agent's 10–90
-interval to the tree's predicts the size of the realized move (ρ=0.52,
-p=0.01); the median shift predicts nothing (ρ=0.20). At the war trough the
-agent's interval ran **three times** the tree's — and at one break origin its
-median matched the tree's almost exactly while its interval ran 2.5× wider: a
-pure alarm, no directional bet. The tree's interval, built from trailing
-volatility, barely moved all half-year. The agent doesn't beat the
-numbers-only methods by predicting direction better; it notices, from the
-news, when the quiet period is ending — and says so by widening. That
-reframes what an agent is for: not a replacement for the cheap methods, a
-*sentinel* alongside them — conventional forecasters for the nominal periods,
-and an agent watching for the moment the period stops being nominal.
+One more signal hides in the comparison, and it may matter more than the
+ranks: *when the agent disagrees with LightGBM*. The gap between the two
+quantile grids behaves like an event detector — three of its four largest
+values sit at origins bracketing the war drawdown, and the fourth fired on a
+perceived risk (an early-June correction off a record high) that never
+confirmed. Decompose the gap and the signal lives in the *width*: how much
+wider the agent's 10–90 interval runs than LightGBM's tracks the size of the
+move that follows, while how far it shifts its *median* tracks nothing at all.
+The agent's useful signal is *how uncertain it says it is*, not *which way it
+leans* — though the width signal leans heavily on the war window, and at
+twenty-four overlapping origins we cannot separate it from luck. We also tried
+a divergence-gated router that hands the forecast to the agent whenever the two
+disagree sharply. It looks interesting, but there is no way this window has the
+statistical power to tell whether it is a real mechanism, so we report it as an
+idea rather than an edge.
 
-![Agent-vs-tree divergence per origin across the protected window, war window
-shaded, with router-vs-baselines CRPS bars inset.](assets/fig3_divergence_sentinel.png)
+The descriptive facts, though, stand on their own. At the war trough the
+agent's interval ran **three times** LightGBM's — and at one break origin its
+median matched LightGBM's almost exactly while its interval ran 2.5× wider: a
+pure alarm, no directional bet. LightGBM's interval, built from trailing
+volatility, barely moved all half-year. The mechanism on offer is not that the
+agent predicts direction better; it is that the agent can notice, from the
+news, that the quiet period may be ending — and say so by widening. That
+suggests a concrete job in a production pipeline: the agent runs alongside the
+conventional forecasters, and when its distribution diverges sharply from
+theirs it raises an alert — kicking off a deeper investigation, or bringing in
+a human expert with a stake in the prediction target. On this evidence that is
+a hypothesis worth testing properly, not a finding to build on yet.
 
-*Divergence between the news agent's and LightGBM's quantile grids, origin by
-origin. The spikes are the war window; the inset compares always-tree,
-always-agent, and the divergence-gated router.*
+![Prediction intervals over time: LightGBM's band stays nearly constant while the
+news agent's widens sharply through the war window.](assets/fig7_sentinel_bands.png)
+
+***Figure 4.** The width signal, rolled out over time. Each band is a method's
+10–90 prediction interval for the 21-day return, origin by origin across the
+protected window, with the realized return overlaid and the war-window origins
+shaded. LightGBM's band — built from trailing volatility — barely moves all
+half-year, its width varying only 1.7× min-to-max. The agent's varies 3.5×:
+consistently wider (1.63× LightGBM's at the median origin) and far more
+responsive, peaking at 3.0× LightGBM's width at the war trough. Its median
+width inside the war window is not elevated relative to quiet weeks; what
+distinguishes the break is the spike.*
+
+![Agent-vs-LightGBM divergence per origin across the protected window, war
+window shaded, with router-vs-baselines CRPS bars inset.](assets/fig3_divergence_sentinel.png)
+
+***Figure 5.** Divergence between the news agent's and LightGBM's quantile
+grids, origin by origin; three of the four largest spikes bracket the war
+window, and the fourth (2026-06-08) is the agent pricing a post-record-high
+correction that never confirmed. Inset: mean h=21 CRPS ×10⁻³ of always-LightGBM
+(17.18), always-agent (17.59), and the divergence-gated router (16.88), on a
+zoomed axis starting at 16.5 — the three means differ by only about 4%.
+Exploratory: 24 origins, and the router threshold is set in-sample.*
 
 One cost aside, said plainly: an agent forecast runs on the order of 100× the
 tokens of an LLMP call — tens to hundreds of thousands against a couple thousand —
@@ -172,10 +198,21 @@ so whatever it buys on the scoreboard, it buys at a price worth naming.
 
 CRPS ranks distributions. It cannot tell you whether a forecaster was *right for
 the right reasons* — and for an analyst agent, the reasoning is the product. So we
-ran a second track: at four landmark origins, the agent writes a scenario
-analysis — weighted scenarios, named drivers, return ranges — and an LLM judge,
-given only the realized returns, scores it on calibration, drivers, and
-specificity. Then we read the artifacts ourselves, against the event timeline.
+ran a second track: at four landmark origins, the agent (on Gemini 3.1
+Flash-Lite, whose stated January 2025 cutoff predates all four origins) writes
+a scenario analysis — weighted scenarios, named drivers, return ranges — and an
+LLM judge from a different model family (Claude Sonnet 4.6), given only the
+realized returns, scores it 1–5 on three axes:
+
+- **Drivers** — did the forces the write-up named actually move the index? Five
+  means the cited drivers are exactly what happened; one means they are unrelated.
+- **Calibration** — did the *stated probabilities* put the most weight on the
+  scenario that matched the realized direction? This is about the weighting, not
+  about whether any one range was hit precisely.
+- **Specificity** — is it concrete and checkable, with dated figures and named
+  catalysts, or generic hedging that would fit almost any week?
+
+Then we read the artifacts ourselves, against the event timeline.
 
 The 2026 war low, 2026-03-31, is the set piece. The agent nailed the shape: its
 base case, "Commodity-Led Defensive Rotation" at 0.55 probability, called +3% to
@@ -203,32 +240,40 @@ different things:
 | 2026-02-25 | pre-drawdown | 3 | 2 | 3 |
 | 2026-03-31 | war low | 3 | 5 | 4 |
 
-Calibration swings from 2 to 5; drivers never clears 3 — because the judge,
-grounded only in realized returns, systematically refuses to certify causal
-chains it cannot see. A forecaster can land the number and miss the reason, or
-read the world well and misweight it, and only scoring them separately shows
-which.
+Calibration swings from 2 to 5; drivers never clears 3 — the judge
+systematically refuses to certify causal chains it cannot verify from the
+returns alone. A cutoff note keeps that honest: the judge's training data runs
+through January 2026, so at the two 2025 origins it may well know the tariff
+story from memory — and it withheld drivers credit anyway, in-knowledge and
+out. The restraint comes from the rubric's grounding, not from ignorance; only
+the 2026 verdicts test it against genuine blindness. A forecaster can land the
+number and miss the reason, or read the world well and misweight it, and only
+scoring them separately shows which.
 
 The claim to take away: for analyst agents, the artifact is the value and the
 score is the floor. Automated judging scales and human trace-reading catches what
 the judge structurally can't — they are complements, not substitutes.
 
-![The 2026-03-31 scenario card: three weighted scenarios beside the judge's
-verdict and the realized returns, with the mechanism mismatch
-annotated.](assets/fig2_scenario_card.png)
+![The war-low scenario card: three weighted scenarios beside the judge's
+verdict and the realized returns.](assets/fig2_scenario_card.png)
 
-*The war-low scenario set, graded against what happened: the 0.55 base case
-called the direction and roughly the magnitude (calibration 5/5) through a
-mechanism that did not occur (drivers 3/5) — right call, wrong reason.*
+***Figure 6.** The war-low scenario set (issued 2026-03-31), graded against
+what happened: the 0.55 base case called the direction and roughly the
+magnitude — realized +3.65% at 21 days, +6.35% at 60 — earning calibration 5/5
+through a mechanism that did not occur (drivers 3/5). The base case bet on
+persistent Middle-East friction keeping oil bid; the rally came from the
+ceasefire relief instead. Right call, wrong reason.*
 
 ## The honest limit
 
 There is a ceiling here that no methodology fixes. An agent that reads the open
 web to forecast a series cannot be perfectly firewalled from the future it is
 predicting. Our as-of date and verifier keep out the obvious leaks, but retrieval
-is porous, model training cutoffs are opaque, and a stray dated-wrong snippet or a
-fact the model simply knows can tint a "2026-03-30" forecast with April's
-hindsight. Every offline agent score is therefore optimistic at best — the same
+is porous, and stated model cutoffs are vendor claims we can report, not verify —
+Part 1's cutoff table lists them, and for the Sonnet-4.6-based agents the stated
+training data reaches into the protected window's first month. A stray
+dated-wrong snippet or a fact the model simply knows can tint a "2026-03-30"
+forecast with April's hindsight. Every offline agent score is therefore optimistic at best — the same
 caution Part 1 raised for the LLMs, now sharper, because the agent is actively
 reaching for information rather than passively holding it. The protected 2026
 window narrows the gap; it does not close it. A strong offline result is a reason
@@ -243,63 +288,32 @@ skill can be measured without an asterisk. We come back to that at the end.
 
 ## The adaptive agent — pre/post on the TSX
 
-Every agent so far was frozen: the same prompt, the same tools, forecast after
-forecast, learning nothing from its own record. The last rung asks what happens
-when the agent is allowed to study. We gave the analyst one self-directed study
-session — fifty turns, about seventy minutes — with the full TSX history in a
-sandbox, a hypothesis ledger, and one rule: nothing enters its strategy file
-without passing an evidence gate (open a hypothesis, record confirmations,
-graduate it). Then we evaluated the *same* agent twice on the protected 2026
-window, frozen both times: once with its untouched seed strategy, once with the
-studied one.
+Every agent so far was frozen. The last rung asks what happens when the agent is
+allowed to study. We gave the analyst (on Gemini 3.5 Flash, whose January 2025
+cutoff predates the entire protected window) one self-directed session — fifty turns,
+about seventy minutes — with the full TSX history in a sandbox, a hypothesis
+ledger, and an evidence gate: nothing enters its strategy file without recorded
+confirmations. Then we evaluated the same agent on the protected window twice,
+frozen both times, seed strategy versus studied strategy. The scoreboard did not
+move: same origins, same referee, per-origin wins a coin flip at every horizon.
 
-Read the artifacts before the scoreboard and the session is genuinely
-impressive. The transcript shows real empirical work, not narration: dozens of
-sandboxed analyses over twenty-five years of daily data, iterating through
-errors — including, we note with some delight, an unprompted "Canadian holiday
-catch-up study" of days when Toronto trades while US markets close, the exact
-calendar seam our own covariate pipeline had mishandled until the same week.
-The distilled strategy holds twenty-five conditional calibration rules
-(widen intervals this much in a low-volatility regime, that much after a 2.5σ
-shock) and — the best scientific hygiene in the file — several recorded
-negative results: day-of-week effects tested and explicitly ruled out. But the
-trace also shows the gate's weakness: every graduated hypothesis collected its
-three required confirmations back-to-back, within the same session, from the
-same study that proposed it. The letter of the evidence gate, satisfied at a
-speed that hollows out its spirit.
+The session's real product is a finding about the gate itself. The transcript
+shows genuine empirical work — dozens of sandboxed analyses over twenty-five
+years of data, including an unprompted "Canadian holiday catch-up study" of the
+exact calendar seam our own pipeline had once mishandled. But every hypothesis
+that graduated collected its three required confirmations back-to-back, within
+the same session, from the same study that proposed it: the letter of an
+evidence gate, satisfied at a speed that hollows out its spirit. Anyone building
+a self-improving agent will meet this failure mode.
 
-The scoreboard then says what it should say: nothing moved. Pre versus post,
-same origins, same referee — 0.00522 versus 0.00527 at h=1, 0.01206 versus
-0.01193 at h=5, 0.01857 versus 0.01876 at h=21, per-origin wins a coin flip at
-every horizon. (Both arms, it's worth saying, are respectable forecasters — at h=5 the
-studied agent is the best agent on the entire board, fourth overall, and the
-seed sits ninth. Note what that means: a *hand-written* strategy skill —
-martingale medians, volatility-scaled intervals, check-the-calendar discipline
-— already lifts an agent past every free-form analyst we ran. Most of the
-recipe is the discipline, not the study; which is itself a finding about where
-harness design ends and learning begins.) The one suggestive trace: inside the war window the studied agent is
-directionally better at h=5 and h=21 — precisely where widen-under-stress
-corrections should bite — at magnitudes twenty-four origins cannot separate
-from luck.
-
-We read this null as the study's most useful output. A single session can only
-confirm hypotheses against the past that generated them; it produces real
-knowledge and cannot, by construction, produce *evidence* — that requires
-hypotheses meeting forecasts whose outcomes don't yet exist. Which is the
-design this whole series has been walking toward: an agent that keeps learning
-as its forecasts resolve, evaluated against a frozen copy of itself, the gap
-between them the measured value of experience. Evaluating adaptive agents that
-way — and treating the agent harness itself as an optimizable system, in the
-lineage of ADAS and the Darwin Gödel Machine — is where our attention goes
-next. Stay tuned.
-
-![Pre/post adaptive evaluation: paired CRPS by horizon with war-window split,
-beside an excerpt of the learned strategy file.](assets/fig4_adaptive_prepost.png)
-
-*The pre/post scoreboard beside what was learned: paired mean CRPS at each
-horizon (with the war-window cut), and an excerpt of the strategy file the
-study produced — including a graduated correction and a recorded negative
-result.*
+A single session can only confirm hypotheses against the past that generated
+them. Actual evidence requires hypotheses meeting forecasts whose outcomes don't
+yet exist — an agent that keeps learning as its forecasts resolve, evaluated
+against a frozen copy of itself. Evaluating adaptive agents that way — and
+treating the harness itself as an optimizable system, in the lineage of ADAS,
+the Darwin Gödel Machine, and [ALMA](https://arxiv.org/abs/2602.07755), which
+meta-learns the agent's memory design rather than hand-engineering it — is where
+our attention goes next.
 
 ## What's next
 
@@ -310,11 +324,9 @@ and each rung taught something the last couldn't.
 It's worth saying plainly why the margins in this series are so thin: we chose
 one of the hardest forecasting problems there is, on purpose. A major equity
 index is the output of a market whose entire job is to price new information
-before you can — millions of participants compressing the news into the close,
-every day. When an agent reads a headline, it is racing the very mechanism that
-generates its target. That an agent finds *any* conditional edge here is
-notable; that the edge is small is the problem talking, not the paradigm. The
-same ladder, the same referee, and the same agents pointed at a series no
+before you can; when an agent reads a headline, it is racing the very mechanism
+that generates its target. That the visible edges are small is the problem
+talking as much as the paradigm. The same ladder pointed at a series no
 efficient market prices — a demand curve, an operational load, a policy-linked
 quantity — is where this machinery has real room, and that transfer is exactly
 what the harness was built to make cheap. If you're starting tomorrow:
@@ -327,19 +339,42 @@ what the harness was built to make cheap. If you're starting tomorrow:
 - **Reach for agents to read the world, not to shave a decimal** — and evaluate
   them accordingly: judge the artifact, not just the score.
 
-But the findings we care about most are the ones this retrospective could only
-*raise*, not settle. The agent earned its keep at the regime break and signalled
-it by widening its intervals — yet with roughly one such break a year, two dozen
-origins can suggest that edge without ever confirming it, and no offline protocol
-can fully firewall a model that reads the open web from the future it is scored
-against. The honest way to answer the questions we've raised is to stop grading
-forecasts against a past the models may already know, and start scoring them
-against a future that does not yet exist — where leakage is not a guard you hope
-holds but a physical impossibility, and where "divergence is an alarm" and
-"agents pay at the breaks" become predictions you commit to *before* the outcome
-rather than patterns you notice after. That is the destination ForecastBench
-pointed at in Part 1's opening, and it is where we are taking the S&P/TSX
-experiment next.
+But the idea we find most interesting is the one this retrospective could only
+*raise*, never settle. The agent's distinctive behaviour was not forecasting
+the direction better but reacting to context — widening when it read something
+unsettling, diverging from the conventional methods exactly when the world was
+moving. If that holds up, a production pipeline for something like a market
+index gets built as a *mix* rather than a contest: cheap, well-calibrated
+models carrying the ordinary weeks, an agentic layer alongside them raising an
+alert when the weeks stop being ordinary. We have not shown this works — we
+have seen one regime event through a two-dozen-origin window that behaves like
+five. What we have is something narrower and, we think, more useful: a
+hypothesis precise enough to pre-register. The alert rule can be stated today,
+committed to before the outcomes exist, and judged by live data. Whatever
+credibility we have in proposing it comes from having tried to break it and
+reported the break.
 
-The full harness, data pipeline, and methods behind this series are open at
-[github.com/VectorInstitute/agentic-forecasting](https://github.com/VectorInstitute/agentic-forecasting).
+Why not just run a longer backtest and settle it now? Because for an agentic
+forecaster, that door is closed — and seeing why may be the most durable thing
+this study has to teach. To resolve a regime-conditional claim you need many
+regime events, so you must reach further back into history. But the further
+back you reach, the more likely the model has already read that history, and
+leakage inflates exactly the methods under test. Protect against leakage with a
+recent post-cutoff window and you are back to roughly five independent
+observations. **You cannot buy statistical power with history when your
+forecaster may have memorized the history.** Note who escapes the squeeze:
+LightGBM can be backtested to 2005 without a qualm. The bind is specific to
+forecasters that read, which is why agentic forecasting does not just prefer a
+different evaluation protocol — it requires one. Live evaluation, scoring
+forecasts whose outcomes do not yet exist, is the only setting where leakage is
+structurally impossible and where the independent windows, run forward long
+enough, stop being five. That is the destination ForecastBench pointed at in
+Part 1's opening, and it is where this experiment goes next.
+
+Everything behind this series — the harness, the data pipeline, the methods, the
+evaluation — is open at
+[github.com/VectorInstitute/agentic-forecasting](https://github.com/VectorInstitute/agentic-forecasting),
+the repository we built for Vector's 2026 Agentic Forecasting Bootcamps. The
+experiments in these two posts, and the live work that follows them, all began
+as a [fork](https://github.com/VectorInstitute/agentic-forecasting-live) of it. We invite you to follow the process we used in the bootcamp: fork the repository, point it at your data, add your own extensions,
+and see what the ladder tells you.

@@ -65,6 +65,26 @@ def build_figure(match: re.Match, *, source_dir: Path, mode: str, out_dir: Path)
     )
 
 
+def _check_orphan_images(body: str) -> None:
+    """Fail on any <img> paragraph that did not merge into a <figure>.
+
+    Every image in post.md must be immediately followed by a one-paragraph
+    italic caption (the FIG_PATTERN contract). An image that survives the
+    substitution as a bare ``<p><img …></p>`` has a missing, blank-line-split,
+    or nested-italic-broken caption — and would silently render captionless.
+    """
+    orphans = re.findall(r"<p><img\s+([^>]*)/?>\s*</p>", body)
+    if orphans:
+        srcs = [SRC_RE.search(a).group(1) if SRC_RE.search(a) else "<unknown src>" for a in orphans]
+        sys.exit(
+            "_render.py: image(s) without a merged caption: "
+            + ", ".join(srcs)
+            + "\nEach image paragraph must be immediately followed by a single"
+            " *italic* caption paragraph (no blank line inside, no intervening"
+            " paragraph, no nested *italics* within the caption)."
+        )
+
+
 def render(
     fragment: str,
     *,
@@ -81,6 +101,7 @@ def render(
         lambda m: build_figure(m, source_dir=source_dir, mode=mode, out_dir=out_dir),
         fragment,
     )
+    _check_orphan_images(body)
 
     h1_match = re.search(r"<h1[^>]*>(.*?)</h1>\s*", body, re.DOTALL)
     header_html = ""
