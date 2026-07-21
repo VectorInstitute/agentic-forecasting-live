@@ -359,6 +359,5 @@ evaluation — is open at
 [github.com/VectorInstitute/agentic-forecasting](https://github.com/VectorInstitute/agentic-forecasting),
 the repository we built for Vector's 2026 Agentic Forecasting Bootcamps. The
 experiments in these two posts, and the live work that follows them, all began
-as a fork of it. If there is a series you want to forecast, consider this an
-invitation to extend the process: fork the repository, point it at your data,
+as a [fork](https://github.com/VectorInstitute/agentic-forecasting-live) of it. We invite you to follow the process we used in the bootcamp: fork the repository, point it at your data, add your own extensions,
 and see what the ladder tells you.

@@ -25,8 +25,11 @@ pretraining can fake.
 
 ***Figure 1.** The trend that motivates this series: each point is a model scored
 on ForecastBench's live questions about unresolved future events; the frontier
-has climbed steadily toward the human-superforecaster reference line. Source:
-[ForecastBench](https://www.forecastbench.org/explore/).*
+has climbed steadily toward the human-superforecaster reference line. Figure from
+[ForecastBench](https://www.forecastbench.org/explore/) by the
+[Forecasting Research Institute](https://forecastingresearch.org/), captured
+21 July 2026 and reproduced unmodified under
+[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).*
 
 This two-part series accompanies Vector's Agentic Forecasting Bootcamp; the full
 code, data pipeline, and evaluation harness are open at
@@ -164,7 +167,7 @@ One distinction matters more than it looks, and Part 2 turns on it. An LLMP is
 not strictly numbers-only — it reads the series description we give it, and the
 technique can condition on any text supplied at inference time, reports
 included. What it cannot do is gather that context itself: everything it sees
-is assembled in advance, by us. The methods allowed to go out and look — or to
+is assembled in advance, in code. The methods allowed to go out and look — or to
 study on their own — are the agents, and because that agency is the hypothesis
 this series was built to test, they get Part 2 to themselves.
 
@@ -179,7 +182,7 @@ persisted prediction store and reproduces the released leaderboards exactly.*
 
 In the 2025 backtest, plain LightGBM tops the h=1 column at CRPS 0.0038. In the
 protected 2026 window that lead does not survive: LightGBM-with-covariates takes
-h=1 at 0.00497, the flash-lite LLMP is essentially tied at 0.00501 —
+h=1 at 0.00497, the `gemini-3.1-flash-lite` LLMP is essentially tied at 0.00501 —
 indistinguishable — and plain LightGBM slips to the middle of the pack. This is
 exactly what the cutoff section warned about: a backtest ranking is a hypothesis,
 and the protected window is where it gets tested. At h=5 and h=21 the ordering
@@ -191,12 +194,11 @@ The LLMP row is the one worth pausing on, because it works at all. A frozen,
 general-purpose model, handed a column of numbers and a little context about
 them, emits a genuine predictive distribution — calibrated well enough to tie
 purpose-built gradient-boosted trees at the short horizon, for a fraction of a
-cent. Across the model matrix — several frontier and lightweight models, with and
+cent in the case of Gemini Flash-Lite. Across the model matrix — several frontier and lightweight models, with and
 without covariates — the LLMP forecasts land throughout the leaderboard,
 sometimes leading a horizon, sometimes mid-pack, never obviously broken. At the
-longer backtest horizons a heavier reasoning model (Claude Sonnet-5, thinking
-enabled) tops h=5 and h=21, though its per-forecast cost is an order of magnitude
-above a flash-lite call — a trade-off worth naming out loud.
+longer backtest horizons a heavier reasoning model (Claude Sonnet 5) tops h=5 and h=21, though its per-forecast cost is an order of magnitude
+above a Gemini Flash-Lite call — a trade-off worth naming out loud.
 
 But the ranking is only half the story.
 
