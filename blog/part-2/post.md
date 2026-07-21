@@ -42,13 +42,6 @@ the distribution, but in the upper reaches the agent had explicitly reserved for
 an outcome it considered unlikely. The rally that produced it lived in that
 right tail.
 
-Worth noting what it did *not* consult: none of its six searches asked what the
-futures market expected. It reasoned from news and price history, never from the
-forward curve — the same gap we flagged in Part 1's covariate panel. A dedicated
-futures-analysis skill, one the agent could call to ask what oil, gold, or index
-futures are pricing in for the horizon it is forecasting, is an obvious thing to
-hand it next. (I think we could consider dropping this almost entirely. The covariate panel we used in Part 1 included the front-month futures contracts from yfinance and in all likelihood those are being used here too.)
-
 ![Anatomy of one agent forecast: search queries, rationale factors, and the
 emitted quantile grid.](assets/fig1_agent_anatomy.png)
 
@@ -67,7 +60,7 @@ the frozen LLMPs. Same origins, same cutoff, same referee.
 
 The honest expectation, set by Part 1, is that reading the news does not
 automatically win — and at h=1 it doesn't. On the protected 2026 eval the
-numbers-only board clusters near CRPS 0.0050 against a naive floor of 0.0093,
+Part 1 board clusters near CRPS 0.0050 against a naive floor of 0.0093,
 and the two news-agent variants land mid-pack at 0.00507 and 0.00509,
 indistinguishable from the frozen models: for a one-day-ahead return, where the
 move is close to unforecastable, a news scan has little to add over a
@@ -79,20 +72,22 @@ spread and direction a coin flip, that is most of what there is to win. But
 step through the horizons and the board reorganizes by *family*. At h=5 the
 language models sweep: the top five methods are all LLM-based and the two
 LightGBM configurations fall to 14th and 17th of twenty-one — the week horizon
-appears to favour the LLMs' fatter, more skeptical distributions over the
-trees' tight quantiles. At h=21 the guard changes again: the trees retake the
-lead, but three of the top seven methods are agents, led by the news agent (on
-the lighter model) at third — ahead of every frozen LLMP on the board.
+appears to favour the LLMs' fatter, more skeptical distributions over
+LightGBM's tight quantiles. At h=21 the guard changes again: the LightGBM
+configurations retake the lead, but three of the top seven methods are agents,
+led by the news agent (on the lighter model) at third — ahead of every frozen
+LLMP on the board.
 
 ![Protected-eval leaderboard: all 21 methods at each horizon, agent rungs
 highlighted.](assets/fig5_combined_leaderboard.png)
 
 ***Figure 2.** The complete protected-window scoreboard, every method family on
 one board, ranked within each horizon. The guard changes at every horizon:
-trees at h=1, the LLM family sweeping h=5, trees back on top at h=21 with three
-agents in the top seven. Mean CRPS ×10⁻³ over n = 24/22/24 resolved weekly
-origins at h = 1/5/21; chevrons hold the far-worse floors — the naive method
-everywhere, ETS at h=5 and h=21 — off-scale so the ladder stays legible.*
+LightGBM at h=1, the LLM family sweeping h=5, LightGBM back on top at h=21 with
+three agents in the top seven. Mean CRPS ×10⁻³ over n = 24/22/24 resolved
+weekly origins at h = 1/5/21; chevrons hold the far-worse floors — the naive
+method everywhere, ETS at h=5 and h=21 — off-scale so the ladder stays
+legible.*
 
 Two wrinkles keep that story honest. The ranking is model-dependent — the same
 agent harness on a heavier model finishes mid-pack at h=21 — so "agents read
@@ -103,17 +98,17 @@ at eighteen of twenty-four origins, the largest paired count in the study, but
 the margins behind the count are small, and a test that weighs them — or
 respects how heavily the origins overlap — lands it inside noise. The code
 agent also shows none of the news agent's break-window behaviour: it computes
-from the same history the trees see, and it fails where they fail. What an
-agent *reads* determines where it wins.
+from the same history the conventional methods see, and it fails where they
+fail. What an agent *reads* determines where it wins.
 
 Ranks, though, still average over the thing that matters. Split the h=21
 origins into the ten inside the war window and the fourteen quiet ones and the
 news agent's third place decomposes into two opposite averages: ~11% *better*
 than LightGBM-with-covariates at the break, ~22% *worse* on quiet weeks, as
 though it pays an LLM-noise tax whenever there is nothing to read. Pushed on,
-the tidy story gives. The break-window edge rests on a single origin where the
-tree blew up and the agent did not — remove that week and 11% becomes 2%, and
-the agent records the *worse* score on six of the ten break origins. One
+the tidy story gives. The break-window edge rests on a single origin where
+LightGBM blew up and the agent did not — remove that week and 11% becomes 2%,
+and the agent records the *worse* score on six of the ten break origins. One
 avoided blowup, not a dependable edge when the regime turns.
 
 None of this is a defect in the methods; it is the window. Twenty-four weekly
@@ -134,59 +129,57 @@ margins behind it are small enough that it does not clear a stricter test. One
 regime event sampled weekly, not ten independent breaks.*
 
 One more signal hides in the comparison, and it may matter more than the
-ranks: *when the agent disagrees with the trees*. The gap between the two
+ranks: *when the agent disagrees with LightGBM*. The gap between the two
 quantile grids behaves like an event detector — three of its four largest
 values sit at origins bracketing the war drawdown, and the fourth fired on a
 perceived risk (an early-June correction off a record high) that never
 confirmed. Decompose the gap and the signal lives in the *width*: how much
-wider the agent's 10–90 interval runs than the tree's tracks the size of the
+wider the agent's 10–90 interval runs than LightGBM's tracks the size of the
 move that follows, while how far it shifts its *median* tracks nothing at all.
 The agent's useful signal is *how uncertain it says it is*, not *which way it
-leans*. The null half of that sentence is solid; the positive half bends when
-pushed. The width–move association is carried almost entirely by the war window
-— drop those ten origins and it falls away, and a permutation test that
-respects the origins' overlap will not certify what remains. Routing on
-divergence doesn't pay either: gate on above-median divergence and you edge out
-both parents on paper, but the margin is under two percent and about three
-random gates in ten do as well — not currently distinguishable from a coin.
-What we have is one regime event, examined closely. (This might be more detail about a negative result than is warranted for this blogpost -- we could say something like we tried considering a divergence-based router, and while it looks interesting, there's no way we have enough statistical power to be able to tell whether it's really an effective mechanism.)
+leans* — though the width signal leans heavily on the war window, and at
+twenty-four overlapping origins we cannot separate it from luck. We also tried
+a divergence-gated router that hands the forecast to the agent whenever the two
+disagree sharply. It looks interesting, but there is no way this window has the
+statistical power to tell whether it is a real mechanism, so we report it as an
+idea rather than an edge.
 
-Up close, though, the descriptive facts stand on their own. At the war trough
-the agent's interval ran **three times** the tree's — and at one break origin
-its median matched the tree's almost exactly while its interval ran 2.5× wider:
-a pure alarm, no directional bet. The tree's interval, built from trailing
+The descriptive facts, though, stand on their own. At the war trough the
+agent's interval ran **three times** LightGBM's — and at one break origin its
+median matched LightGBM's almost exactly while its interval ran 2.5× wider: a
+pure alarm, no directional bet. LightGBM's interval, built from trailing
 volatility, barely moved all half-year. The mechanism on offer is not that the
 agent predicts direction better; it is that the agent can notice, from the
 news, that the quiet period may be ending — and say so by widening. That
-suggests a different job description: not a replacement for the cheap methods
-but a *sentinel* alongside them, conventional forecasters carrying the nominal
-periods and an agent watching for the moment they stop being nominal. (I might have put this differently. In my mind, it's like -- you have an agent running alongside conventional methods in a production forecasting pipeline. Whenever its outputs diverge from what conventional methods are saying, it could raise an alert, which could kick off a deeper investigation or bring in the attention of a human expert with a vested interest in the prediction target.) On this
-evidence that is a hypothesis worth testing properly, not a finding to build on
-yet.
+suggests a concrete job in a production pipeline: the agent runs alongside the
+conventional forecasters, and when its distribution diverges sharply from
+theirs it raises an alert — kicking off a deeper investigation, or bringing in
+a human expert with a stake in the prediction target. On this evidence that is
+a hypothesis worth testing properly, not a finding to build on yet.
 
 ![Prediction intervals over time: LightGBM's band stays nearly constant while the
 news agent's widens sharply through the war window.](assets/fig7_sentinel_bands.png)
 
-***Figure 4.** The sentinel, rolled out over time. Each band is a method's
+***Figure 4.** The width signal, rolled out over time. Each band is a method's
 10–90 prediction interval for the 21-day return, origin by origin across the
 protected window, with the realized return overlaid and the war-window origins
 shaded. LightGBM's band — built from trailing volatility — barely moves all
 half-year, its width varying only 1.7× min-to-max. The agent's varies 3.5×:
-consistently wider (1.63× the tree's at the median origin) and far more
-responsive, peaking at 3.0× the tree's width at the war trough. Its median
+consistently wider (1.63× LightGBM's at the median origin) and far more
+responsive, peaking at 3.0× LightGBM's width at the war trough. Its median
 width inside the war window is not elevated relative to quiet weeks; what
 distinguishes the break is the spike.*
 
-![Agent-vs-tree divergence per origin across the protected window, war window
-shaded, with router-vs-baselines CRPS bars inset.](assets/fig3_divergence_sentinel.png)
+![Agent-vs-LightGBM divergence per origin across the protected window, war
+window shaded, with router-vs-baselines CRPS bars inset.](assets/fig3_divergence_sentinel.png)
 
 ***Figure 5.** Divergence between the news agent's and LightGBM's quantile
 grids, origin by origin; three of the four largest spikes bracket the war
 window, and the fourth (2026-06-08) is the agent pricing a post-record-high
-correction that never confirmed. Inset: mean h=21 CRPS of always-tree (17.18
-×10⁻³), always-agent (17.59), and the divergence-gated router (16.88) — note
-the zoomed axis starting at 16.5; the three means differ by only about 4%.
-Exploratory: 24 origins, and the router threshold is set in-sample.* (What's up with the mixed notations in this caption?)
+correction that never confirmed. Inset: mean h=21 CRPS ×10⁻³ of always-LightGBM
+(17.18), always-agent (17.59), and the divergence-gated router (16.88), on a
+zoomed axis starting at 16.5 — the three means differ by only about 4%.
+Exploratory: 24 origins, and the router threshold is set in-sample.*
 
 One cost aside, said plainly: an agent forecast runs on the order of 100× the
 tokens of an LLMP call — tens to hundreds of thousands against a couple thousand —
@@ -332,16 +325,17 @@ what the harness was built to make cheap. If you're starting tomorrow:
 But the idea we find most interesting is the one this retrospective could only
 *raise*, never settle. The agent's distinctive behaviour was not forecasting
 the direction better but reacting to context — widening when it read something
-unsettling, disagreeing with the trees (calling the LightGBM models this way 'the trees' reads funny to me) exactly when the world was moving. If
-that holds up, a production pipeline for something like a market index gets
-built as a *mix* rather than a contest: cheap, well-calibrated models carrying
-the ordinary weeks, an agentic layer watching for the moment they stop being
-ordinary. We have not shown this works — we have seen one regime event through
-a two-dozen-origin window that behaves like five. What we have is something
-narrower and, we think, more useful: a hypothesis precise enough to
-pre-register. The sentinel rule can be stated today, committed to before the
-outcomes exist, and judged by live data. Whatever credibility we have in
-proposing it comes from having tried to break it and reported the break.
+unsettling, diverging from the conventional methods exactly when the world was
+moving. If that holds up, a production pipeline for something like a market
+index gets built as a *mix* rather than a contest: cheap, well-calibrated
+models carrying the ordinary weeks, an agentic layer alongside them raising an
+alert when the weeks stop being ordinary. We have not shown this works — we
+have seen one regime event through a two-dozen-origin window that behaves like
+five. What we have is something narrower and, we think, more useful: a
+hypothesis precise enough to pre-register. The alert rule can be stated today,
+committed to before the outcomes exist, and judged by live data. Whatever
+credibility we have in proposing it comes from having tried to break it and
+reported the break.
 
 Why not just run a longer backtest and settle it now? Because for an agentic
 forecaster, that door is closed — and seeing why may be the most durable thing
@@ -364,7 +358,7 @@ Everything behind this series — the harness, the data pipeline, the methods, t
 evaluation — is open at
 [github.com/VectorInstitute/agentic-forecasting](https://github.com/VectorInstitute/agentic-forecasting),
 the repository we built for Vector's 2026 Agentic Forecasting Bootcamps. The
-experiments in these two posts, and the live work that follows them, all began as
-a fork of it. If you have a series you actually care about (again, don't love that language), that is the fastest
-way we know to put it on an honest scoreboard: fork it, point it at your data,
-and see what the ladder tells you. (this is a bit of a hard sell -- I'd frame it more as an invitation to extend our process)
+experiments in these two posts, and the live work that follows them, all began
+as a fork of it. If there is a series you want to forecast, consider this an
+invitation to extend the process: fork the repository, point it at your data,
+and see what the ladder tells you.

@@ -4,18 +4,17 @@
 
 *Part 1 of 2.*
 
-## Can models forecast a series you actually care about? (I don't like this kind of language -- 'that you actually care about' sounds kind of petty to me.)
+## From public leaderboards to a single series
 
 [ForecastBench](https://forecastbench.org/explore) keeps a public scoreboard of
 how well AI systems predict real future events. Over successive rounds, the best
 LLM forecasters have been climbing toward the line drawn by human
 superforecasters. If you build with these models, that trend raises a concrete
-question: does the skill transfer to a specific series you actually care about —
-a market index, a demand curve, a risk metric — where being roughly right on
-average isn't enough and you need a full distribution?
+question: does the skill transfer to a specific series — a market index, a
+demand curve, a risk metric — where being roughly right on average isn't enough
+and you need a full distribution?
 
-Put plainly: can the gains being reported on public leaderboards be realized on a
-series *you* picked? (I mean, is the TSX really anyone's special chosen series? -- again the tone here is kind of questionable to me.) That is the question this series tries to answer. It is also
+That is the question this series tries to answer. It is also
 the reason forecasting has become such an unusually honest benchmark for AI in
 the first place — the future cannot be memorized. A model can regurgitate a
 benchmark it saw in training, but it cannot have seen next week's close. Score a
@@ -34,7 +33,7 @@ code, data pipeline, and evaluation harness are open at
 [github.com/VectorInstitute/agentic-forecasting](https://github.com/VectorInstitute/agentic-forecasting),
 and the work in this series lives in a
 [fork of it](https://github.com/VectorInstitute/agentic-forecasting-live). In Part 1 we
-build the scoreboard for one concrete series and run the numbers-only methods —
+build the scoreboard for one concrete series and run the fixed-context methods —
 from a naive baseline to gradient-boosted trees to a frozen LLM — up to their
 ceiling. Part 2 brings in agents that read.
 
@@ -128,13 +127,13 @@ read — recent enough that leakage is less likely, though never zero. So we
 report both sweeps side by side, and when a method's backtest lead evaporates in
 the protected window, we say so.
 
-## The numbers-only ladder
+## The fixed-context ladder
 
-Every method on this ladder sees only the series — and, for some, a panel of
-numeric covariates. None reads a word of news. They differ only in how much
-structure they assume. That constraint is the whole point of Part 1: establish
-what numbers alone can do, and how far. Part 2 lifts it and hands the forecaster
-the news.
+Every method on this ladder works from a fixed information window: the series
+itself, for some a panel of numeric covariates, and — for the LLM rung — a
+short text description of the task. None of them can go looking for more. That
+constraint is the whole point of Part 1: establish what pre-assembled context
+can do, and how far. Part 2 lifts it.
 
 The bottom rung is the **naive floor**: take the recent distribution of returns
 and carry it forward. It is the "your model isn't magic" baseline, and it is no
@@ -152,18 +151,22 @@ Then **LightGBM** — gradient-boosted trees — with and without a covariate pa
 a Canadian macro-financial set spanning the Bank of Canada policy rate, StatCan
 CPI and unemployment, WTI oil, gold, USD/CAD, the VIX, and the S&P 500.
 
-The top rung is still numbers-only, but it uses a general-purpose LLM. The
-technique, the **LLM Process** (LLMP), was developed by a team of researchers that includes Vector faculty member David Duvenaud. You serialize the return history,
-and optionally the same covariate panel, into a text prompt and then ask the model to
-emit the full quantile grid directly, as numbers. No fine-tuning, no forecasting
-head, no tools. We score those quantiles with CRPS exactly like every other
-method: same origins, same cutoff, same referee.
+The top rung swaps the purpose-built models for a general-purpose LLM. The
+technique, the **LLM Process** (LLMP), was developed by a team of researchers
+that includes Vector faculty member David Duvenaud. You serialize the return
+history, optionally the covariate panel, and a short description of the series
+into a text prompt, then ask the model to emit the full quantile grid directly,
+as numbers. No fine-tuning, no forecasting head, no tools. We score those
+quantiles with CRPS exactly like every other method: same origins, same cutoff,
+same referee.
 
-One distinction here matters more than it looks, and Part 2 turns on it: the
-context an LLMP sees is assembled **programmatically, in advance, by us**. The
-model reads the window we hand it and nothing else. It cannot go looking. That
-is precisely what separates an LLM Process from an agent — and it is why an LLMP
-still belongs on the numbers-only ladder. (I'm worried that we're presenting the LLMP as numbers-only while in reality it does include a bit of context about the series, just a simple description, but also an LLMP can make use of additional text context such as reports. The key difference is that they need to be supplied in advance at inference. So let's tidy up this arugment a bit. We can just treat agents separately because they were central to our hypothesis -- that agency to go out and look for information or to do self-guided learning could be impactful.)
+One distinction matters more than it looks, and Part 2 turns on it. An LLMP is
+not strictly numbers-only — it reads the series description we give it, and the
+technique can condition on any text supplied at inference time, reports
+included. What it cannot do is gather that context itself: everything it sees
+is assembled in advance, by us. The methods allowed to go out and look — or to
+study on their own — are the agents, and because that agency is the hypothesis
+this series was built to test, they get Part 2 to themselves.
 
 ![Rank heatmap of mean CRPS by method and horizon, 2025 backtest beside the
 protected 2026 eval.](assets/fig3_weekly_leaderboard.png)
@@ -240,7 +243,8 @@ of each regime break was not in the price history at those origins. It was in
 the news. A tariff is announced in words before it is a number in a series; a
 war-risk premium is a headline before it is a return.
 
-That appears to be the ceiling of numbers-only forecasting on this series. We
+That appears to be the ceiling, on this series, for forecasters that cannot
+seek context. We
 would not claim it is a hard limit: a more context-sensitive numerical model is
 certainly buildable — richer futures and term-structure signals are the obvious
 place to start — but such models are difficult to build well for general classes
