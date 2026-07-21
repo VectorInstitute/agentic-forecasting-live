@@ -2,9 +2,9 @@
 
 **Ethan Jackson, Ali Kore, Behnoosh Zamanlooy & Shayaan Mehdi**
 
-*Part 1 of two.*
+*Part 1 of 2.*
 
-## Can models forecast a series you actually care about?
+## Can models forecast a series you actually care about? (I don't like this kind of language -- 'that you actually care about' sounds kind of petty to me.)
 
 [ForecastBench](https://forecastbench.org/explore) keeps a public scoreboard of
 how well AI systems predict real future events. Over successive rounds, the best
@@ -15,7 +15,7 @@ a market index, a demand curve, a risk metric — where being roughly right on
 average isn't enough and you need a full distribution?
 
 Put plainly: can the gains being reported on public leaderboards be realized on a
-series *you* picked? That is the question this series tries to answer. It is also
+series *you* picked? (I mean, is the TSX really anyone's special chosen series? -- again the tone here is kind of questionable to me.) That is the question this series tries to answer. It is also
 the reason forecasting has become such an unusually honest benchmark for AI in
 the first place — the future cannot be memorized. A model can regurgitate a
 benchmark it saw in training, but it cannot have seen next week's close. Score a
@@ -152,11 +152,9 @@ Then **LightGBM** — gradient-boosted trees — with and without a covariate pa
 a Canadian macro-financial set spanning the Bank of Canada policy rate, StatCan
 CPI and unemployment, WTI oil, gold, USD/CAD, the VIX, and the S&P 500.
 
-The top rung is still numbers-only, but it is a general-purpose LLM. The
-technique is the **LLM-Process** (LLMP), introduced by
-[Requeima et al. (2024)](https://arxiv.org/abs/2405.12856) — with senior author
-David Duvenaud, a Vector Institute faculty member. Serialize the return history,
-and optionally the same covariate panel, into a text prompt; ask the model to
+The top rung is still numbers-only, but it uses a general-purpose LLM. The
+technique, the **LLM Process** (LLMP), was developed by a team of researchers that includes Vector faculty member David Duvenaud. You serialize the return history,
+and optionally the same covariate panel, into a text prompt and then ask the model to
 emit the full quantile grid directly, as numbers. No fine-tuning, no forecasting
 head, no tools. We score those quantiles with CRPS exactly like every other
 method: same origins, same cutoff, same referee.
@@ -164,8 +162,8 @@ method: same origins, same cutoff, same referee.
 One distinction here matters more than it looks, and Part 2 turns on it: the
 context an LLMP sees is assembled **programmatically, in advance, by us**. The
 model reads the window we hand it and nothing else. It cannot go looking. That
-is precisely what separates an LLM-Process from an agent — and it is why an LLMP
-still belongs on the numbers-only ladder.
+is precisely what separates an LLM Process from an agent — and it is why an LLMP
+still belongs on the numbers-only ladder. (I'm worried that we're presenting the LLMP as numbers-only while in reality it does include a bit of context about the series, just a simple description, but also an LLMP can make use of additional text context such as reports. The key difference is that they need to be supplied in advance at inference. So let's tidy up this arugment a bit. We can just treat agents separately because they were central to our hypothesis -- that agency to go out and look for information or to do self-guided learning could be impactful.)
 
 ![Rank heatmap of mean CRPS by method and horizon, 2025 backtest beside the
 protected 2026 eval.](assets/fig3_weekly_leaderboard.png)

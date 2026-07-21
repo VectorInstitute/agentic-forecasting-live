@@ -2,7 +2,7 @@
 
 **Ethan Jackson, Ali Kore, Behnoosh Zamanlooy & Shayaan Mehdi**
 
-*Part 2 of two.*
+*Part 2 of 2.*
 
 ## The staircase
 
@@ -47,7 +47,7 @@ futures market expected. It reasoned from news and price history, never from the
 forward curve — the same gap we flagged in Part 1's covariate panel. A dedicated
 futures-analysis skill, one the agent could call to ask what oil, gold, or index
 futures are pricing in for the horizon it is forecasting, is an obvious thing to
-hand it next.
+hand it next. (I think we could consider dropping this almost entirely. The covariate panel we used in Part 1 included the front-month futures contracts from yfinance and in all likelihood those are being used here too.)
 
 ![Anatomy of one agent forecast: search queries, rationale factors, and the
 emitted quantile grid.](assets/fig1_agent_anatomy.png)
@@ -149,7 +149,7 @@ respects the origins' overlap will not certify what remains. Routing on
 divergence doesn't pay either: gate on above-median divergence and you edge out
 both parents on paper, but the margin is under two percent and about three
 random gates in ten do as well — not currently distinguishable from a coin.
-What we have is one regime event, examined closely.
+What we have is one regime event, examined closely. (This might be more detail about a negative result than is warranted for this blogpost -- we could say something like we tried considering a divergence-based router, and while it looks interesting, there's no way we have enough statistical power to be able to tell whether it's really an effective mechanism.)
 
 Up close, though, the descriptive facts stand on their own. At the war trough
 the agent's interval ran **three times** the tree's — and at one break origin
@@ -160,7 +160,7 @@ agent predicts direction better; it is that the agent can notice, from the
 news, that the quiet period may be ending — and say so by widening. That
 suggests a different job description: not a replacement for the cheap methods
 but a *sentinel* alongside them, conventional forecasters carrying the nominal
-periods and an agent watching for the moment they stop being nominal. On this
+periods and an agent watching for the moment they stop being nominal. (I might have put this differently. In my mind, it's like -- you have an agent running alongside conventional methods in a production forecasting pipeline. Whenever its outputs diverge from what conventional methods are saying, it could raise an alert, which could kick off a deeper investigation or bring in the attention of a human expert with a vested interest in the prediction target.) On this
 evidence that is a hypothesis worth testing properly, not a finding to build on
 yet.
 
@@ -186,7 +186,7 @@ window, and the fourth (2026-06-08) is the agent pricing a post-record-high
 correction that never confirmed. Inset: mean h=21 CRPS of always-tree (17.18
 ×10⁻³), always-agent (17.59), and the divergence-gated router (16.88) — note
 the zoomed axis starting at 16.5; the three means differ by only about 4%.
-Exploratory: 24 origins, and the router threshold is set in-sample.*
+Exploratory: 24 origins, and the router threshold is set in-sample.* (What's up with the mixed notations in this caption?)
 
 One cost aside, said plainly: an agent forecast runs on the order of 100× the
 tokens of an LLMP call — tens to hundreds of thousands against a couple thousand —
@@ -332,7 +332,7 @@ what the harness was built to make cheap. If you're starting tomorrow:
 But the idea we find most interesting is the one this retrospective could only
 *raise*, never settle. The agent's distinctive behaviour was not forecasting
 the direction better but reacting to context — widening when it read something
-unsettling, disagreeing with the trees exactly when the world was moving. If
+unsettling, disagreeing with the trees (calling the LightGBM models this way 'the trees' reads funny to me) exactly when the world was moving. If
 that holds up, a production pipeline for something like a market index gets
 built as a *mix* rather than a contest: cheap, well-calibrated models carrying
 the ordinary weeks, an agentic layer watching for the moment they stop being
@@ -365,6 +365,6 @@ evaluation — is open at
 [github.com/VectorInstitute/agentic-forecasting](https://github.com/VectorInstitute/agentic-forecasting),
 the repository we built for Vector's 2026 Agentic Forecasting Bootcamps. The
 experiments in these two posts, and the live work that follows them, all began as
-a fork of it. If you have a series you actually care about, that is the fastest
+a fork of it. If you have a series you actually care about (again, don't love that language), that is the fastest
 way we know to put it on an honest scoreboard: fork it, point it at your data,
-and see what the ladder tells you.
+and see what the ladder tells you. (this is a bit of a hard sell -- I'd frame it more as an invitation to extend our process)
